@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Win the Day — 아침을 말씀으로 이기라</title>
+  <meta name="description" content="아침에 핸드폰 대신 성경을 먼저 잡는 것, 그것이 하루를 승리로 이기는 비결입니다. 21일 성경묵상 챌린지에 참여하세요." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #1a2744;
+      --navy-light: #243560;
+      --gold: #c9980a;
+      --gold-light: #f0c040;
+      --cream: #faf6ee;
+      --cream-dark: #f0e8d0;
+      --green: #1c4a2e;
+      --green-light: #2d7a4a;
+      --text: #1a1a2e;
+      --text-muted: #6b7280;
+      --white: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.7;
+    }
+
+    /* ──────────── NAV ──────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(26, 39, 68, 0.97);
+      backdrop-filter: blur(10px);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-logo {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--white); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold-light); }
+
+    .nav-cta {
+      background: var(--gold);
+      color: var(--navy) !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      font-weight: 700 !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--gold-light) !important; }
+
+    .nav-kakao {
+      background: #FEE500;
+      color: #3C1E1E !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      font-weight: 700 !important;
+      transition: background 0.2s !important;
+      margin-left: 0.5rem;
+    }
+    .nav-kakao:hover { background: #f5d900 !important; }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* ──────────── HERO ──────────── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy) 0%, #0f1c3a 60%, #1c3a1c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 2rem 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, rgba(201,152,10,0.15) 0%, transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(201,152,10,0.2);
+      border: 1px solid rgba(201,152,10,0.5);
+      color: var(--gold-light);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(2.5rem, 8vw, 5.5rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title .gold { color: var(--gold-light); }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-verse {
+      font-family: 'Noto Serif KR', serif;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.95rem;
+      font-style: italic;
+      margin-bottom: 3rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--navy);
+      padding: 1rem 2.5rem;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(201,152,10,0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      padding: 1rem 2.5rem;
+      border-radius: 100px;
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 2px solid rgba(255,255,255,0.4);
+      transition: all 0.2s;
+      display: inline-block;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--white);
+      background: rgba(255,255,255,0.1);
+    }
+
+    .btn-kakao {
+      background: #FEE500;
+      color: #3C1E1E;
+      padding: 1rem 2.5rem;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-kakao:hover {
+      background: #f5d900;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(254,229,0,0.4);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ──────────── STATS ──────────── */
+    .stats {
+      background: var(--cream);
+      padding: 80px 2rem;
+    }
+
+    .stats-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .section-tag {
+      display: inline-block;
+      color: var(--green);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto 3rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .stat-number {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-number.red { color: #c0392b; }
+    .stat-number.gold { color: var(--gold); }
+    .stat-number.green { color: var(--green-light); }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ──────────── VISION ──────────── */
+    .vision {
+      background: var(--white);
+      padding: 100px 2rem;
+    }
+
+    .vision-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .vision-quote {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      line-height: 1.6;
+      color: var(--navy);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 2rem;
+      text-align: left;
+      background: var(--cream);
+      border-radius: 0 12px 12px 0;
+      margin: 3rem 0;
+    }
+
+    .vision-quote cite {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      font-style: normal;
+    }
+
+    /* ──────────── METHOD: STOP-STAY-STEP ──────────── */
+    .method {
+      background: var(--navy);
+      padding: 100px 2rem;
+      color: var(--white);
+    }
+
+    .method-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .method-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .method-header .section-tag { color: var(--gold-light); }
+    .method-header .section-title { color: var(--white); }
+    .method-header .section-desc { color: rgba(255,255,255,0.6); }
+
+    .method-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .step-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      transition: transform 0.3s, background 0.3s;
+    }
+
+    .step-card:hover {
+      transform: translateY(-6px);
+      background: rgba(255,255,255,0.1);
+    }
+
+    .step-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-keyword {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1rem;
+      color: var(--gold-light);
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+    }
+
+    .step-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--white);
+    }
+
+    .step-verse {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .step-desc {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .step-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .step-tag {
+      background: rgba(201,152,10,0.2);
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      font-weight: 500;
+    }
+
+    /* ──────────── WIN THE DAY CHART ──────────── */
+    .chart-section {
+      background: var(--cream);
+      padding: 100px 2rem;
+    }
+
+    .chart-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .chart-header { text-align: center; margin-bottom: 3rem; }
+
+    .chart-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.1);
+      border: 2px solid var(--cream-dark);
+    }
+
+    .chart-card-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--navy);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .chart-card-sub {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px dashed var(--cream-dark);
+    }
+
+    .chart-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .chart-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+
+    .chart-label {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+
+    .chart-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1.5px solid var(--cream-dark);
+      padding: 0.4rem 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: transparent;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .chart-input:focus { border-color: var(--gold); }
+    .chart-input::placeholder { color: #ccc; }
+
+    .chart-space { margin-left: 2.3rem; }
+
+    .chart-space-item {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      align-items: center;
+    }
+
+    .chart-space-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      width: 20px;
+      flex-shrink: 0;
+    }
+
+    .chart-declaration {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 2rem;
+      color: var(--white);
+      font-family: 'Noto Serif KR', serif;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .chart-declaration input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      color: var(--gold-light);
+      font-family: 'Noto Serif KR', serif;
+      font-size: 0.95rem;
+      text-align: center;
+      width: 200px;
+      outline: none;
+    }
+
+    .chart-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+
+    .btn-print {
+      background: var(--navy);
+      color: var(--white);
+      padding: 0.75rem 1.75rem;
+      border-radius: 100px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-print:hover { background: var(--navy-light); }
+
+    .btn-reset {
+      background: transparent;
+      color: var(--text-muted);
+      padding: 0.75rem 1.75rem;
+      border-radius: 100px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 2px solid var(--cream-dark);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-reset:hover { border-color: #999; color: var(--text); }
+
+    /* ──────────── 21일 챌린지 ──────────── */
+    .challenge {
+      background: var(--white);
+      padding: 100px 2rem;
+    }
+
+    .challenge-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .challenge-header { text-align: center; margin-bottom: 4rem; }
+
+    .weeks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .week-card {
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .week-card.stop { background: linear-gradient(135deg, #1a3a5c 0%, #1a2744 100%); }
+    .week-card.stay { background: linear-gradient(135deg, #1c4a2e 0%, #0d2718 100%); }
+    .week-card.step { background: linear-gradient(135deg, #5c3a00 0%, #3a2200 100%); }
+
+    .week-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 0.5rem;
+    }
+
+    .week-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .week-sub {
+      font-size: 1rem;
+      color: var(--gold-light);
+      margin-bottom: 1rem;
+    }
+
+    .week-desc {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .day-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .day-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .day-num {
+      background: rgba(255,255,255,0.1);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.75rem;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .challenge-cta {
+      text-align: center;
+      background: var(--cream);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+    }
+
+    .challenge-cta h3 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .challenge-cta p {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    /* ──────────── SCRIPTURES ──────────── */
+    .scriptures {
+      background: var(--green);
+      padding: 80px 2rem;
+      color: var(--white);
+    }
+
+    .scriptures-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .scriptures-header { text-align: center; margin-bottom: 3rem; }
+    .scriptures-header .section-title { color: var(--white); }
+    .scriptures-header .section-tag { color: var(--gold-light); }
+
+    .scripture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .scripture-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 2rem 1.75rem;
+    }
+
+    .scripture-ref {
+      font-size: 0.8rem;
+      color: var(--gold-light);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .scripture-text {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* ──────────── JOIN ──────────── */
+    .join {
+      background: var(--cream);
+      padding: 100px 2rem;
+    }
+
+    .join-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .join-form {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      margin-top: 3rem;
+    }
+
+    .join-form h3 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.4rem;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .join-form p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .form-group input, .form-group select {
+      padding: 0.85rem 1rem;
+      border: 2px solid var(--cream-dark);
+      border-radius: 10px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--gold);
+    }
+
+    .pledge-box {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: left;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text);
+      border-left: 4px solid var(--gold);
+    }
+
+    .pledge-box strong { color: var(--navy); }
+
+    .form-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-align: left;
+    }
+
+    .form-check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      accent-color: var(--gold);
+    }
+
+    #join-success {
+      display: none;
+      background: #e8f5e9;
+      border-radius: 12px;
+      padding: 2rem;
+      color: var(--green);
+      font-weight: 500;
+    }
+
+    /* ──────────── RESOURCES ──────────── */
+    .resources {
+      background: var(--white);
+      padding: 80px 2rem;
+    }
+
+    .resources-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .resource-card {
+      border: 2px solid var(--cream-dark);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .resource-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 8px 24px rgba(201,152,10,0.15);
+      transform: translateY(-4px);
+    }
+
+    .resource-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+
+    .resource-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--navy);
+    }
+
+    .resource-desc { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ──────────── FOOTER ──────────── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,0.6);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    footer .logo {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 0.75rem;
+    }
+
+    footer p { font-size: 0.85rem; margin-bottom: 0.5rem; }
+
+    footer .verse {
+      font-family: 'Noto Serif KR', serif;
+      font-style: italic;
+      color: rgba(255,255,255,0.4);
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* ──────────── PRINT STYLES ──────────── */
+    @media print {
+      nav, .hero, .stats, .vision, .method, .challenge, .scriptures, .join, .resources, footer { display: none; }
+      .chart-section { display: block !important; padding: 20px; }
+      .chart-inner { max-width: 100%; }
+      .chart-actions { display: none; }
+      .chart-input { border-bottom: 1px solid #ccc; }
+    }
+
+    /* ──────────── RESPONSIVE ──────────── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--navy);
+        padding: 1rem 2rem;
+        gap: 1rem;
+      }
+      .chart-card { padding: 2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Win the <span>Day</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#vision">비전</a></li>
+    <li><a href="#method">3단계</a></li>
+    <li><a href="#chart">묵상 차트</a></li>
+    <li><a href="#challenge">21일 챌린지</a></li>
+    <li><a href="#resources">자료</a></li>
+    <li><a href="#join" class="nav-cta">참여하기</a></li>
+    <li><a href="http://pf.kakao.com/_SxixjhG" target="_blank" class="nav-kakao">💬 카카오채널</a></li>
+  </ul>
+  <div class="nav-hamburger" onclick="toggleMenu()" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="home">
+  <div>
+    <div class="hero-badge">🏆 WIN THE DAY MOVEMENT</div>
+    <h1 class="hero-title">
+      아침에 핸드폰 대신<br><span class="gold">성경을 먼저 잡으라</span>
+    </h1>
+    <p class="hero-subtitle">
+      그것이 하루를 승리로 이기는 비결입니다
+    </p>
+    <p class="hero-verse">
+      "믿음의 주요 온전하게 하시는 이인 예수를 바라보자" — 히브리서 12:2
+    </p>
+    <div class="hero-buttons">
+      <a href="#join" class="btn-primary">지금 참여하기</a>
+      <a href="http://pf.kakao.com/_SxixjhG" target="_blank" class="btn-kakao">💬 카카오채널 구독</a>
+      <a href="#method" class="btn-outline">어떻게 하나요?</a>
+    </div>
+  </div>
+  <div class="scroll-hint">↓ 스크롤</div>
+</section>
+
+<!-- ── STATS ── -->
+<section class="stats" id="stats">
+  <div class="stats-inner">
+    <span class="section-tag">오늘 우리의 현실</span>
+    <h2 class="section-title">무엇이 당신의 하루를 이끄는가?</h2>
+    <p class="section-desc">
+      우리는 매일 아침 무언가를 먼저 잡습니다. 그 선택이 하루 전체를 결정합니다.
+    </p>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number red">5:23</div>
+        <div class="stat-label">한국인 하루 평균<br>스마트폰 사용 시간</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number gold">VS</div>
+        <div class="stat-label">아침의 선택이<br>하루를 결정합니다</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number green">21일</div>
+        <div class="stat-label">말씀이 습관이 되는 데<br>필요한 시간</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VISION ── -->
+<section class="vision" id="vision">
+  <div class="vision-inner">
+    <span class="section-tag">캠페인 비전</span>
+    <h2 class="section-title">왜 Win the Day인가?</h2>
+    <p class="section-desc">
+      이것은 규칙이 아닙니다. 아침의 첫 선택을 말씀으로 드리는 삶의 방식입니다.
+    </p>
+
+    <div class="vision-quote">
+      "아침에 핸드폰을 잡기 전에 성경을 먼저 잡는 것—<br>
+      그것이 이미 하루를 승리로 쟁취한 것과 마찬가지입니다.<br>
+      말씀을 몸에 새긴다는 것은, 삶이 말씀의 모양을 갖추어 가는 과정입니다."
+      <cite>— 이승목 목사, 《신앙으로 몸에 새기다》</cite>
+    </div>
+
+    <p class="section-desc" style="margin-top: 2rem;">
+      Win the Day는 단순한 성경 읽기 챌린지가 아닙니다.<br>
+      말씀을 누리고, 새기고, 전하고, 공유하는 <strong>기독교 습관 운동</strong>입니다.
+    </p>
+  </div>
+</section>
+
+<!-- ── METHOD: STOP STAY STEP ── -->
+<section class="method" id="method">
+  <div class="method-inner">
+    <div class="method-header">
+      <span class="section-tag">3단계 묵상법</span>
+      <h2 class="section-title" style="color:var(--white)">STOP → STAY → STEP</h2>
+      <p class="section-desc">멈추고, 머물고, 나아가는 말씀묵상의 세 리듬</p>
+    </div>
+    <div class="method-steps">
+
+      <div class="step-card">
+        <div class="step-icon">🛑</div>
+        <div class="step-keyword">STOP</div>
+        <div class="step-title">멈추라</div>
+        <div class="step-verse">"가만히 있어 내가 하나님임을 알지어다" — 시편 46:10</div>
+        <div class="step-desc">
+          하나님의 음성은 소음 속에서 들리지 않습니다. 핸드폰을 내려놓고 고요한 장소, 고요한 시간, 고요한 마음을 만드는 것이 묵상의 첫 걸음입니다.
+        </div>
+        <div class="step-tags">
+          <span class="step-tag">고요한 장소</span>
+          <span class="step-tag">고요한 시간</span>
+          <span class="step-tag">고요한 마음</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon">📖</div>
+        <div class="step-keyword">STAY</div>
+        <div class="step-title">머물라</div>
+        <div class="step-verse">"너희가 내 말에 거하면 참으로 내 제자가 되리라" — 요한복음 8:31</div>
+        <div class="step-desc">
+          읽기·묵상·암송의 삼중독법으로 말씀 안에 깊이 머뭅니다. SPACE 방법으로 죄(S)·약속(P)·행동(A)·명령(C)·본(E)을 살피며 말씀이 마음에 새겨지게 합니다.
+        </div>
+        <div class="step-tags">
+          <span class="step-tag">읽기</span>
+          <span class="step-tag">묵상</span>
+          <span class="step-tag">암송</span>
+          <span class="step-tag">SPACE</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon">👣</div>
+        <div class="step-keyword">STEP</div>
+        <div class="step-title">나아가라</div>
+        <div class="step-verse">"너희는 말씀을 행하는 자가 되고 듣기만 하는 자가 되지 말라" — 야고보서 1:22</div>
+        <div class="step-desc">
+          오늘 읽은 말씀에서 한 가지를 실천합니다. 5P 원칙(개인적·가능한·실제적·타당한·점진적)으로 적용을 구체화하고, 공동체와 나눕니다.
+        </div>
+        <div class="step-tags">
+          <span class="step-tag">오늘의 적용</span>
+          <span class="step-tag">5P 원칙</span>
+          <span class="step-tag">나눔</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── WIN THE DAY CHART ── -->
+<section class="chart-section" id="chart">
+  <div class="chart-inner">
+    <div class="chart-header">
+      <span class="section-tag">매일 아침의 루틴</span>
+      <h2 class="section-title">Win the Day 차트</h2>
+      <p class="section-desc">핸드폰을 잡기 전, 이것부터. 5분이면 충분합니다.</p>
+    </div>
+
+    <div class="chart-card" id="printArea">
+      <div class="chart-card-title">🏆 Win the Day</div>
+      <div class="chart-card-sub">
+        아침에 핸드폰을 잡기 전에 이것부터!<br>
+        <input type="date" id="chartDate" style="border:none;border-bottom:1px solid #ccc;font-family:inherit;font-size:0.9rem;margin-top:4px;outline:none;color:var(--text)" />
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-icon">📖</div>
+        <div style="flex:1">
+          <div class="chart-label">오늘의 말씀</div>
+          <input class="chart-input" type="text" placeholder="성경 본문 (예: 시편 46:10)" />
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-icon">🛑</div>
+        <div style="flex:1">
+          <div class="chart-label">STOP — 내게 말씀하신 한 구절</div>
+          <input class="chart-input" type="text" placeholder="마음에 닿은 구절을 적으세요" />
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-icon">📚</div>
+        <div style="flex:1">
+          <div class="chart-label">STAY — SPACE 적용</div>
+          <div class="chart-space">
+            <div class="chart-space-item">
+              <span class="chart-space-label">S</span>
+              <input class="chart-input" type="text" placeholder="고백할 죄나 잘못된 태도" />
+            </div>
+            <div class="chart-space-item">
+              <span class="chart-space-label">P</span>
+              <input class="chart-input" type="text" placeholder="하나님의 약속" />
+            </div>
+            <div class="chart-space-item">
+              <span class="chart-space-label">A</span>
+              <input class="chart-input" type="text" placeholder="취해야 할 행동" />
+            </div>
+            <div class="chart-space-item">
+              <span class="chart-space-label">C</span>
+              <input class="chart-input" type="text" placeholder="순종해야 할 명령" />
+            </div>
+            <div class="chart-space-item">
+              <span class="chart-space-label">E</span>
+              <input class="chart-input" type="text" placeholder="따르거나 피해야 할 본" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-icon">👣</div>
+        <div style="flex:1">
+          <div class="chart-label">STEP — 오늘의 한 가지 실천</div>
+          <input class="chart-input" type="text" placeholder="구체적으로, 오늘 할 수 있는 것을" />
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-icon">🙏</div>
+        <div style="flex:1">
+          <div class="chart-label">오늘의 기도</div>
+          <input class="chart-input" type="text" placeholder="한 줄 기도 제목" />
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-icon">😊</div>
+        <div style="flex:1">
+          <div class="chart-label">감사 3가지</div>
+          <input class="chart-input" type="text" placeholder="1." style="margin-bottom:8px" />
+          <input class="chart-input" type="text" placeholder="2." style="margin-bottom:8px" />
+          <input class="chart-input" type="text" placeholder="3." />
+        </div>
+      </div>
+
+      <div class="chart-declaration">
+        오늘 나는 <input type="text" placeholder="말씀/실천" id="declarationInput" /> 을(를) 통해<br>
+        하루를 승리로 시작합니다! 🏆
+      </div>
+    </div>
+
+    <div class="chart-actions">
+      <button class="btn-print" onclick="window.print()">🖨️ 인쇄하기</button>
+      <button class="btn-reset" onclick="resetChart()">↺ 초기화</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── 21일 CHALLENGE ── -->
+<section class="challenge" id="challenge">
+  <div class="challenge-inner">
+    <div class="challenge-header">
+      <span class="section-tag">21일 챌린지</span>
+      <h2 class="section-title">21일이면 습관이 됩니다</h2>
+      <p class="section-desc">
+        3주 동안 매일 같은 시간, 같은 장소에서 말씀을 만납니다.<br>
+        쉐마의 약속처럼, 말씀은 당신의 일상에 새겨질 것입니다.
+      </p>
+    </div>
+
+    <div class="weeks-grid">
+      <div class="week-card stop">
+        <div class="week-num">1주차</div>
+        <div class="week-title">STOP</div>
+        <div class="week-sub">멈추는 습관 형성</div>
+        <div class="week-desc">핸드폰 대신 성경을 먼저 잡는 첫 7일. 시편을 중심으로 하나님 앞에 멈추는 훈련을 시작합니다.</div>
+        <div class="day-list">
+          <div class="day-item"><span class="day-num">1</span> 시편 1:1-3 — 복 있는 자의 묵상</div>
+          <div class="day-item"><span class="day-num">2</span> 시편 119:105 — 말씀은 등불</div>
+          <div class="day-item"><span class="day-num">3</span> 시편 46:10 — 가만히 있어</div>
+          <div class="day-item"><span class="day-num">4</span> 마태복음 6:6 — 골방 기도</div>
+          <div class="day-item"><span class="day-num">5</span> 시편 5:3 — 아침의 기도</div>
+          <div class="day-item"><span class="day-num">6</span> 이사야 50:4 — 아침마다 깨우치심</div>
+          <div class="day-item"><span class="day-num">7</span> 마가복음 1:35 — 새벽 미명의 예수</div>
+        </div>
+      </div>
+
+      <div class="week-card stay">
+        <div class="week-num">2주차</div>
+        <div class="week-title">STAY</div>
+        <div class="week-sub">말씀 안에 머무는 7일</div>
+        <div class="week-desc">읽기·묵상·암송의 삼중독법으로 말씀 안에 깊이 거합니다. SPACE 방법으로 적용을 훈련합니다.</div>
+        <div class="day-list">
+          <div class="day-item"><span class="day-num">8</span> 요한복음 8:31-32 — 거하면 자유</div>
+          <div class="day-item"><span class="day-num">9</span> 신명기 6:4-9 — 쉐마</div>
+          <div class="day-item"><span class="day-num">10</span> 잠언 4:20-22 — 귀 기울이라</div>
+          <div class="day-item"><span class="day-num">11</span> 히브리서 4:12 — 살아있는 말씀</div>
+          <div class="day-item"><span class="day-num">12</span> 여호수아 1:8 — 주야로 묵상</div>
+          <div class="day-item"><span class="day-num">13</span> 시편 119:11 — 마음에 두어</div>
+          <div class="day-item"><span class="day-num">14</span> 로마서 12:2 — 마음의 변화</div>
+        </div>
+      </div>
+
+      <div class="week-card step">
+        <div class="week-num">3주차</div>
+        <div class="week-title">STEP</div>
+        <div class="week-sub">나아가는 삶의 7일</div>
+        <div class="week-desc">말씀이 삶이 되는 마지막 7일. 순종과 나눔으로 Win the Day가 공동체 운동이 됩니다.</div>
+        <div class="day-list">
+          <div class="day-item"><span class="day-num">15</span> 야고보서 1:22-25 — 행하는 자</div>
+          <div class="day-item"><span class="day-num">16</span> 에베소서 5:15-16 — 세월을 아끼라</div>
+          <div class="day-item"><span class="day-num">17</span> 빌립보서 4:6-7 — 염려 말라</div>
+          <div class="day-item"><span class="day-num">18</span> 고린도전서 10:31 — 하나님의 영광</div>
+          <div class="day-item"><span class="day-num">19</span> 갈라디아서 5:16 — 성령을 따라</div>
+          <div class="day-item"><span class="day-num">20</span> 히브리서 12:1-2 — 예수를 바라보자</div>
+          <div class="day-item"><span class="day-num">21</span> 신명기 6:4-9 + 시편 1편 — 완주 선언</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="challenge-cta">
+      <h3>지금 21일 챌린지를 시작하세요</h3>
+      <p>오늘 아침이 바로 Day 1입니다. 핸드폰을 내려놓고 성경을 펴세요.</p>
+      <a href="#join" class="btn-primary">챌린지 참여하기 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── SCRIPTURES ── -->
+<section class="scriptures" id="scriptures">
+  <div class="scriptures-inner">
+    <div class="scriptures-header">
+      <span class="section-tag">핵심 말씀</span>
+      <h2 class="section-title" style="color:var(--white)">Win the Day의 성경적 기반</h2>
+    </div>
+    <div class="scripture-grid">
+      <div class="scripture-card">
+        <div class="scripture-ref">히브리서 12:2</div>
+        <div class="scripture-text">"믿음의 주요 온전하게 하시는 이인 예수를 바라보자. 그는 그 앞에 있는 기쁨을 위하여 십자가를 참으사…"</div>
+      </div>
+      <div class="scripture-card">
+        <div class="scripture-ref">시편 119:105</div>
+        <div class="scripture-text">"주의 말씀은 내 발에 등이요 내 길에 빛이니이다."</div>
+      </div>
+      <div class="scripture-card">
+        <div class="scripture-ref">신명기 6:6-7 (쉐마)</div>
+        <div class="scripture-text">"오늘 내가 네게 명하는 이 말씀을 너는 마음에 새기고, 네 자녀에게 부지런히 가르치며 집에 앉았을 때에든지 길을 갈 때에든지 이야기할 것이며…"</div>
+      </div>
+      <div class="scripture-card">
+        <div class="scripture-ref">야고보서 1:22</div>
+        <div class="scripture-text">"너희는 말씀을 행하는 자가 되고 듣기만 하여 자신을 속이는 자가 되지 말라."</div>
+      </div>
+      <div class="scripture-card">
+        <div class="scripture-ref">시편 46:10</div>
+        <div class="scripture-text">"이르시기를 너희는 가만히 있어 내가 하나님임을 알지어다. 내가 뭇 나라 중에서 높임을 받으리라."</div>
+      </div>
+      <div class="scripture-card">
+        <div class="scripture-ref">요한복음 8:31-32</div>
+        <div class="scripture-text">"너희가 내 말에 거하면 참으로 내 제자가 되고, 진리를 알지니 진리가 너희를 자유롭게 하리라."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── JOIN ── -->
+<section class="join" id="join">
+  <div class="join-inner">
+    <span class="section-tag">지금 참여하기</span>
+    <h2 class="section-title">Win the Day 운동에 함께하세요</h2>
+    <p class="section-desc">
+      오늘 핸드폰 대신 성경을 먼저 잡겠다는 서약을 선언합니다.
+    </p>
+
+    <div class="join-form">
+      <h3>21일 챌린지 서약</h3>
+      <p>정보를 입력하고 챌린지를 시작하세요. 매일 아침 묵상 알림을 보내드립니다.</p>
+
+      <div id="join-success">
+        🎉 서약이 완료되었습니다! 오늘이 바로 Day 1입니다.<br>아침에 핸드폰을 잡기 전 성경을 먼저 펴세요. 하루를 승리하시기를 바랍니다!
+      </div>
+
+      <form id="joinForm" onsubmit="handleJoin(event)">
+        <div class="form-group">
+          <label>이름</label>
+          <input type="text" placeholder="이름을 입력하세요" required />
+        </div>
+        <div class="form-group">
+          <label>교회 / 소속 (선택)</label>
+          <input type="text" placeholder="교회 이름 또는 소속 모임" />
+        </div>
+        <div class="form-group">
+          <label>챌린지 시작일</label>
+          <input type="date" id="startDate" required />
+        </div>
+
+        <div class="pledge-box">
+          <strong>나는 오늘부터 21일 동안,</strong><br>
+          매일 아침 핸드폰을 잡기 전에 성경을 먼저 펴고<br>
+          STOP → STAY → STEP의 방법으로 말씀을 묵상하며<br>
+          하루를 승리로 이길 것을 서약합니다.<br><br>
+          "믿음의 주요 온전하게 하시는 이인 예수를 바라보자" (히 12:2)
+        </div>
+
+        <div class="form-check">
+          <input type="checkbox" required />
+          <span>위의 서약에 동의합니다. 21일 동안 Win the Day 챌린지에 참여하겠습니다.</span>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem">
+          🏆 서약하고 챌린지 시작하기
+        </button>
+      </form>
+
+      <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:2px dashed var(--cream-dark);text-align:center">
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem">묵상 나눔은 카카오채널에서!</p>
+        <a href="http://pf.kakao.com/_SxixjhG" target="_blank" class="btn-kakao" style="width:100%;display:block;text-align:center">
+          💬 카카오채널에서 묵상 나누기
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESOURCES ── -->
+<section class="resources" id="resources">
+  <div class="resources-inner">
+    <span class="section-tag">자료 다운로드</span>
+    <h2 class="section-title">Win the Day 자료 모음</h2>
+    <p class="section-desc">캠페인에 필요한 모든 자료를 준비했습니다.</p>
+
+    <div class="resource-grid">
+      <a href="#chart" class="resource-card">
+        <div class="resource-icon">📋</div>
+        <div class="resource-title">묵상 차트</div>
+        <div class="resource-desc">STOP-STAY-STEP 일일 묵상 차트 (인쇄용)</div>
+      </a>
+      <div class="resource-card" style="cursor:default">
+        <div class="resource-icon">📚</div>
+        <div class="resource-title">21일 가이드북</div>
+        <div class="resource-desc">21일 전체 묵상 가이드 (Day 1~21)</div>
+      </div>
+      <div class="resource-card" style="cursor:default">
+        <div class="resource-icon">⛪</div>
+        <div class="resource-title">교회 도입 키트</div>
+        <div class="resource-desc">설교 시리즈 + 소그룹 가이드</div>
+      </div>
+      <div class="resource-card" style="cursor:default">
+        <div class="resource-icon">📱</div>
+        <div class="resource-title">SNS 콘텐츠 키트</div>
+        <div class="resource-desc">카드뉴스 + 카카오 메시지 템플릿</div>
+      </div>
+    </div>
+
+    <a href="http://pf.kakao.com/_SxixjhG" target="_blank" class="resource-card" style="border-color:#FEE500;background:#fffde7;margin-top:1.5rem;display:block;text-decoration:none">
+      <div class="resource-icon">💬</div>
+      <div class="resource-title" style="color:#3C1E1E">카카오채널 구독</div>
+      <div class="resource-desc">매일 묵상 나눔 · 운동 소식 · 공동체 격려</div>
+    </a>
+
+    <p style="margin-top:2rem;color:var(--text-muted);font-size:0.9rem">
+      자료 문의 및 교회 도입 상담: <strong>ohlee2026@gmail.com</strong>
+    </p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="logo">Win the Day</div>
+  <p>아침에 핸드폰 대신 성경을 먼저 잡는 운동</p>
+  <p style="margin-top:0.5rem">이승목 목사 · 《신앙으로 몸에 새기다》</p>
+  <p style="margin-top:1rem">
+    <a href="http://pf.kakao.com/_SxixjhG" target="_blank"
+       style="background:#FEE500;color:#3C1E1E;padding:0.5rem 1.25rem;border-radius:100px;font-weight:700;text-decoration:none;font-size:0.9rem">
+      💬 카카오채널 구독하기
+    </a>
+  </p>
+  <div class="verse">
+    "주의 말씀은 내 발에 등이요 내 길에 빛이니이다" — 시편 119:105
+  </div>
+</footer>
+
+<script>
+  // 오늘 날짜 자동 입력
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('chartDate').value = today;
+  document.getElementById('startDate').value = today;
+
+  // 햄버거 메뉴
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  // Win the Day 차트 초기화
+  function resetChart() {
+    document.querySelectorAll('.chart-input').forEach(i => i.value = '');
+    document.getElementById('declarationInput').value = '';
+    document.getElementById('chartDate').value = new Date().toISOString().split('T')[0];
+  }
+
+  // 챌린지 서약 제출
+  function handleJoin(e) {
+    e.preventDefault();
+    document.getElementById('joinForm').style.display = 'none';
+    document.getElementById('join-success').style.display = 'block';
+    // 실제 배포 시: fetch('/api/join', ...) 또는 Google Forms 연동
+  }
+
+  // 스크롤 시 네비 배경 강화
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (window.scrollY > 50) {
+      nav.style.background = 'rgba(26,39,68,1)';
+    } else {
+      nav.style.background = 'rgba(26,39,68,0.97)';
+    }
+  });
+
+  // 부드러운 등장 애니메이션
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.step-card, .week-card, .stat-card, .scripture-card, .resource-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
