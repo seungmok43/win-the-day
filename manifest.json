@@ -1,0 +1,31 @@
+{
+  "name": "Win the Day — 말씀 묵상",
+  "short_name": "Win the Day",
+  "description": "매일 성경묵상 커뮤니티 — 아침에 핸드폰 대신 성경을 먼저",
+  "start_url": "./community.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a2744",
+  "theme_color": "#1a2744",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "오늘의 묵상",
+      "url": "./community.html",
+      "description": "오늘 묵상 나누기"
+    },
+    {
+      "name": "묵상 차트",
+      "url": "./index.html#chart",
+      "description": "Win the Day 차트"
+    }
+  ]
+}

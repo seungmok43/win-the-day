@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘의 묵상 — Win the Day</title>
+  <meta name="theme-color" content="#1a2744" />
+  <link rel="manifest" href="manifest.json" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- ⚠️ Firebase 설정 — Firebase 콘솔에서 복사해 아래를 교체하세요 -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
+  <style>
+    :root {
+      --navy: #1a2744;
+      --gold: #c9980a;
+      --gold-light: #f0c040;
+      --cream: #faf6ee;
+      --green: #1c4a2e;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --white: #ffffff;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Noto Sans KR',sans-serif; background:#f3f4f6; color:var(--text); }
+
+    /* ── NAV ── */
+    nav {
+      background:var(--navy);
+      padding:0 1rem;
+      height:56px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      z-index:50;
+    }
+    .nav-back { color:rgba(255,255,255,0.7); text-decoration:none; font-size:0.9rem; }
+    .nav-back:hover { color:var(--white); }
+    .nav-title { font-family:'Noto Serif KR',serif; color:var(--gold-light); font-size:1rem; font-weight:700; }
+    .nav-kakao {
+      background:#FEE500; color:#3C1E1E; padding:0.35rem 0.85rem;
+      border-radius:100px; font-size:0.8rem; font-weight:700; text-decoration:none;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .container { max-width:680px; margin:0 auto; padding:1rem; }
+
+    /* ── FIREBASE SETUP BANNER ── */
+    #setup-banner {
+      background:#fff3cd; border:1px solid #ffc107; border-radius:12px;
+      padding:1.25rem; margin-bottom:1rem; display:none;
+    }
+    #setup-banner h3 { color:#856404; font-size:0.95rem; margin-bottom:0.5rem; }
+    #setup-banner ol { padding-left:1.25rem; font-size:0.85rem; color:#856404; line-height:1.8; }
+    #setup-banner a { color:#856404; }
+
+    /* ── DATE NAV ── */
+    .date-nav {
+      background:var(--white); border-radius:16px; padding:1rem 1.25rem;
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);
+    }
+    .date-btn {
+      background:none; border:2px solid var(--border); border-radius:8px;
+      padding:0.4rem 0.85rem; font-size:1rem; cursor:pointer;
+      transition:all 0.2s; color:var(--text);
+    }
+    .date-btn:hover { border-color:var(--navy); color:var(--navy); }
+    .date-btn:disabled { opacity:0.3; cursor:not-allowed; }
+    .date-center { text-align:center; }
+    .date-display { font-size:0.95rem; font-weight:700; color:var(--navy); }
+    .date-today-btn {
+      font-size:0.75rem; color:var(--gold); background:none; border:none;
+      cursor:pointer; margin-top:2px; display:block; text-align:center;
+    }
+
+    /* ── SCRIPTURE CARD ── */
+    .scripture-card {
+      background:linear-gradient(135deg, var(--navy) 0%, #243560 100%);
+      border-radius:20px; padding:1.75rem; margin-bottom:1rem;
+      box-shadow:0 4px 20px rgba(26,39,68,0.3);
+    }
+    .scripture-label {
+      font-size:0.75rem; color:rgba(255,255,255,0.5); letter-spacing:0.1em;
+      font-weight:700; margin-bottom:0.5rem;
+    }
+    .scripture-ref {
+      font-family:'Noto Serif KR',serif; font-size:1.5rem; font-weight:700;
+      color:var(--gold-light); margin-bottom:0.25rem;
+    }
+    .scripture-date { font-size:0.85rem; color:rgba(255,255,255,0.5); }
+    .scripture-card-footer {
+      margin-top:1.25rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.1);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .post-count { font-size:0.85rem; color:rgba(255,255,255,0.6); }
+    .challenge-day { font-size:0.8rem; color:var(--gold-light); font-weight:500; }
+
+    /* ── POST FORM ── */
+    .post-form {
+      background:var(--white); border-radius:20px; padding:1.5rem;
+      margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);
+    }
+    .post-form h3 {
+      font-family:'Noto Serif KR',serif; font-size:1.1rem; color:var(--navy);
+      margin-bottom:1rem;
+    }
+    .form-row { margin-bottom:0.85rem; }
+    .form-label { font-size:0.8rem; font-weight:700; color:var(--text); margin-bottom:0.3rem; display:block; }
+    .form-input, .form-textarea, .form-select {
+      width:100%; padding:0.7rem 0.9rem; border:2px solid var(--border); border-radius:10px;
+      font-family:'Noto Sans KR',sans-serif; font-size:0.9rem; color:var(--text);
+      outline:none; transition:border-color 0.2s; background:var(--white);
+    }
+    .form-input:focus, .form-textarea:focus { border-color:var(--gold); }
+    .form-textarea { min-height:100px; resize:vertical; line-height:1.6; }
+    .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+
+    /* image upload */
+    .image-upload-area {
+      border:2px dashed var(--border); border-radius:10px; padding:1.25rem;
+      text-align:center; cursor:pointer; transition:all 0.2s; position:relative;
+    }
+    .image-upload-area:hover { border-color:var(--gold); background:#fffdf5; }
+    .image-upload-area input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+    .image-upload-icon { font-size:1.5rem; margin-bottom:0.25rem; }
+    .image-upload-text { font-size:0.8rem; color:var(--muted); }
+    #image-preview { width:100%; border-radius:8px; margin-top:0.5rem; display:none; max-height:200px; object-fit:cover; }
+
+    .submit-btn {
+      width:100%; padding:0.9rem; background:var(--navy); color:var(--white);
+      border:none; border-radius:12px; font-family:'Noto Sans KR',sans-serif;
+      font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.2s;
+      margin-top:0.5rem;
+    }
+    .submit-btn:hover { background:#243560; }
+    .submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .submit-success {
+      display:none; background:#e8f5e9; border-radius:10px; padding:1rem;
+      text-align:center; color:var(--green); font-weight:500; font-size:0.9rem;
+    }
+
+    /* ── FEED ── */
+    .feed-header {
+      font-size:0.85rem; font-weight:700; color:var(--muted);
+      margin-bottom:0.75rem; padding-left:0.25rem;
+    }
+    .feed-empty {
+      background:var(--white); border-radius:16px; padding:3rem 1.5rem;
+      text-align:center; color:var(--muted); font-size:0.9rem;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+    }
+    .feed-empty-icon { font-size:3rem; margin-bottom:0.75rem; }
+    .loading { text-align:center; padding:2rem; color:var(--muted); }
+
+    /* ── POST CARD ── */
+    .post-card {
+      background:var(--white); border-radius:16px; padding:1.25rem;
+      margin-bottom:0.75rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      animation:fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+    .post-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; }
+    .post-avatar {
+      width:40px; height:40px; border-radius:50%; background:var(--navy);
+      display:flex; align-items:center; justify-content:center;
+      color:var(--gold-light); font-weight:700; font-size:1rem; flex-shrink:0;
+    }
+    .post-name { font-weight:700; font-size:0.95rem; color:var(--navy); }
+    .post-time { font-size:0.75rem; color:var(--muted); }
+    .post-church { font-size:0.75rem; color:var(--muted); }
+
+    .post-section { margin-bottom:0.75rem; }
+    .post-section-label {
+      font-size:0.7rem; font-weight:700; letter-spacing:0.08em;
+      padding:0.2rem 0.5rem; border-radius:4px; display:inline-block; margin-bottom:0.3rem;
+    }
+    .label-stop { background:#e8eaf6; color:#3949ab; }
+    .label-stay { background:#e8f5e9; color:#2e7d32; }
+    .label-step { background:#fff8e1; color:#f57f17; }
+    .label-free { background:#f3e5f5; color:#6a1b9a; }
+    .post-text { font-size:0.9rem; line-height:1.7; color:var(--text); white-space:pre-wrap; }
+
+    .post-image { width:100%; border-radius:10px; margin-top:0.75rem; cursor:pointer; }
+
+    .post-footer {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-top:1rem; padding-top:0.75rem; border-top:1px solid var(--border);
+    }
+    .like-btn {
+      background:none; border:1px solid var(--border); border-radius:100px;
+      padding:0.3rem 0.85rem; font-size:0.85rem; cursor:pointer;
+      display:flex; align-items:center; gap:0.35rem; transition:all 0.2s;
+      color:var(--muted);
+    }
+    .like-btn:hover, .like-btn.liked { background:#fff0f3; border-color:#f06292; color:#c2185b; }
+    .post-scripture-tag {
+      font-size:0.75rem; color:var(--muted); background:#f3f4f6;
+      padding:0.2rem 0.6rem; border-radius:100px;
+    }
+
+    /* ── IMAGE MODAL ── */
+    #img-modal {
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9);
+      z-index:200; align-items:center; justify-content:center;
+    }
+    #img-modal.open { display:flex; }
+    #img-modal img { max-width:90vw; max-height:90vh; border-radius:8px; }
+    #img-modal-close {
+      position:absolute; top:1rem; right:1rem; color:white; font-size:2rem;
+      cursor:pointer; background:none; border:none;
+    }
+
+    /* ── BOTTOM NAV (모바일 앱 느낌) ── */
+    .bottom-nav {
+      display:none; position:fixed; bottom:0; left:0; right:0;
+      background:var(--white); border-top:1px solid var(--border);
+      padding:0.5rem 0 0.25rem;
+    }
+    .bottom-nav-inner { display:flex; justify-content:space-around; }
+    .bottom-nav-item { text-align:center; text-decoration:none; color:var(--muted); font-size:0.65rem; }
+    .bottom-nav-item .icon { font-size:1.4rem; display:block; }
+    .bottom-nav-item.active { color:var(--navy); }
+
+    @media (max-width:480px) {
+      .bottom-nav { display:block; }
+      .container { padding-bottom:5rem; }
+      .form-row-2 { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-back">← Win the Day</a>
+  <span class="nav-title">📖 오늘의 묵상</span>
+  <a href="http://pf.kakao.com/_SxixjhG" target="_blank" class="nav-kakao">💬 채널</a>
+</nav>
+
+<!-- FIREBASE SETUP BANNER -->
+<div class="container" style="margin-top:0.75rem">
+  <div id="setup-banner">
+    <h3>⚙️ Firebase 설정이 필요합니다</h3>
+    <ol>
+      <li><a href="https://console.firebase.google.com" target="_blank">Firebase 콘솔</a>에서 새 프로젝트 생성 (예: win-the-day)</li>
+      <li>웹 앱 추가 → 구성 코드 복사</li>
+      <li>이 파일의 <code>FIREBASE_CONFIG</code> 부분에 붙여넣기</li>
+      <li>Firestore Database → 테스트 모드로 시작</li>
+      <li>Storage → 시작</li>
+    </ol>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- DATE NAV -->
+  <div class="date-nav">
+    <button class="date-btn" id="prev-btn" onclick="changeDate(-1)">◀</button>
+    <div class="date-center">
+      <div class="date-display" id="date-display">로딩 중...</div>
+      <button class="date-today-btn" onclick="goToday()">오늘로</button>
+    </div>
+    <button class="date-btn" id="next-btn" onclick="changeDate(1)">▶</button>
+  </div>
+
+  <!-- SCRIPTURE CARD -->
+  <div class="scripture-card">
+    <div class="scripture-label">📅 2026 매일성경 읽기표</div>
+    <div class="scripture-ref" id="scripture-ref">로딩 중...</div>
+    <div class="scripture-date" id="scripture-date"></div>
+    <div class="scripture-card-footer">
+      <span class="post-count" id="post-count">묵상 0개</span>
+      <span class="challenge-day" id="challenge-day"></span>
+    </div>
+  </div>
+
+  <!-- POST FORM -->
+  <div class="post-form">
+    <h3>✍️ 오늘의 묵상 나누기</h3>
+
+    <div id="post-form-inner">
+      <div class="form-row-2">
+        <div class="form-row">
+          <label class="form-label">이름 *</label>
+          <input class="form-input" id="input-name" type="text" placeholder="홍길동" maxlength="10" />
+        </div>
+        <div class="form-row">
+          <label class="form-label">소속 교회 (선택)</label>
+          <input class="form-input" id="input-church" type="text" placeholder="OO교회" maxlength="20" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">묵상 방식</label>
+        <select class="form-select" id="input-mode" onchange="toggleMode()">
+          <option value="stop-stay-step">STOP → STAY → STEP</option>
+          <option value="free">자유 묵상</option>
+        </select>
+      </div>
+
+      <!-- STOP-STAY-STEP 모드 -->
+      <div id="mode-sss">
+        <div class="form-row">
+          <label class="form-label">🛑 STOP — 마음에 닿은 구절</label>
+          <input class="form-input" id="input-stop" type="text" placeholder="내게 말씀하신 한 구절..." />
+        </div>
+        <div class="form-row">
+          <label class="form-label">📚 STAY — 묵상 (SPACE 적용)</label>
+          <textarea class="form-textarea" id="input-stay" placeholder="S(죄): &#10;P(약속): &#10;A(행동): &#10;C(명령): &#10;E(본):"></textarea>
+        </div>
+        <div class="form-row">
+          <label class="form-label">👣 STEP — 오늘의 한 가지 적용</label>
+          <input class="form-input" id="input-step" type="text" placeholder="오늘 실제로 할 것..." />
+        </div>
+      </div>
+
+      <!-- 자유 묵상 모드 -->
+      <div id="mode-free" style="display:none">
+        <div class="form-row">
+          <label class="form-label">💭 묵상 내용</label>
+          <textarea class="form-textarea" id="input-free" placeholder="오늘 말씀을 통해 하나님이 내게 말씀하신 것을 나눠주세요..."></textarea>
+        </div>
+      </div>
+
+      <!-- IMAGE UPLOAD -->
+      <div class="form-row">
+        <label class="form-label">📷 묵상 이미지 (선택)</label>
+        <div class="image-upload-area" id="upload-area">
+          <input type="file" id="input-image" accept="image/*" onchange="previewImage(event)" />
+          <div class="image-upload-icon">📷</div>
+          <div class="image-upload-text">사진을 탭하거나 클릭해서 첨부<br><small>(성경책, 노트, 아침 풍경 등)</small></div>
+        </div>
+        <img id="image-preview" src="" alt="미리보기" />
+        <button id="remove-image-btn" style="display:none;font-size:0.8rem;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:4px" onclick="removeImage()">✕ 이미지 제거</button>
+      </div>
+
+      <button class="submit-btn" id="submit-btn" onclick="submitPost()">
+        🏆 묵상 올리기
+      </button>
+    </div>
+
+    <div class="submit-success" id="submit-success">
+      🎉 묵상이 올라갔습니다! 오늘도 Win the Day!
+    </div>
+  </div>
+
+  <!-- FEED -->
+  <div class="feed-header" id="feed-header">📣 오늘 함께한 묵상</div>
+  <div id="feed-container">
+    <div class="loading">불러오는 중...</div>
+  </div>
+
+</div>
+
+<!-- IMAGE MODAL -->
+<div id="img-modal" onclick="closeModal()">
+  <button id="img-modal-close">✕</button>
+  <img id="modal-img" src="" alt="" />
+</div>
+
+<!-- BOTTOM NAV (모바일) -->
+<div class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item">
+      <span class="icon">🏠</span>홈
+    </a>
+    <a href="community.html" class="bottom-nav-item active">
+      <span class="icon">📖</span>묵상
+    </a>
+    <a href="index.html#chart" class="bottom-nav-item">
+      <span class="icon">📋</span>차트
+    </a>
+    <a href="http://pf.kakao.com/_SxixjhG" target="_blank" class="bottom-nav-item">
+      <span class="icon">💬</span>채널
+    </a>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="bible-readings-2026.js"></script>
+<script>
+// ── FIREBASE 설정 ──────────────────────────────────────────────
+// ⚠️ 아래 값을 Firebase 콘솔에서 복사한 값으로 교체하세요
+const FIREBASE_CONFIG = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+// ──────────────────────────────────────────────────────────────
+
+let db = null;
+let storage = null;
+let isFirebaseReady = false;
+
+function initFirebase() {
+  try {
+    if (FIREBASE_CONFIG.apiKey === "YOUR_API_KEY") {
+      document.getElementById('setup-banner').style.display = 'block';
+      renderDemoFeed();
+      return;
+    }
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+    storage = firebase.storage();
+    isFirebaseReady = true;
+  } catch(e) {
+    console.error('Firebase init error:', e);
+    document.getElementById('setup-banner').style.display = 'block';
+    renderDemoFeed();
+  }
+}
+
+// ── 날짜 관리 ──
+let currentDateStr = '';
+
+function getTodayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function formatDateKorean(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  const days = ['일','월','화','수','목','금','토'];
+  const date = new Date(+y, +m-1, +d);
+  return `${+m}월 ${+d}일 (${days[date.getDay()]})`;
+}
+
+function getChallengeDay(dateStr) {
+  const start = new Date('2026-01-01');
+  const current = new Date(dateStr);
+  const diff = Math.floor((current - start) / 86400000) + 1;
+  if (diff >= 1 && diff <= 365) return `Day ${diff}`;
+  return '';
+}
+
+function initDate() {
+  currentDateStr = getTodayStr();
+  updateDateUI();
+}
+
+function updateDateUI() {
+  document.getElementById('date-display').textContent = formatDateKorean(currentDateStr);
+  const scripture = getReadingByDate(currentDateStr);
+  document.getElementById('scripture-ref').textContent = scripture;
+  document.getElementById('scripture-date').textContent = currentDateStr;
+  const day = getChallengeDay(currentDateStr);
+  document.getElementById('challenge-day').textContent = day ? `🏆 ${day}` : '';
+  document.getElementById('next-btn').disabled = currentDateStr >= getTodayStr();
+  if (isFirebaseReady) loadFeed();
+}
+
+function changeDate(delta) {
+  const d = new Date(currentDateStr);
+  d.setDate(d.getDate() + delta);
+  const newStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  if (newStr > getTodayStr()) return;
+  currentDateStr = newStr;
+  updateDateUI();
+}
+
+function goToday() {
+  currentDateStr = getTodayStr();
+  updateDateUI();
+}
+
+// ── 이미지 처리 ──
+let selectedImageFile = null;
+
+function previewImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    alert('이미지 크기는 5MB 이하로 해주세요');
+    return;
+  }
+  selectedImageFile = file;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const preview = document.getElementById('image-preview');
+    preview.src = ev.target.result;
+    preview.style.display = 'block';
+    document.getElementById('remove-image-btn').style.display = 'block';
+    document.querySelector('.image-upload-area .image-upload-text').textContent = '이미지 선택됨';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeImage() {
+  selectedImageFile = null;
+  document.getElementById('image-preview').style.display = 'none';
+  document.getElementById('remove-image-btn').style.display = 'none';
+  document.getElementById('input-image').value = '';
+  document.querySelector('.image-upload-area .image-upload-text').innerHTML =
+    '사진을 탭하거나 클릭해서 첨부<br><small>(성경책, 노트, 아침 풍경 등)</small>';
+}
+
+function toggleMode() {
+  const mode = document.getElementById('input-mode').value;
+  document.getElementById('mode-sss').style.display = mode === 'stop-stay-step' ? 'block' : 'none';
+  document.getElementById('mode-free').style.display = mode === 'free' ? 'block' : 'none';
+}
+
+// ── 게시 ──
+async function submitPost() {
+  if (!isFirebaseReady) {
+    alert('Firebase 설정이 필요합니다. 상단 안내를 확인해주세요.');
+    return;
+  }
+  const name = document.getElementById('input-name').value.trim();
+  if (!name) { alert('이름을 입력해주세요'); return; }
+
+  const mode = document.getElementById('input-mode').value;
+  let content = {};
+
+  if (mode === 'stop-stay-step') {
+    content.stop = document.getElementById('input-stop').value.trim();
+    content.stay = document.getElementById('input-stay').value.trim();
+    content.step = document.getElementById('input-step').value.trim();
+    if (!content.stop && !content.stay && !content.step) {
+      alert('묵상 내용을 하나 이상 입력해주세요');
+      return;
+    }
+  } else {
+    content.free = document.getElementById('input-free').value.trim();
+    if (!content.free) { alert('묵상 내용을 입력해주세요'); return; }
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '올리는 중...';
+
+  try {
+    let imageUrl = null;
+
+    // 이미지 업로드
+    if (selectedImageFile && storage) {
+      const ref = storage.ref(`meditations/${currentDateStr}/${Date.now()}_${selectedImageFile.name}`);
+      await ref.put(selectedImageFile);
+      imageUrl = await ref.getDownloadURL();
+    }
+
+    const postData = {
+      name,
+      church: document.getElementById('input-church').value.trim() || null,
+      date: currentDateStr,
+      scripture: getReadingByDate(currentDateStr),
+      mode,
+      content,
+      imageUrl,
+      likes: 0,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    await db.collection('meditations').add(postData);
+
+    // 성공
+    document.getElementById('post-form-inner').style.display = 'none';
+    document.getElementById('submit-success').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('post-form-inner').style.display = 'block';
+      document.getElementById('submit-success').style.display = 'none';
+      btn.disabled = false;
+      btn.textContent = '🏆 묵상 올리기';
+      // 폼 초기화
+      ['input-name','input-stop','input-stay','input-step','input-free','input-church'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      removeImage();
+    }, 2500);
+
+  } catch(e) {
+    console.error(e);
+    alert('오류가 발생했습니다: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '🏆 묵상 올리기';
+  }
+}
+
+// ── 피드 로드 ──
+let unsubscribe = null;
+
+function loadFeed() {
+  if (unsubscribe) unsubscribe();
+  document.getElementById('feed-container').innerHTML = '<div class="loading">불러오는 중...</div>';
+
+  unsubscribe = db.collection('meditations')
+    .where('date', '==', currentDateStr)
+    .orderBy('timestamp', 'desc')
+    .onSnapshot(snapshot => {
+      const count = snapshot.size;
+      document.getElementById('post-count').textContent = `묵상 ${count}개`;
+      document.getElementById('feed-header').textContent = `📣 ${formatDateKorean(currentDateStr)} 묵상 (${count}개)`;
+      if (count === 0) {
+        document.getElementById('feed-container').innerHTML = `
+          <div class="feed-empty">
+            <div class="feed-empty-icon">🌅</div>
+            아직 오늘의 묵상이 없습니다<br>첫 번째로 묵상을 나눠보세요!
+          </div>`;
+        return;
+      }
+      document.getElementById('feed-container').innerHTML = snapshot.docs.map(doc => renderPost(doc.id, doc.data())).join('');
+    }, err => {
+      console.error(err);
+      document.getElementById('feed-container').innerHTML = '<div class="loading">불러오기 실패. Firebase 설정을 확인해주세요.</div>';
+    });
+}
+
+function renderPost(id, data) {
+  const initial = data.name?.[0]?.toUpperCase() || '?';
+  const time = data.timestamp?.toDate
+    ? formatTime(data.timestamp.toDate())
+    : '방금 전';
+
+  let contentHtml = '';
+  if (data.mode === 'stop-stay-step') {
+    if (data.content?.stop) contentHtml += `
+      <div class="post-section">
+        <span class="post-section-label label-stop">🛑 STOP</span>
+        <div class="post-text">${escHtml(data.content.stop)}</div>
+      </div>`;
+    if (data.content?.stay) contentHtml += `
+      <div class="post-section">
+        <span class="post-section-label label-stay">📚 STAY</span>
+        <div class="post-text">${escHtml(data.content.stay)}</div>
+      </div>`;
+    if (data.content?.step) contentHtml += `
+      <div class="post-section">
+        <span class="post-section-label label-step">👣 STEP</span>
+        <div class="post-text">${escHtml(data.content.step)}</div>
+      </div>`;
+  } else {
+    contentHtml = `
+      <div class="post-section">
+        <span class="post-section-label label-free">💭 묵상</span>
+        <div class="post-text">${escHtml(data.content?.free || '')}</div>
+      </div>`;
+  }
+
+  const imgHtml = data.imageUrl
+    ? `<img class="post-image" src="${data.imageUrl}" alt="묵상 이미지" loading="lazy" onclick="openModal('${data.imageUrl}')" />`
+    : '';
+
+  return `
+    <div class="post-card" id="post-${id}">
+      <div class="post-header">
+        <div class="post-avatar">${initial}</div>
+        <div>
+          <div class="post-name">${escHtml(data.name)}${data.church ? ` <span class="post-church">· ${escHtml(data.church)}</span>` : ''}</div>
+          <div class="post-time">${time}</div>
+        </div>
+      </div>
+      ${contentHtml}
+      ${imgHtml}
+      <div class="post-footer">
+        <button class="like-btn" id="like-${id}" onclick="toggleLike('${id}', ${data.likes || 0})">
+          ❤️ ${data.likes || 0}
+        </button>
+        <span class="post-scripture-tag">${escHtml(data.scripture || '')}</span>
+      </div>
+    </div>`;
+}
+
+// ── 좋아요 ──
+const likedPosts = new Set(JSON.parse(localStorage.getItem('liked') || '[]'));
+
+async function toggleLike(id, currentLikes) {
+  if (!isFirebaseReady) return;
+  const isLiked = likedPosts.has(id);
+  const newLikes = isLiked ? currentLikes - 1 : currentLikes + 1;
+  const btn = document.getElementById(`like-${id}`);
+  if (btn) {
+    btn.textContent = `❤️ ${newLikes}`;
+    btn.classList.toggle('liked', !isLiked);
+  }
+  if (isLiked) likedPosts.delete(id); else likedPosts.add(id);
+  localStorage.setItem('liked', JSON.stringify([...likedPosts]));
+  await db.collection('meditations').doc(id).update({ likes: newLikes });
+}
+
+// ── 데모 피드 (Firebase 미설정 시) ──
+function renderDemoFeed() {
+  document.getElementById('post-count').textContent = '묵상 2개 (데모)';
+  document.getElementById('feed-container').innerHTML = `
+    <div style="background:#fff3cd;border-radius:8px;padding:0.75rem;margin-bottom:0.75rem;font-size:0.8rem;color:#856404">
+      📌 데모 모드입니다. Firebase 설정 후 실제 묵상을 나눌 수 있습니다.
+    </div>
+    ${renderPost('demo1', {
+      name:'이승목', church:'OO교회', date:currentDateStr,
+      scripture: getReadingByDate(currentDateStr),
+      mode:'stop-stay-step',
+      content:{ stop:'"부활하신 예수님을 처음 만난 막달라 마리아"', stay:'P(약속): 예수님은 반드시 찾아오신다\nA(행동): 오늘도 말씀 앞에 먼저 멈추기', step:'아침에 핸드폰 보기 전 성경 먼저 펴기' },
+      imageUrl:null, likes:5,
+      timestamp:{ toDate:()=>new Date() }
+    })}
+    ${renderPost('demo2', {
+      name:'홍길동', church:'', date:currentDateStr,
+      scripture: getReadingByDate(currentDateStr),
+      mode:'free',
+      content:{ free:'오늘 말씀을 읽으며 하나님의 신실하심이 느껴졌습니다. Win the Day!'},
+      imageUrl:null, likes:2,
+      timestamp:{ toDate:()=>new Date(Date.now()-600000) }
+    })}`;
+}
+
+// ── 유틸 ──
+function formatTime(date) {
+  const now = new Date();
+  const diff = Math.floor((now - date) / 1000);
+  if (diff < 60) return '방금 전';
+  if (diff < 3600) return `${Math.floor(diff/60)}분 전`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}시간 전`;
+  return `${date.getMonth()+1}/${date.getDate()}`;
+}
+
+function escHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function openModal(url) {
+  document.getElementById('modal-img').src = url;
+  document.getElementById('img-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('img-modal').classList.remove('open');
+}
+
+// ── 초기화 ──
+initDate();
+initFirebase();
+if (isFirebaseReady) loadFeed();
+
+// PWA 서비스워커 등록
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
