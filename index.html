@@ -20,6 +20,8 @@
       --navy-light: #243560;
       --gold: #c9980a;
       --gold-light: #f0c040;
+      --crimson: #8b1a4a;
+      --crimson-light: #b52260;
       --cream: #faf6ee;
       --cream-dark: #f0e8d0;
       --green: #1c4a2e;
@@ -55,15 +57,16 @@
     }
 
     .nav-logo {
-      font-family: 'Noto Serif KR', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--gold-light);
       text-decoration: none;
-      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
     }
 
-    .nav-logo span { color: var(--white); }
+    .nav-logo img {
+      height: 32px;
+      filter: brightness(0) invert(1);
+      object-fit: contain;
+    }
 
     .nav-links {
       display: flex;
@@ -123,7 +126,7 @@
     /* ──────────── HERO ──────────── */
     .hero {
       min-height: 100vh;
-      background: linear-gradient(135deg, var(--navy) 0%, #0f1c3a 60%, #1c3a1c 100%);
+      background: linear-gradient(160deg, #0f1c3a 0%, #1a2744 50%, #2a1020 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -137,14 +140,25 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, rgba(201,152,10,0.15) 0%, transparent 70%);
+      background: radial-gradient(ellipse at 50% 35%, rgba(139,26,74,0.2) 0%, transparent 65%);
+    }
+
+    .hero-logo-wrap {
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-logo-img {
+      max-width: min(480px, 85vw);
+      width: 100%;
+      filter: brightness(0) invert(1);
+      drop-shadow: 0 4px 24px rgba(0,0,0,0.5);
     }
 
     .hero-badge {
       display: inline-block;
-      background: rgba(201,152,10,0.2);
-      border: 1px solid rgba(201,152,10,0.5);
-      color: var(--gold-light);
+      background: rgba(139,26,74,0.25);
+      border: 1px solid rgba(139,26,74,0.6);
+      color: #e880a8;
       font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 0.15em;
@@ -155,10 +169,10 @@
 
     .hero-title {
       font-family: 'Noto Serif KR', serif;
-      font-size: clamp(2.5rem, 8vw, 5.5rem);
+      font-size: clamp(2rem, 6vw, 4rem);
       font-weight: 700;
       color: var(--white);
-      line-height: 1.15;
+      line-height: 1.2;
       margin-bottom: 0.5rem;
       letter-spacing: -0.03em;
     }
@@ -955,7 +969,7 @@
 
 <!-- ── NAV ── -->
 <nav id="navbar">
-  <a href="#" class="nav-logo">Win the <span>Day</span></a>
+  <a href="#" class="nav-logo"><img src="logo.png" alt="Win the Day" /></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#vision">비전</a></li>
     <li><a href="#method">3단계</a></li>
@@ -974,7 +988,10 @@
 <!-- ── HERO ── -->
 <section class="hero" id="home">
   <div>
-    <div class="hero-badge">🏆 WIN THE DAY MOVEMENT</div>
+    <div class="hero-logo-wrap">
+      <img src="logo.png" alt="Win the Day" class="hero-logo-img" />
+    </div>
+    <div class="hero-badge">✝ 말씀으로 하루를 이기는 운동</div>
     <h1 class="hero-title">
       아침에 핸드폰 대신<br><span class="gold">성경을 먼저 잡으라</span>
     </h1>
