@@ -8,379 +8,740 @@
   <link rel="manifest" href="manifest.json" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet" />
 
-  <!-- ⚠️ Firebase 설정 — Firebase 콘솔에서 복사해 아래를 교체하세요 -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 
   <style>
     :root {
-      --navy: #1a2744;
-      --gold: #c9980a;
+      --navy:    #1a2744;
+      --crimson: #8b1a4a;
+      --gold:    #c9980a;
       --gold-light: #f0c040;
-      --cream: #faf6ee;
-      --green: #1c4a2e;
-      --text: #1a1a2e;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --white: #ffffff;
+      --cream:   #faf6ee;
+      --green:   #1c4a2e;
+      --text:    #1a1a2e;
+      --muted:   #6b7280;
+      --border:  #e5e7eb;
+      --white:   #ffffff;
+      --bg:      #f3f4f6;
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
     html { scroll-behavior:smooth; }
-    body { font-family:'Noto Sans KR',sans-serif; background:#f3f4f6; color:var(--text); }
+    body {
+      font-family:'Noto Sans KR', sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
 
-    /* ── NAV ── */
-    nav {
+    /* ── HEADER ── */
+    .app-header {
       background:var(--navy);
-      padding:0 1rem;
       height:56px;
       display:flex;
       align-items:center;
       justify-content:space-between;
+      padding:0 1rem;
       position:sticky;
       top:0;
-      z-index:50;
+      z-index:100;
+      box-shadow:0 2px 12px rgba(0,0,0,0.25);
     }
-    .nav-back { color:rgba(255,255,255,0.7); text-decoration:none; font-size:0.9rem; }
-    .nav-back:hover { color:var(--white); }
-    .nav-title { font-family:'Noto Serif KR',serif; color:var(--gold-light); font-size:1rem; font-weight:700; }
-    .nav-kakao {
-      background:#FEE500; color:#3C1E1E; padding:0.35rem 0.85rem;
-      border-radius:100px; font-size:0.8rem; font-weight:700; text-decoration:none;
+    .header-back {
+      color:rgba(255,255,255,0.75);
+      text-decoration:none;
+      font-size:1.4rem;
+      line-height:1;
+      padding:0.4rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:8px;
+      transition:background 0.15s;
+    }
+    .header-back:hover { background:rgba(255,255,255,0.1); color:var(--white); }
+    .header-logo img {
+      height:26px;
+      filter:brightness(0) invert(1);
+      vertical-align:middle;
+      display:block;
+    }
+    .header-kakao {
+      background:#FEE500;
+      color:#3C1E1E;
+      padding:0.3rem 0.75rem;
+      border-radius:100px;
+      font-size:0.8rem;
+      font-weight:700;
+      text-decoration:none;
+      white-space:nowrap;
     }
 
-    /* ── MAIN LAYOUT ── */
+    /* ── STREAK BANNER ── */
+    .streak-banner {
+      background:linear-gradient(135deg, var(--crimson) 0%, #6b1238 100%);
+      padding:1.1rem 1.25rem;
+      color:var(--white);
+    }
+    .streak-inner { max-width:680px; margin:0 auto; }
+    .streak-top {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:0.65rem;
+    }
+    .streak-day {
+      font-size:1.5rem;
+      font-weight:700;
+      font-family:'Noto Serif KR', serif;
+      letter-spacing:-0.5px;
+    }
+    .streak-sub {
+      font-size:0.82rem;
+      color:rgba(255,255,255,0.8);
+      margin-top:0.15rem;
+    }
+    .streak-badge {
+      background:rgba(255,255,255,0.15);
+      border-radius:100px;
+      padding:0.3rem 0.8rem;
+      font-size:0.8rem;
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .streak-bar-wrap {
+      background:rgba(255,255,255,0.2);
+      border-radius:100px;
+      height:7px;
+      overflow:hidden;
+    }
+    .streak-bar-fill {
+      height:100%;
+      background:var(--gold-light);
+      border-radius:100px;
+      transition:width 0.6s ease;
+    }
+    .streak-no-start {
+      font-size:0.88rem;
+      color:rgba(255,255,255,0.9);
+      display:flex;
+      align-items:center;
+      gap:0.75rem;
+      flex-wrap:wrap;
+    }
+    .streak-no-start a {
+      background:rgba(255,255,255,0.2);
+      color:var(--white);
+      text-decoration:none;
+      padding:0.3rem 0.85rem;
+      border-radius:100px;
+      font-size:0.8rem;
+      font-weight:700;
+      border:1px solid rgba(255,255,255,0.4);
+    }
+
+    /* ── CONTAINER ── */
     .container { max-width:680px; margin:0 auto; padding:1rem; }
+    @media (max-width:480px) { .container { padding:0.75rem; padding-bottom:5.5rem; } }
 
     /* ── FIREBASE SETUP BANNER ── */
     #setup-banner {
-      background:#fff3cd; border:1px solid #ffc107; border-radius:12px;
-      padding:1.25rem; margin-bottom:1rem; display:none;
+      background:#fff3cd;
+      border:1px solid #ffc107;
+      border-radius:12px;
+      padding:1.1rem 1.25rem;
+      margin-bottom:1rem;
+      display:none;
     }
-    #setup-banner h3 { color:#856404; font-size:0.95rem; margin-bottom:0.5rem; }
-    #setup-banner ol { padding-left:1.25rem; font-size:0.85rem; color:#856404; line-height:1.8; }
+    #setup-banner h3 { color:#856404; font-size:0.9rem; margin-bottom:0.4rem; }
+    #setup-banner ol { padding-left:1.25rem; font-size:0.82rem; color:#856404; line-height:1.9; }
     #setup-banner a { color:#856404; }
 
-    /* ── DATE NAV ── */
-    .date-nav {
-      background:var(--white); border-radius:16px; padding:1rem 1.25rem;
-      display:flex; align-items:center; justify-content:space-between;
-      margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);
-    }
-    .date-btn {
-      background:none; border:2px solid var(--border); border-radius:8px;
-      padding:0.4rem 0.85rem; font-size:1rem; cursor:pointer;
-      transition:all 0.2s; color:var(--text);
-    }
-    .date-btn:hover { border-color:var(--navy); color:var(--navy); }
-    .date-btn:disabled { opacity:0.3; cursor:not-allowed; }
-    .date-center { text-align:center; }
-    .date-display { font-size:0.95rem; font-weight:700; color:var(--navy); }
-    .date-today-btn {
-      font-size:0.75rem; color:var(--gold); background:none; border:none;
-      cursor:pointer; margin-top:2px; display:block; text-align:center;
-    }
-
-    /* ── SCRIPTURE CARD ── */
+    /* ── TODAY SCRIPTURE CARD ── */
     .scripture-card {
       background:linear-gradient(135deg, var(--navy) 0%, #243560 100%);
-      border-radius:20px; padding:1.75rem; margin-bottom:1rem;
-      box-shadow:0 4px 20px rgba(26,39,68,0.3);
+      border-radius:20px;
+      padding:1.5rem 1.5rem 1.25rem;
+      margin-bottom:0.9rem;
+      box-shadow:0 4px 20px rgba(26,39,68,0.25);
     }
-    .scripture-label {
-      font-size:0.75rem; color:rgba(255,255,255,0.5); letter-spacing:0.1em;
-      font-weight:700; margin-bottom:0.5rem;
+    .scripture-date-label {
+      font-size:0.75rem;
+      color:rgba(255,255,255,0.55);
+      letter-spacing:0.06em;
+      font-weight:700;
+      margin-bottom:0.35rem;
     }
     .scripture-ref {
-      font-family:'Noto Serif KR',serif; font-size:1.5rem; font-weight:700;
-      color:var(--gold-light); margin-bottom:0.25rem;
+      font-family:'Noto Serif KR', serif;
+      font-size:1.45rem;
+      font-weight:700;
+      color:var(--gold-light);
+      margin-bottom:0.25rem;
+      line-height:1.3;
     }
-    .scripture-date { font-size:0.85rem; color:rgba(255,255,255,0.5); }
+    .scripture-card-meta {
+      font-size:0.82rem;
+      color:rgba(255,255,255,0.5);
+    }
     .scripture-card-footer {
-      margin-top:1.25rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.1);
-      display:flex; align-items:center; justify-content:space-between;
+      margin-top:1.1rem;
+      padding-top:0.9rem;
+      border-top:1px solid rgba(255,255,255,0.12);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:0.5rem;
     }
-    .post-count { font-size:0.85rem; color:rgba(255,255,255,0.6); }
-    .challenge-day { font-size:0.8rem; color:var(--gold-light); font-weight:500; }
+    .post-count-badge {
+      font-size:0.8rem;
+      color:rgba(255,255,255,0.65);
+    }
+    .write-now-btn {
+      background:var(--gold);
+      color:var(--navy);
+      border:none;
+      border-radius:100px;
+      padding:0.4rem 1rem;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.82rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:background 0.15s, transform 0.1s;
+    }
+    .write-now-btn:hover { background:var(--gold-light); }
+    .write-now-btn:active { transform:scale(0.97); }
 
-    /* ── POST FORM ── */
-    .post-form {
-      background:var(--white); border-radius:20px; padding:1.5rem;
-      margin-bottom:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);
+    /* ── FORM ACCORDION ── */
+    .form-accordion {
+      background:var(--white);
+      border-radius:20px;
+      margin-bottom:0.9rem;
+      box-shadow:0 2px 8px rgba(0,0,0,0.07);
+      overflow:hidden;
     }
-    .post-form h3 {
-      font-family:'Noto Serif KR',serif; font-size:1.1rem; color:var(--navy);
+    .form-toggle-row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:1rem 1.25rem;
+      cursor:pointer;
+      user-select:none;
+      transition:background 0.15s;
+    }
+    .form-toggle-row:hover { background:#f9f9fb; }
+    .form-toggle-label {
+      font-size:0.95rem;
+      color:var(--muted);
+      font-weight:500;
+    }
+    .form-toggle-arrow {
+      font-size:0.75rem;
+      color:var(--muted);
+      transition:transform 0.25s;
+    }
+    .form-toggle-arrow.open { transform:rotate(180deg); }
+
+    .form-body {
+      max-height:0;
+      overflow:hidden;
+      transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .form-body.open { max-height:2000px; }
+    .form-body-inner { padding:0 1.25rem 1.25rem; }
+
+    /* mode tabs */
+    .mode-tabs {
+      display:flex;
+      gap:0;
+      border:2px solid var(--border);
+      border-radius:10px;
+      overflow:hidden;
       margin-bottom:1rem;
     }
+    .mode-tab {
+      flex:1;
+      padding:0.5rem 0.5rem;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.82rem;
+      font-weight:700;
+      background:none;
+      border:none;
+      cursor:pointer;
+      color:var(--muted);
+      transition:background 0.15s, color 0.15s;
+      text-align:center;
+    }
+    .mode-tab.active {
+      background:var(--navy);
+      color:var(--white);
+    }
+
     .form-row { margin-bottom:0.85rem; }
-    .form-label { font-size:0.8rem; font-weight:700; color:var(--text); margin-bottom:0.3rem; display:block; }
-    .form-input, .form-textarea, .form-select {
-      width:100%; padding:0.7rem 0.9rem; border:2px solid var(--border); border-radius:10px;
-      font-family:'Noto Sans KR',sans-serif; font-size:0.9rem; color:var(--text);
-      outline:none; transition:border-color 0.2s; background:var(--white);
+    .form-label {
+      font-size:0.8rem;
+      font-weight:700;
+      color:var(--text);
+      margin-bottom:0.3rem;
+      display:block;
+    }
+    .form-input, .form-textarea {
+      width:100%;
+      padding:0.65rem 0.9rem;
+      border:2px solid var(--border);
+      border-radius:10px;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.9rem;
+      color:var(--text);
+      outline:none;
+      transition:border-color 0.2s;
+      background:var(--white);
     }
     .form-input:focus, .form-textarea:focus { border-color:var(--gold); }
-    .form-textarea { min-height:100px; resize:vertical; line-height:1.6; }
-    .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+    .form-textarea { min-height:90px; resize:vertical; line-height:1.65; }
+    .form-row-2 {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:0.75rem;
+      margin-bottom:0.85rem;
+    }
+    @media (max-width:400px) { .form-row-2 { grid-template-columns:1fr; } }
 
     /* image upload */
     .image-upload-area {
-      border:2px dashed var(--border); border-radius:10px; padding:1.25rem;
-      text-align:center; cursor:pointer; transition:all 0.2s; position:relative;
+      border:2px dashed var(--border);
+      border-radius:10px;
+      padding:1rem;
+      text-align:center;
+      cursor:pointer;
+      transition:all 0.2s;
+      position:relative;
     }
     .image-upload-area:hover { border-color:var(--gold); background:#fffdf5; }
-    .image-upload-area input { position:absolute; inset:0; opacity:0; cursor:pointer; }
-    .image-upload-icon { font-size:1.5rem; margin-bottom:0.25rem; }
-    .image-upload-text { font-size:0.8rem; color:var(--muted); }
-    #image-preview { width:100%; border-radius:8px; margin-top:0.5rem; display:none; max-height:200px; object-fit:cover; }
+    .image-upload-area input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+    .image-upload-icon { font-size:1.35rem; margin-bottom:0.2rem; }
+    .image-upload-text { font-size:0.78rem; color:var(--muted); }
+    #image-preview { width:100%; border-radius:8px; margin-top:0.5rem; display:none; max-height:180px; object-fit:cover; }
 
     .submit-btn {
-      width:100%; padding:0.9rem; background:var(--navy); color:var(--white);
-      border:none; border-radius:12px; font-family:'Noto Sans KR',sans-serif;
-      font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.2s;
-      margin-top:0.5rem;
+      width:100%;
+      padding:0.85rem;
+      background:var(--crimson);
+      color:var(--white);
+      border:none;
+      border-radius:12px;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:1rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:background 0.15s, transform 0.1s;
+      margin-top:0.25rem;
     }
-    .submit-btn:hover { background:#243560; }
+    .submit-btn:hover { background:#a12058; }
+    .submit-btn:active { transform:scale(0.98); }
     .submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+
     .submit-success {
-      display:none; background:#e8f5e9; border-radius:10px; padding:1rem;
-      text-align:center; color:var(--green); font-weight:500; font-size:0.9rem;
+      display:none;
+      background:#e8f5e9;
+      border-radius:10px;
+      padding:1rem;
+      text-align:center;
+      color:var(--green);
+      font-weight:500;
+      font-size:0.9rem;
+      margin:0 1.25rem 1.25rem;
     }
 
-    /* ── FEED ── */
-    .feed-header {
-      font-size:0.85rem; font-weight:700; color:var(--muted);
-      margin-bottom:0.75rem; padding-left:0.25rem;
+    /* ── FEED HEADER ── */
+    .feed-top {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:0.75rem;
+      flex-wrap:wrap;
+      gap:0.5rem;
     }
+    .feed-title {
+      font-size:0.88rem;
+      font-weight:700;
+      color:var(--muted);
+    }
+    .date-nav-row {
+      display:flex;
+      align-items:center;
+      gap:0.35rem;
+    }
+    .date-arrow {
+      background:none;
+      border:1.5px solid var(--border);
+      border-radius:6px;
+      width:28px;
+      height:28px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.8rem;
+      cursor:pointer;
+      color:var(--text);
+      transition:border-color 0.15s;
+    }
+    .date-arrow:hover { border-color:var(--navy); }
+    .date-arrow:disabled { opacity:0.3; cursor:not-allowed; }
+    .date-label-btn {
+      font-size:0.78rem;
+      font-weight:700;
+      color:var(--navy);
+      background:none;
+      border:none;
+      cursor:pointer;
+      padding:0 0.25rem;
+    }
+
+    /* ── EMPTY FEED ── */
     .feed-empty {
-      background:var(--white); border-radius:16px; padding:3rem 1.5rem;
-      text-align:center; color:var(--muted); font-size:0.9rem;
+      background:var(--white);
+      border-radius:16px;
+      padding:3rem 1.5rem;
+      text-align:center;
+      color:var(--muted);
+      font-size:0.9rem;
       box-shadow:0 2px 8px rgba(0,0,0,0.06);
     }
     .feed-empty-icon { font-size:3rem; margin-bottom:0.75rem; }
-    .loading { text-align:center; padding:2rem; color:var(--muted); }
+    .feed-empty p { margin-bottom:1rem; line-height:1.6; }
+    .feed-empty-btn {
+      background:var(--crimson);
+      color:var(--white);
+      border:none;
+      border-radius:100px;
+      padding:0.55rem 1.25rem;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.88rem;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .loading { text-align:center; padding:2rem; color:var(--muted); font-size:0.9rem; }
 
     /* ── POST CARD ── */
     .post-card {
-      background:var(--white); border-radius:16px; padding:1.25rem;
-      margin-bottom:0.75rem; box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      background:var(--white);
+      border-radius:16px;
+      padding:1.15rem 1.25rem;
+      margin-bottom:0.75rem;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
       animation:fadeIn 0.3s ease;
     }
     @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
 
-    .post-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; }
-    .post-avatar {
-      width:40px; height:40px; border-radius:50%; background:var(--navy);
-      display:flex; align-items:center; justify-content:center;
-      color:var(--gold-light); font-weight:700; font-size:1rem; flex-shrink:0;
+    .post-header {
+      display:flex;
+      align-items:center;
+      gap:0.75rem;
+      margin-bottom:0.9rem;
     }
-    .post-name { font-weight:700; font-size:0.95rem; color:var(--navy); }
-    .post-time { font-size:0.75rem; color:var(--muted); }
-    .post-church { font-size:0.75rem; color:var(--muted); }
+    .post-avatar {
+      width:38px; height:38px;
+      border-radius:50%;
+      background:var(--navy);
+      display:flex; align-items:center; justify-content:center;
+      color:var(--gold-light);
+      font-weight:700;
+      font-size:0.95rem;
+      flex-shrink:0;
+    }
+    .post-meta { flex:1; min-width:0; }
+    .post-name {
+      font-weight:700;
+      font-size:0.9rem;
+      color:var(--navy);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .post-name-church { font-weight:400; color:var(--muted); font-size:0.85rem; }
+    .post-time { font-size:0.72rem; color:var(--muted); margin-top:1px; }
 
-    .post-section { margin-bottom:0.75rem; }
+    .post-section { margin-bottom:0.65rem; }
     .post-section-label {
-      font-size:0.7rem; font-weight:700; letter-spacing:0.08em;
-      padding:0.2rem 0.5rem; border-radius:4px; display:inline-block; margin-bottom:0.3rem;
+      font-size:0.68rem;
+      font-weight:700;
+      letter-spacing:0.06em;
+      padding:0.18rem 0.5rem;
+      border-radius:4px;
+      display:inline-block;
+      margin-bottom:0.3rem;
     }
     .label-stop { background:#e8eaf6; color:#3949ab; }
     .label-stay { background:#e8f5e9; color:#2e7d32; }
     .label-step { background:#fff8e1; color:#f57f17; }
     .label-free { background:#f3e5f5; color:#6a1b9a; }
-    .post-text { font-size:0.9rem; line-height:1.7; color:var(--text); white-space:pre-wrap; }
+    .post-text { font-size:0.88rem; line-height:1.75; color:var(--text); white-space:pre-wrap; }
 
-    .post-image { width:100%; border-radius:10px; margin-top:0.75rem; cursor:pointer; }
+    .post-divider { height:1px; background:var(--border); margin:0.75rem 0; }
+
+    .post-image { width:100%; border-radius:10px; margin-top:0.5rem; cursor:pointer; display:block; }
 
     .post-footer {
-      display:flex; align-items:center; justify-content:space-between;
-      margin-top:1rem; padding-top:0.75rem; border-top:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:0.75rem;
+      padding-top:0.65rem;
+      border-top:1px solid var(--border);
     }
     .like-btn {
-      background:none; border:1px solid var(--border); border-radius:100px;
-      padding:0.3rem 0.85rem; font-size:0.85rem; cursor:pointer;
-      display:flex; align-items:center; gap:0.35rem; transition:all 0.2s;
+      background:none;
+      border:1px solid var(--border);
+      border-radius:100px;
+      padding:0.28rem 0.8rem;
+      font-size:0.82rem;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:0.3rem;
+      transition:all 0.15s;
       color:var(--muted);
     }
     .like-btn:hover, .like-btn.liked { background:#fff0f3; border-color:#f06292; color:#c2185b; }
     .post-scripture-tag {
-      font-size:0.75rem; color:var(--muted); background:#f3f4f6;
-      padding:0.2rem 0.6rem; border-radius:100px;
+      font-size:0.72rem;
+      color:var(--muted);
+      background:#f3f4f6;
+      padding:0.18rem 0.55rem;
+      border-radius:100px;
+      max-width:140px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     /* ── IMAGE MODAL ── */
     #img-modal {
-      display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9);
-      z-index:200; align-items:center; justify-content:center;
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.92);
+      z-index:200;
+      align-items:center;
+      justify-content:center;
     }
     #img-modal.open { display:flex; }
-    #img-modal img { max-width:90vw; max-height:90vh; border-radius:8px; }
+    #img-modal img { max-width:92vw; max-height:90vh; border-radius:8px; }
     #img-modal-close {
-      position:absolute; top:1rem; right:1rem; color:white; font-size:2rem;
+      position:absolute;
+      top:1rem; right:1rem;
+      color:white; font-size:2rem;
       cursor:pointer; background:none; border:none;
+      line-height:1;
     }
 
-    /* ── BOTTOM NAV (모바일 앱 느낌) ── */
-    .bottom-nav {
-      display:none; position:fixed; bottom:0; left:0; right:0;
-      background:var(--white); border-top:1px solid var(--border);
-      padding:0.5rem 0 0.25rem;
+    /* ── BOTTOM BAR (mobile) ── */
+    .bottom-bar {
+      display:none;
+      position:fixed;
+      bottom:0; left:0; right:0;
+      background:var(--white);
+      border-top:1px solid var(--border);
+      box-shadow:0 -2px 12px rgba(0,0,0,0.08);
+      padding:0.6rem 1rem 0.75rem;
+      z-index:90;
     }
-    .bottom-nav-inner { display:flex; justify-content:space-around; }
-    .bottom-nav-item { text-align:center; text-decoration:none; color:var(--muted); font-size:0.65rem; }
-    .bottom-nav-item .icon { font-size:1.4rem; display:block; }
-    .bottom-nav-item.active { color:var(--navy); }
-
-    @media (max-width:480px) {
-      .bottom-nav { display:block; }
-      .container { padding-bottom:5rem; }
-      .form-row-2 { grid-template-columns:1fr; }
+    .bottom-bar-inner {
+      display:flex;
+      gap:0.75rem;
+      max-width:680px;
+      margin:0 auto;
     }
+    .bottom-bar-btn {
+      flex:1;
+      padding:0.6rem 0.5rem;
+      border-radius:10px;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.8rem;
+      font-weight:700;
+      text-align:center;
+      text-decoration:none;
+      cursor:pointer;
+      border:none;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:0.1rem;
+      transition:background 0.15s;
+    }
+    .bottom-bar-btn .btn-icon { font-size:1.2rem; }
+    .bottom-bar-btn.outline {
+      background:none;
+      border:2px solid var(--border);
+      color:var(--text);
+    }
+    .bottom-bar-btn.outline:hover { border-color:var(--navy); }
+    .bottom-bar-btn.primary {
+      background:var(--crimson);
+      color:var(--white);
+    }
+    .bottom-bar-btn.primary:hover { background:#a12058; }
+    .bottom-bar-btn.kakao {
+      background:#FEE500;
+      color:#3C1E1E;
+    }
+    @media (max-width:480px) { .bottom-bar { display:block; } }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="index.html" class="nav-back">←</a>
-  <a href="index.html" style="text-decoration:none"><img src="logo.png" alt="Win the Day" style="height:28px;filter:brightness(0) invert(1);vertical-align:middle" /></a>
-  <a href="http://pf.kakao.com/_SxixjhG" target="_blank" class="nav-kakao">💬 채널</a>
-</nav>
+<!-- APP HEADER -->
+<header class="app-header">
+  <a href="index.html" class="header-back" aria-label="뒤로가기">&#8592;</a>
+  <a href="index.html" class="header-logo">
+    <img src="logo.png" alt="Win the Day" />
+  </a>
+  <a href="http://pf.kakao.com/_SxixjhG" target="_blank" rel="noopener noreferrer" class="header-kakao">💬 채널</a>
+</header>
 
-<!-- FIREBASE SETUP BANNER -->
-<div class="container" style="margin-top:0.75rem">
+<!-- STREAK BANNER -->
+<div class="streak-banner">
+  <div class="streak-inner" id="streak-inner">
+    <!-- JS renders content -->
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- FIREBASE SETUP BANNER -->
   <div id="setup-banner">
     <h3>⚙️ Firebase 설정이 필요합니다</h3>
     <ol>
-      <li><a href="https://console.firebase.google.com" target="_blank">Firebase 콘솔</a>에서 새 프로젝트 생성 (예: win-the-day)</li>
+      <li><a href="https://console.firebase.google.com" target="_blank" rel="noopener noreferrer">Firebase 콘솔</a>에서 새 프로젝트 생성</li>
       <li>웹 앱 추가 → 구성 코드 복사</li>
       <li>이 파일의 <code>FIREBASE_CONFIG</code> 부분에 붙여넣기</li>
       <li>Firestore Database → 테스트 모드로 시작</li>
       <li>Storage → 시작</li>
     </ol>
   </div>
-</div>
 
-<div class="container">
-
-  <!-- DATE NAV -->
-  <div class="date-nav">
-    <button class="date-btn" id="prev-btn" onclick="changeDate(-1)">◀</button>
-    <div class="date-center">
-      <div class="date-display" id="date-display">로딩 중...</div>
-      <button class="date-today-btn" onclick="goToday()">오늘로</button>
-    </div>
-    <button class="date-btn" id="next-btn" onclick="changeDate(1)">▶</button>
-  </div>
-
-  <!-- SCRIPTURE CARD -->
+  <!-- TODAY SCRIPTURE CARD -->
   <div class="scripture-card">
-    <div class="scripture-label">📅 2026 매일성경 읽기표</div>
-    <div class="scripture-ref" id="scripture-ref">로딩 중...</div>
-    <div class="scripture-date" id="scripture-date"></div>
+    <div class="scripture-date-label" id="scripture-date-label">📅 로딩 중...</div>
+    <div class="scripture-ref" id="scripture-ref">—</div>
+    <div class="scripture-card-meta" id="scripture-card-meta"></div>
     <div class="scripture-card-footer">
-      <span class="post-count" id="post-count">묵상 0개</span>
-      <span class="challenge-day" id="challenge-day"></span>
+      <span class="post-count-badge" id="post-count-badge">묵상 0개</span>
+      <button class="write-now-btn" onclick="openForm()">✍️ 묵상 나누기 ↓</button>
     </div>
   </div>
 
-  <!-- POST FORM -->
-  <div class="post-form">
-    <h3>✍️ 오늘의 묵상 나누기</h3>
-
-    <div id="post-form-inner">
-      <div class="form-row-2">
-        <div class="form-row">
-          <label class="form-label">이름 *</label>
-          <input class="form-input" id="input-name" type="text" placeholder="홍길동" maxlength="10" />
-        </div>
-        <div class="form-row">
-          <label class="form-label">소속 교회 (선택)</label>
-          <input class="form-input" id="input-church" type="text" placeholder="OO교회" maxlength="20" />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <label class="form-label">묵상 방식</label>
-        <select class="form-select" id="input-mode" onchange="toggleMode()">
-          <option value="stop-stay-step">STOP → STAY → STEP</option>
-          <option value="free">자유 묵상</option>
-        </select>
-      </div>
-
-      <!-- STOP-STAY-STEP 모드 -->
-      <div id="mode-sss">
-        <div class="form-row">
-          <label class="form-label">🛑 STOP — 마음에 닿은 구절</label>
-          <input class="form-input" id="input-stop" type="text" placeholder="내게 말씀하신 한 구절..." />
-        </div>
-        <div class="form-row">
-          <label class="form-label">📚 STAY — 묵상 (SPACE 적용)</label>
-          <textarea class="form-textarea" id="input-stay" placeholder="S(죄): &#10;P(약속): &#10;A(행동): &#10;C(명령): &#10;E(본):"></textarea>
-        </div>
-        <div class="form-row">
-          <label class="form-label">👣 STEP — 오늘의 한 가지 적용</label>
-          <input class="form-input" id="input-step" type="text" placeholder="오늘 실제로 할 것..." />
-        </div>
-      </div>
-
-      <!-- 자유 묵상 모드 -->
-      <div id="mode-free" style="display:none">
-        <div class="form-row">
-          <label class="form-label">💭 묵상 내용</label>
-          <textarea class="form-textarea" id="input-free" placeholder="오늘 말씀을 통해 하나님이 내게 말씀하신 것을 나눠주세요..."></textarea>
-        </div>
-      </div>
-
-      <!-- IMAGE UPLOAD -->
-      <div class="form-row">
-        <label class="form-label">📷 묵상 이미지 (선택)</label>
-        <div class="image-upload-area" id="upload-area">
-          <input type="file" id="input-image" accept="image/*" onchange="previewImage(event)" />
-          <div class="image-upload-icon">📷</div>
-          <div class="image-upload-text">사진을 탭하거나 클릭해서 첨부<br><small>(성경책, 노트, 아침 풍경 등)</small></div>
-        </div>
-        <img id="image-preview" src="" alt="미리보기" />
-        <button id="remove-image-btn" style="display:none;font-size:0.8rem;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:4px" onclick="removeImage()">✕ 이미지 제거</button>
-      </div>
-
-      <button class="submit-btn" id="submit-btn" onclick="submitPost()">
-        🏆 묵상 올리기
-      </button>
+  <!-- FORM ACCORDION -->
+  <div class="form-accordion" id="form-accordion">
+    <div class="form-toggle-row" onclick="toggleForm()" id="form-toggle-row">
+      <span class="form-toggle-label" id="form-toggle-label">✍️ 오늘의 묵상을 나눠주세요...</span>
+      <span class="form-toggle-arrow" id="form-toggle-arrow">▼</span>
     </div>
+    <div class="form-body" id="form-body">
+      <div class="form-body-inner">
+        <!-- NAME / CHURCH -->
+        <div class="form-row-2">
+          <div class="form-row" style="margin-bottom:0">
+            <label class="form-label">이름 *</label>
+            <input class="form-input" id="input-name" type="text" placeholder="홍길동" maxlength="10" autocomplete="nickname" />
+          </div>
+          <div class="form-row" style="margin-bottom:0">
+            <label class="form-label">소속 교회 (선택)</label>
+            <input class="form-input" id="input-church" type="text" placeholder="OO교회" maxlength="20" />
+          </div>
+        </div>
 
+        <!-- MODE TABS -->
+        <div class="form-row" style="margin-top:0.85rem">
+          <div class="mode-tabs">
+            <button class="mode-tab active" id="tab-sss" onclick="setMode('sss')">STOP/STAY/STEP</button>
+            <button class="mode-tab" id="tab-free" onclick="setMode('free')">자유 묵상</button>
+          </div>
+        </div>
+
+        <!-- STOP-STAY-STEP -->
+        <div id="mode-sss">
+          <div class="form-row">
+            <label class="form-label">🛑 STOP — 마음에 닿은 구절</label>
+            <input class="form-input" id="input-stop" type="text" placeholder="내게 말씀하신 한 구절..." />
+          </div>
+          <div class="form-row">
+            <label class="form-label">📚 STAY — 묵상 내용</label>
+            <textarea class="form-textarea" id="input-stay" placeholder="이 말씀이 내게 주는 의미..."></textarea>
+          </div>
+          <div class="form-row">
+            <label class="form-label">👣 STEP — 오늘의 한 가지 적용</label>
+            <input class="form-input" id="input-step" type="text" placeholder="오늘 실제로 할 것..." />
+          </div>
+        </div>
+
+        <!-- FREE -->
+        <div id="mode-free" style="display:none">
+          <div class="form-row">
+            <label class="form-label">💭 묵상 내용</label>
+            <textarea class="form-textarea" id="input-free" placeholder="오늘 말씀을 통해 하나님이 내게 말씀하신 것을 나눠주세요..."></textarea>
+          </div>
+        </div>
+
+        <!-- IMAGE UPLOAD -->
+        <div class="form-row">
+          <label class="form-label">📷 묵상 이미지 (선택)</label>
+          <div class="image-upload-area" id="upload-area">
+            <input type="file" id="input-image" accept="image/*" onchange="previewImage(event)" />
+            <div class="image-upload-icon">📷</div>
+            <div class="image-upload-text">사진을 탭하거나 클릭해서 첨부</div>
+          </div>
+          <img id="image-preview" src="" alt="미리보기" />
+          <button id="remove-image-btn" style="display:none;font-size:0.78rem;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:4px" onclick="removeImage()">✕ 이미지 제거</button>
+        </div>
+
+        <button class="submit-btn" id="submit-btn" onclick="submitPost()">
+          🏆 올리기
+        </button>
+      </div><!-- /form-body-inner -->
+    </div><!-- /form-body -->
     <div class="submit-success" id="submit-success">
       🎉 묵상이 올라갔습니다! 오늘도 Win the Day!
     </div>
-  </div>
+  </div><!-- /form-accordion -->
 
   <!-- FEED -->
-  <div class="feed-header" id="feed-header">📣 오늘 함께한 묵상</div>
+  <div class="feed-top">
+    <div class="feed-title" id="feed-title">오늘 함께한 묵상 0개</div>
+    <div class="date-nav-row">
+      <button class="date-arrow" id="prev-btn" onclick="changeDate(-1)" title="어제">&#8249;</button>
+      <button class="date-label-btn" onclick="goToday()">오늘</button>
+      <button class="date-arrow" id="next-btn" onclick="changeDate(1)" title="내일">&#8250;</button>
+    </div>
+  </div>
+
   <div id="feed-container">
     <div class="loading">불러오는 중...</div>
   </div>
 
-</div>
+</div><!-- /container -->
 
 <!-- IMAGE MODAL -->
 <div id="img-modal" onclick="closeModal()">
-  <button id="img-modal-close">✕</button>
+  <button id="img-modal-close" onclick="closeModal()">✕</button>
   <img id="modal-img" src="" alt="" />
 </div>
 
-<!-- BOTTOM NAV (모바일) -->
-<div class="bottom-nav">
-  <div class="bottom-nav-inner">
-    <a href="index.html" class="bottom-nav-item">
-      <span class="icon">🏠</span>홈
+<!-- BOTTOM BAR (mobile) -->
+<div class="bottom-bar">
+  <div class="bottom-bar-inner">
+    <a href="index.html#chart" class="bottom-bar-btn outline">
+      <span class="btn-icon">📋</span>오늘 차트
     </a>
-    <a href="community.html" class="bottom-nav-item active">
-      <span class="icon">📖</span>묵상
-    </a>
-    <a href="index.html#chart" class="bottom-nav-item">
-      <span class="icon">📋</span>차트
-    </a>
-    <a href="http://pf.kakao.com/_SxixjhG" target="_blank" class="bottom-nav-item">
-      <span class="icon">💬</span>채널
+    <button class="bottom-bar-btn primary" onclick="openForm()">
+      <span class="btn-icon">✍️</span>묵상 올리기
+    </button>
+    <a href="http://pf.kakao.com/_SxixjhG" target="_blank" rel="noopener noreferrer" class="bottom-bar-btn kakao">
+      <span class="btn-icon">💬</span>채널
     </a>
   </div>
 </div>
@@ -434,31 +795,81 @@ function formatDateKorean(dateStr) {
   const [y, m, d] = dateStr.split('-');
   const days = ['일','월','화','수','목','금','토'];
   const date = new Date(+y, +m-1, +d);
+  return `${+y}년 ${+m}월 ${+d}일 (${days[date.getDay()]})`;
+}
+
+function formatDateShort(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  const days = ['일','월','화','수','목','금','토'];
+  const date = new Date(+y, +m-1, +d);
   return `${+m}월 ${+d}일 (${days[date.getDay()]})`;
 }
 
-function getChallengeDay(dateStr) {
-  const start = new Date('2026-01-01');
-  const current = new Date(dateStr);
-  const diff = Math.floor((current - start) / 86400000) + 1;
-  if (diff >= 1 && diff <= 365) return `Day ${diff}`;
-  return '';
+// ── 스트릭 배너 ──
+function renderStreak() {
+  const banner = document.getElementById('streak-inner');
+  const raw = localStorage.getItem('wtd_pledge_v1');
+  const startStr = raw ? JSON.parse(raw).startDate : null;
+
+  if (!startStr) {
+    banner.innerHTML = `
+      <div class="streak-no-start">
+        <span>📖 챌린지 시작 전</span>
+        <a href="index.html">서약하러 가기 →</a>
+      </div>`;
+    return;
+  }
+
+  const start = new Date(startStr);
+  const today = new Date();
+  // days since challenge start (1-indexed)
+  const elapsed = Math.floor((today - start) / 86400000) + 1;
+  const TOTAL = 21;
+  const day = Math.max(1, Math.min(elapsed, TOTAL + 10)); // allow over 21 days (bonus)
+  const pct = Math.min(100, Math.round((day / TOTAL) * 100));
+  const done = day >= TOTAL;
+
+  // streak message
+  let sub = `연속 ${day}일째 말씀과 함께!`;
+  if (day === 1) sub = '오늘 첫 날! 시작이 반입니다.';
+  if (done) sub = '21일 완주! 하나님과 동행한 여정이었습니다 🎉';
+
+  banner.innerHTML = `
+    <div class="streak-top">
+      <div>
+        <div class="streak-day">🔥 Day ${day} / ${TOTAL}</div>
+        <div class="streak-sub">${sub}</div>
+      </div>
+      <div class="streak-badge">${done ? '✅ 완주' : `${pct}%`}</div>
+    </div>
+    <div class="streak-bar-wrap">
+      <div class="streak-bar-fill" style="width:${pct}%"></div>
+    </div>`;
+}
+
+// ── 말씀 카드 업데이트 ──
+function updateScriptureCard() {
+  const korean = formatDateKorean(currentDateStr);
+  const short = formatDateShort(currentDateStr);
+  const scripture = (typeof getReadingByDate === 'function')
+    ? getReadingByDate(currentDateStr)
+    : '말씀 데이터 로딩 중...';
+
+  document.getElementById('scripture-date-label').textContent = `📅 ${korean}`;
+  document.getElementById('scripture-ref').textContent = scripture || '—';
+  document.getElementById('scripture-card-meta').textContent =
+    currentDateStr === getTodayStr() ? '오늘의 매일성경 읽기표' : `${short} 읽기표`;
+  document.getElementById('next-btn').disabled = currentDateStr >= getTodayStr();
+
+  // feed title
+  const isToday = currentDateStr === getTodayStr();
+  const dateLabel = isToday ? '오늘' : short;
+  document.getElementById('feed-title').textContent = `${dateLabel} 함께한 묵상 —개`;
 }
 
 function initDate() {
   currentDateStr = getTodayStr();
-  updateDateUI();
-}
-
-function updateDateUI() {
-  document.getElementById('date-display').textContent = formatDateKorean(currentDateStr);
-  const scripture = getReadingByDate(currentDateStr);
-  document.getElementById('scripture-ref').textContent = scripture;
-  document.getElementById('scripture-date').textContent = currentDateStr;
-  const day = getChallengeDay(currentDateStr);
-  document.getElementById('challenge-day').textContent = day ? `🏆 ${day}` : '';
-  document.getElementById('next-btn').disabled = currentDateStr >= getTodayStr();
-  if (isFirebaseReady) loadFeed();
+  updateScriptureCard();
 }
 
 function changeDate(delta) {
@@ -467,12 +878,65 @@ function changeDate(delta) {
   const newStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   if (newStr > getTodayStr()) return;
   currentDateStr = newStr;
-  updateDateUI();
+  updateScriptureCard();
+  if (isFirebaseReady) {
+    if (unsubscribe) unsubscribe();
+    loadFeed();
+  } else {
+    renderDemoFeed();
+  }
 }
 
 function goToday() {
   currentDateStr = getTodayStr();
-  updateDateUI();
+  updateScriptureCard();
+  if (isFirebaseReady) {
+    if (unsubscribe) unsubscribe();
+    loadFeed();
+  } else {
+    renderDemoFeed();
+  }
+}
+
+// ── 폼 아코디언 ──
+let formOpen = false;
+
+function toggleForm() {
+  formOpen = !formOpen;
+  const body = document.getElementById('form-body');
+  const arrow = document.getElementById('form-toggle-arrow');
+  const label = document.getElementById('form-toggle-label');
+  if (formOpen) {
+    body.classList.add('open');
+    arrow.classList.add('open');
+    label.textContent = '✍️ 오늘의 묵상 나누기';
+    setTimeout(() => {
+      document.getElementById('input-name').focus();
+    }, 350);
+  } else {
+    body.classList.remove('open');
+    arrow.classList.remove('open');
+    label.textContent = '✍️ 오늘의 묵상을 나눠주세요...';
+  }
+}
+
+function openForm() {
+  if (!formOpen) toggleForm();
+  // scroll to form
+  setTimeout(() => {
+    document.getElementById('form-accordion').scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 50);
+}
+
+// ── 묵상 모드 탭 ──
+let currentMode = 'sss';
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-sss').style.display = mode === 'sss' ? 'block' : 'none';
+  document.getElementById('mode-free').style.display = mode === 'free' ? 'block' : 'none';
+  document.getElementById('tab-sss').classList.toggle('active', mode === 'sss');
+  document.getElementById('tab-free').classList.toggle('active', mode === 'free');
 }
 
 // ── 이미지 처리 ──
@@ -492,7 +956,7 @@ function previewImage(e) {
     preview.src = ev.target.result;
     preview.style.display = 'block';
     document.getElementById('remove-image-btn').style.display = 'block';
-    document.querySelector('.image-upload-area .image-upload-text').textContent = '이미지 선택됨';
+    document.querySelector('.image-upload-area .image-upload-text').textContent = '이미지 선택됨 ✓';
   };
   reader.readAsDataURL(file);
 }
@@ -502,14 +966,7 @@ function removeImage() {
   document.getElementById('image-preview').style.display = 'none';
   document.getElementById('remove-image-btn').style.display = 'none';
   document.getElementById('input-image').value = '';
-  document.querySelector('.image-upload-area .image-upload-text').innerHTML =
-    '사진을 탭하거나 클릭해서 첨부<br><small>(성경책, 노트, 아침 풍경 등)</small>';
-}
-
-function toggleMode() {
-  const mode = document.getElementById('input-mode').value;
-  document.getElementById('mode-sss').style.display = mode === 'stop-stay-step' ? 'block' : 'none';
-  document.getElementById('mode-free').style.display = mode === 'free' ? 'block' : 'none';
+  document.querySelector('.image-upload-area .image-upload-text').textContent = '사진을 탭하거나 클릭해서 첨부';
 }
 
 // ── 게시 ──
@@ -519,12 +976,14 @@ async function submitPost() {
     return;
   }
   const name = document.getElementById('input-name').value.trim();
-  if (!name) { alert('이름을 입력해주세요'); return; }
+  if (!name) {
+    alert('이름을 입력해주세요');
+    document.getElementById('input-name').focus();
+    return;
+  }
 
-  const mode = document.getElementById('input-mode').value;
   let content = {};
-
-  if (mode === 'stop-stay-step') {
+  if (currentMode === 'sss') {
     content.stop = document.getElementById('input-stop').value.trim();
     content.stay = document.getElementById('input-stay').value.trim();
     content.step = document.getElementById('input-step').value.trim();
@@ -534,7 +993,11 @@ async function submitPost() {
     }
   } else {
     content.free = document.getElementById('input-free').value.trim();
-    if (!content.free) { alert('묵상 내용을 입력해주세요'); return; }
+    if (!content.free) {
+      alert('묵상 내용을 입력해주세요');
+      document.getElementById('input-free').focus();
+      return;
+    }
   }
 
   const btn = document.getElementById('submit-btn');
@@ -543,8 +1006,6 @@ async function submitPost() {
 
   try {
     let imageUrl = null;
-
-    // 이미지 업로드
     if (selectedImageFile && storage) {
       const ref = storage.ref(`meditations/${currentDateStr}/${Date.now()}_${selectedImageFile.name}`);
       await ref.put(selectedImageFile);
@@ -555,8 +1016,8 @@ async function submitPost() {
       name,
       church: document.getElementById('input-church').value.trim() || null,
       date: currentDateStr,
-      scripture: getReadingByDate(currentDateStr),
-      mode,
+      scripture: (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '',
+      mode: currentMode === 'sss' ? 'stop-stay-step' : 'free',
       content,
       imageUrl,
       likes: 0,
@@ -565,26 +1026,31 @@ async function submitPost() {
 
     await db.collection('meditations').add(postData);
 
-    // 성공
-    document.getElementById('post-form-inner').style.display = 'none';
+    // 성공 처리
+    document.getElementById('form-body').classList.remove('open');
+    document.getElementById('form-toggle-arrow').classList.remove('open');
+    document.getElementById('form-toggle-label').textContent = '✍️ 오늘의 묵상을 나눠주세요...';
+    formOpen = false;
+
     document.getElementById('submit-success').style.display = 'block';
     setTimeout(() => {
-      document.getElementById('post-form-inner').style.display = 'block';
       document.getElementById('submit-success').style.display = 'none';
-      btn.disabled = false;
-      btn.textContent = '🏆 묵상 올리기';
-      // 폼 초기화
-      ['input-name','input-stop','input-stay','input-step','input-free','input-church'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-      removeImage();
-    }, 2500);
+    }, 3000);
+
+    btn.disabled = false;
+    btn.textContent = '🏆 올리기';
+    // 폼 초기화
+    ['input-name','input-stop','input-stay','input-step','input-free','input-church'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    removeImage();
 
   } catch(e) {
     console.error(e);
     alert('오류가 발생했습니다: ' + e.message);
     btn.disabled = false;
-    btn.textContent = '🏆 묵상 올리기';
+    btn.textContent = '🏆 올리기';
   }
 }
 
@@ -592,7 +1058,6 @@ async function submitPost() {
 let unsubscribe = null;
 
 function loadFeed() {
-  if (unsubscribe) unsubscribe();
   document.getElementById('feed-container').innerHTML = '<div class="loading">불러오는 중...</div>';
 
   unsubscribe = db.collection('meditations')
@@ -600,28 +1065,40 @@ function loadFeed() {
     .orderBy('timestamp', 'desc')
     .onSnapshot(snapshot => {
       const count = snapshot.size;
-      document.getElementById('post-count').textContent = `묵상 ${count}개`;
-      document.getElementById('feed-header').textContent = `📣 ${formatDateKorean(currentDateStr)} 묵상 (${count}개)`;
+      document.getElementById('post-count-badge').textContent = `묵상 ${count}개`;
+      const isToday = currentDateStr === getTodayStr();
+      const dateLabel = isToday ? '오늘' : formatDateShort(currentDateStr);
+      document.getElementById('feed-title').textContent = `${dateLabel} 함께한 묵상 ${count}개`;
+
       if (count === 0) {
         document.getElementById('feed-container').innerHTML = `
           <div class="feed-empty">
             <div class="feed-empty-icon">🌅</div>
-            아직 오늘의 묵상이 없습니다<br>첫 번째로 묵상을 나눠보세요!
+            <p>아직 오늘의 묵상이 없어요<br>첫 번째로 나눠보세요!</p>
+            <button class="feed-empty-btn" onclick="openForm()">✍️ 묵상 쓰기</button>
           </div>`;
         return;
       }
-      document.getElementById('feed-container').innerHTML = snapshot.docs.map(doc => renderPost(doc.id, doc.data())).join('');
+      document.getElementById('feed-container').innerHTML =
+        snapshot.docs.map(doc => renderPost(doc.id, doc.data())).join('');
+      // restore liked states
+      likedPosts.forEach(id => {
+        const btn = document.getElementById(`like-${id}`);
+        if (btn) btn.classList.add('liked');
+      });
     }, err => {
       console.error(err);
-      document.getElementById('feed-container').innerHTML = '<div class="loading">불러오기 실패. Firebase 설정을 확인해주세요.</div>';
+      document.getElementById('feed-container').innerHTML =
+        '<div class="loading">불러오기 실패. Firebase 설정을 확인해주세요.</div>';
     });
 }
 
 function renderPost(id, data) {
-  const initial = data.name?.[0]?.toUpperCase() || '?';
+  const initial = (data.name?.[0] || '?').toUpperCase();
   const time = data.timestamp?.toDate
     ? formatTime(data.timestamp.toDate())
     : '방금 전';
+  const isLiked = likedPosts.has(id);
 
   let contentHtml = '';
   if (data.mode === 'stop-stay-step') {
@@ -652,22 +1129,26 @@ function renderPost(id, data) {
     ? `<img class="post-image" src="${data.imageUrl}" alt="묵상 이미지" loading="lazy" onclick="openModal('${data.imageUrl}')" />`
     : '';
 
+  const churchHtml = data.church
+    ? ` <span class="post-name-church">· ${escHtml(data.church)}</span>`
+    : '';
+
   return `
     <div class="post-card" id="post-${id}">
       <div class="post-header">
         <div class="post-avatar">${initial}</div>
-        <div>
-          <div class="post-name">${escHtml(data.name)}${data.church ? ` <span class="post-church">· ${escHtml(data.church)}</span>` : ''}</div>
+        <div class="post-meta">
+          <div class="post-name">${escHtml(data.name)}${churchHtml}</div>
           <div class="post-time">${time}</div>
         </div>
       </div>
       ${contentHtml}
       ${imgHtml}
       <div class="post-footer">
-        <button class="like-btn" id="like-${id}" onclick="toggleLike('${id}', ${data.likes || 0})">
+        <button class="like-btn${isLiked ? ' liked' : ''}" id="like-${id}" onclick="toggleLike('${id}', ${data.likes || 0})">
           ❤️ ${data.likes || 0}
         </button>
-        <span class="post-scripture-tag">${escHtml(data.scripture || '')}</span>
+        <span class="post-scripture-tag">📖 ${escHtml(data.scripture || '')}</span>
       </div>
     </div>`;
 }
@@ -678,37 +1159,48 @@ const likedPosts = new Set(JSON.parse(localStorage.getItem('liked') || '[]'));
 async function toggleLike(id, currentLikes) {
   if (!isFirebaseReady) return;
   const isLiked = likedPosts.has(id);
-  const newLikes = isLiked ? currentLikes - 1 : currentLikes + 1;
+  const newLikes = Math.max(0, isLiked ? currentLikes - 1 : currentLikes + 1);
   const btn = document.getElementById(`like-${id}`);
   if (btn) {
-    btn.textContent = `❤️ ${newLikes}`;
+    btn.innerHTML = `❤️ ${newLikes}`;
     btn.classList.toggle('liked', !isLiked);
   }
-  if (isLiked) likedPosts.delete(id); else likedPosts.add(id);
+  if (isLiked) likedPosts.delete(id);
+  else likedPosts.add(id);
   localStorage.setItem('liked', JSON.stringify([...likedPosts]));
-  await db.collection('meditations').doc(id).update({ likes: newLikes });
+  try {
+    await db.collection('meditations').doc(id).update({ likes: newLikes });
+  } catch(e) { console.error(e); }
 }
 
 // ── 데모 피드 (Firebase 미설정 시) ──
 function renderDemoFeed() {
-  document.getElementById('post-count').textContent = '묵상 2개 (데모)';
+  const count = 2;
+  document.getElementById('post-count-badge').textContent = `묵상 ${count}개 (데모)`;
+  document.getElementById('feed-title').textContent = `오늘 함께한 묵상 ${count}개 (데모)`;
+  const scriptureRef = (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '';
+
   document.getElementById('feed-container').innerHTML = `
-    <div style="background:#fff3cd;border-radius:8px;padding:0.75rem;margin-bottom:0.75rem;font-size:0.8rem;color:#856404">
+    <div style="background:#fff3cd;border-radius:8px;padding:0.75rem 1rem;margin-bottom:0.75rem;font-size:0.8rem;color:#856404;border:1px solid #ffc10733">
       📌 데모 모드입니다. Firebase 설정 후 실제 묵상을 나눌 수 있습니다.
     </div>
     ${renderPost('demo1', {
-      name:'이승목', church:'OO교회', date:currentDateStr,
-      scripture: getReadingByDate(currentDateStr),
+      name:'이승목', church:'승목교회', date:currentDateStr,
+      scripture: scriptureRef,
       mode:'stop-stay-step',
-      content:{ stop:'"부활하신 예수님을 처음 만난 막달라 마리아"', stay:'P(약속): 예수님은 반드시 찾아오신다\nA(행동): 오늘도 말씀 앞에 먼저 멈추기', step:'아침에 핸드폰 보기 전 성경 먼저 펴기' },
+      content:{
+        stop:'"부활하신 예수님을 처음 만난 막달라 마리아"',
+        stay:'P(약속): 예수님은 반드시 찾아오신다\nA(행동): 오늘도 말씀 앞에 먼저 멈추기',
+        step:'아침에 핸드폰 보기 전 성경 먼저 펴기'
+      },
       imageUrl:null, likes:5,
       timestamp:{ toDate:()=>new Date() }
     })}
     ${renderPost('demo2', {
       name:'홍길동', church:'', date:currentDateStr,
-      scripture: getReadingByDate(currentDateStr),
+      scripture: scriptureRef,
       mode:'free',
-      content:{ free:'오늘 말씀을 읽으며 하나님의 신실하심이 느껴졌습니다. Win the Day!'},
+      content:{ free:'오늘 말씀을 읽으며 하나님의 신실하심이 느껴졌습니다. 매일 이 자리로 부르시는 주님께 감사합니다. Win the Day!' },
       imageUrl:null, likes:2,
       timestamp:{ toDate:()=>new Date(Date.now()-600000) }
     })}`;
@@ -725,7 +1217,7 @@ function formatTime(date) {
 }
 
 function escHtml(str) {
-  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function openModal(url) {
@@ -738,6 +1230,7 @@ function closeModal() {
 }
 
 // ── 초기화 ──
+renderStreak();
 initDate();
 initFirebase();
 if (isFirebaseReady) loadFeed();

@@ -1,5 +1,5 @@
 const CACHE = 'win-the-day-v1';
-const OFFLINE = ['./index.html','./community.html','./bible-readings-2026.js','./manifest.json','./icon.svg'];
+const OFFLINE = ['./index.html','./community.html','./bible-readings-2026.js','./manifest.json','./icon.svg','./logo.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(OFFLINE)));
