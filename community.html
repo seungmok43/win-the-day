@@ -518,6 +518,22 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
+    .delete-btn {
+      background:none;
+      border:none;
+      cursor:pointer;
+      font-size:0.75rem;
+      color:var(--muted);
+      padding:0.2rem 0.45rem;
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      gap:0.2rem;
+      transition:color 0.15s, background 0.15s;
+      line-height:1;
+      margin-left:0.4rem;
+    }
+    .delete-btn:hover { color:#c0392b; background:#fff0f0; }
 
     /* ── IMAGE MODAL ── */
     #img-modal {
@@ -1101,6 +1117,12 @@ function renderPost(id, data) {
     : '방금 전';
   const isLiked = likedPosts.has(id);
 
+  // 삭제 버튼: Firebase 준비됐을 때만 표시 (데모 카드 id는 'demo1','demo2' 로 시작)
+  const isDemo = id.startsWith('demo');
+  const deleteBtnHtml = (!isDemo && isFirebaseReady)
+    ? `<button class="delete-btn" onclick="deletePost('${id}', '${escHtml(data.name || '')}')">🗑️ 삭제</button>`
+    : '';
+
   let contentHtml = '';
   if (data.mode === 'stop-stay-step') {
     if (data.content?.stop) contentHtml += `
@@ -1149,7 +1171,10 @@ function renderPost(id, data) {
         <button class="like-btn${isLiked ? ' liked' : ''}" id="like-${id}" onclick="toggleLike('${id}', ${data.likes || 0})">
           ❤️ ${data.likes || 0}
         </button>
-        <span class="post-scripture-tag">📖 ${escHtml(data.scripture || '')}</span>
+        <div style="display:flex;align-items:center;gap:0.25rem;min-width:0">
+          <span class="post-scripture-tag">📖 ${escHtml(data.scripture || '')}</span>
+          ${deleteBtnHtml}
+        </div>
       </div>
     </div>`;
 }
@@ -1172,6 +1197,38 @@ async function toggleLike(id, currentLikes) {
   try {
     await db.collection('meditations').doc(id).update({ likes: newLikes });
   } catch(e) { console.error(e); }
+}
+
+// ── 삭제 ──
+async function deletePost(docId, postName) {
+  if (!isFirebaseReady) return;
+  const raw = localStorage.getItem('wtd_pledge_v1');
+  const myName = raw ? JSON.parse(raw).name : null;
+
+  // 본인 확인
+  if (myName && myName === postName) {
+    if (!confirm('이 묵상을 삭제하시겠습니까?')) return;
+    try {
+      await db.collection('meditations').doc(docId).delete();
+    } catch(e) {
+      console.error(e);
+      alert('삭제 중 오류가 발생했습니다: ' + e.message);
+    }
+    return;
+  }
+
+  // 관리자 확인
+  const pw = prompt('관리자 비밀번호를 입력하세요:');
+  if (pw === 'wintheday2026') {
+    try {
+      await db.collection('meditations').doc(docId).delete();
+    } catch(e) {
+      console.error(e);
+      alert('삭제 중 오류가 발생했습니다: ' + e.message);
+    }
+  } else if (pw !== null) {
+    alert('비밀번호가 틀렸습니다.');
+  }
 }
 
 // ── 데모 피드 (Firebase 미설정 시) ──
