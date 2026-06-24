@@ -792,6 +792,63 @@
       line-height:1.65;
     }
 
+    /* ── SSS SPACE ITEMS ── */
+    .sss-space { display:flex; flex-direction:column; gap:0.5rem; }
+    .sss-space-item {
+      display:flex;
+      align-items:center;
+      gap:0.6rem;
+    }
+    .sss-space-label {
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:var(--navy);
+      color:#fff;
+      font-size:0.78rem;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+    .sss-space-item .form-input { margin-bottom:0; }
+
+    /* ── SSS DECLARATION ROW ── */
+    .sss-declaration-row {
+      background:linear-gradient(135deg, var(--navy) 0%, #243560 100%);
+      border-radius:12px;
+      padding:0.9rem 1rem;
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:0.4rem;
+    }
+    .sss-declaration-text {
+      color:#fff;
+      font-size:0.88rem;
+      font-weight:500;
+      white-space:nowrap;
+    }
+    .sss-declaration-input {
+      flex:1;
+      min-width:80px;
+      background:transparent;
+      border:none;
+      border-bottom:1.5px solid rgba(255,255,255,0.5);
+      border-radius:0;
+      color:var(--gold-light);
+      font-weight:700;
+      padding:0.2rem 0.4rem;
+      font-size:0.9rem;
+      text-align:center;
+    }
+    .sss-declaration-input:focus {
+      border-color:var(--gold-light);
+      outline:none;
+    }
+    .sss-declaration-input::placeholder { color:rgba(255,255,255,0.4); }
+
     /* ── BOTTOM BAR (mobile) ── */
     .bottom-bar {
       display:none;
@@ -930,16 +987,52 @@
         <!-- STOP-STAY-STEP -->
         <div id="mode-sss">
           <div class="form-row">
-            <label class="form-label">🛑 STOP — 마음에 닿은 구절</label>
-            <input class="form-input" id="input-stop" type="text" placeholder="내게 말씀하신 한 구절..." />
+            <label class="form-label">🛑 STOP — 내게 말씀하신 한 구절</label>
+            <input class="form-input" id="input-stop" type="text" placeholder="마음에 닿은 구절을 적으세요" />
           </div>
           <div class="form-row">
-            <label class="form-label">📚 STAY — 묵상 내용</label>
-            <textarea class="form-textarea" id="input-stay" placeholder="이 말씀이 내게 주는 의미..."></textarea>
+            <label class="form-label">📚 STAY — SPACE 적용</label>
+            <div class="sss-space">
+              <div class="sss-space-item">
+                <span class="sss-space-label">S</span>
+                <input class="form-input" id="input-space-s" type="text" placeholder="고백할 죄나 잘못된 태도" />
+              </div>
+              <div class="sss-space-item">
+                <span class="sss-space-label">P</span>
+                <input class="form-input" id="input-space-p" type="text" placeholder="하나님의 약속" />
+              </div>
+              <div class="sss-space-item">
+                <span class="sss-space-label">A</span>
+                <input class="form-input" id="input-space-a" type="text" placeholder="취해야 할 행동" />
+              </div>
+              <div class="sss-space-item">
+                <span class="sss-space-label">C</span>
+                <input class="form-input" id="input-space-c" type="text" placeholder="순종해야 할 명령" />
+              </div>
+              <div class="sss-space-item">
+                <span class="sss-space-label">E</span>
+                <input class="form-input" id="input-space-e" type="text" placeholder="따르거나 피해야 할 본" />
+              </div>
+            </div>
           </div>
           <div class="form-row">
-            <label class="form-label">👣 STEP — 오늘의 한 가지 적용</label>
-            <input class="form-input" id="input-step" type="text" placeholder="오늘 실제로 할 것..." />
+            <label class="form-label">👣 STEP — 오늘의 한 가지 실천</label>
+            <input class="form-input" id="input-step" type="text" placeholder="구체적으로, 오늘 할 수 있는 것을" />
+          </div>
+          <div class="form-row">
+            <label class="form-label">🙏 오늘의 기도</label>
+            <input class="form-input" id="input-prayer" type="text" placeholder="한 줄 기도 제목" />
+          </div>
+          <div class="form-row">
+            <label class="form-label">😊 감사 3가지</label>
+            <input class="form-input" id="input-thanks1" type="text" placeholder="1." style="margin-bottom:0.5rem" />
+            <input class="form-input" id="input-thanks2" type="text" placeholder="2." style="margin-bottom:0.5rem" />
+            <input class="form-input" id="input-thanks3" type="text" placeholder="3." />
+          </div>
+          <div class="form-row sss-declaration-row">
+            <span class="sss-declaration-text">오늘 나는</span>
+            <input class="form-input sss-declaration-input" id="input-declaration" type="text" placeholder="말씀/실천" />
+            <span class="sss-declaration-text">로 하루를 승리합니다! 🏆</span>
           </div>
         </div>
 
@@ -1272,22 +1365,54 @@ async function submitPost() {
     return;
   }
 
-  let content = {};
+  let postData = {};
   if (currentMode === 'sss') {
-    content.stop = document.getElementById('input-stop').value.trim();
-    content.stay = document.getElementById('input-stay').value.trim();
-    content.step = document.getElementById('input-step').value.trim();
-    if (!content.stop && !content.stay && !content.step) {
+    const stop        = document.getElementById('input-stop').value.trim();
+    const space_s     = document.getElementById('input-space-s').value.trim();
+    const space_p     = document.getElementById('input-space-p').value.trim();
+    const space_a     = document.getElementById('input-space-a').value.trim();
+    const space_c     = document.getElementById('input-space-c').value.trim();
+    const space_e     = document.getElementById('input-space-e').value.trim();
+    const step        = document.getElementById('input-step').value.trim();
+    const prayer      = document.getElementById('input-prayer').value.trim();
+    const thanks1     = document.getElementById('input-thanks1').value.trim();
+    const thanks2     = document.getElementById('input-thanks2').value.trim();
+    const thanks3     = document.getElementById('input-thanks3').value.trim();
+    const declaration = document.getElementById('input-declaration').value.trim();
+
+    if (!stop && !space_s && !space_p && !space_a && !space_c && !space_e && !step) {
       alert('묵상 내용을 하나 이상 입력해주세요');
       return;
     }
+
+    postData = {
+      name,
+      church: document.getElementById('input-church').value.trim() || null,
+      date: currentDateStr,
+      scripture: (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '',
+      mode: 'sss',
+      stop, space_s, space_p, space_a, space_c, space_e,
+      step, prayer, thanks1, thanks2, thanks3, declaration,
+      likes: 0,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    };
   } else {
-    content.free = document.getElementById('input-free').value.trim();
-    if (!content.free) {
+    const free = document.getElementById('input-free').value.trim();
+    if (!free) {
       alert('묵상 내용을 입력해주세요');
       document.getElementById('input-free').focus();
       return;
     }
+    postData = {
+      name,
+      church: document.getElementById('input-church').value.trim() || null,
+      date: currentDateStr,
+      scripture: (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '',
+      mode: 'free',
+      content: free,
+      likes: 0,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    };
   }
 
   const btn = document.getElementById('submit-btn');
@@ -1295,17 +1420,6 @@ async function submitPost() {
   btn.textContent = '올리는 중...';
 
   try {
-    const postData = {
-      name,
-      church: document.getElementById('input-church').value.trim() || null,
-      date: currentDateStr,
-      scripture: (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '',
-      mode: currentMode === 'sss' ? 'stop-stay-step' : 'free',
-      content,
-      likes: 0,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    };
-
     await db.collection('meditations').add(postData);
 
     // 성공 처리
@@ -1322,7 +1436,11 @@ async function submitPost() {
     btn.disabled = false;
     btn.textContent = '🏆 올리기';
     // 폼 초기화
-    ['input-name','input-stop','input-stay','input-step','input-free','input-church'].forEach(id => {
+    ['input-name','input-church',
+     'input-stop','input-space-s','input-space-p','input-space-a','input-space-c','input-space-e',
+     'input-step','input-prayer','input-thanks1','input-thanks2','input-thanks3','input-declaration',
+     'input-free'
+    ].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = '';
     });
@@ -1375,7 +1493,60 @@ function renderPost(id, data) {
     : '';
 
   let contentHtml = '';
-  if (data.mode === 'stop-stay-step') {
+  if (data.mode === 'sss') {
+    // New SSS format
+    if (data.stop) contentHtml += `
+      <div class="post-section">
+        <span class="post-section-label label-stop">🛑 STOP</span>
+        <div class="post-text">${escHtml(data.stop)}</div>
+      </div>`;
+
+    const spaceItems = [
+      { key:'space_s', label:'S', text:'고백할 죄나 잘못된 태도' },
+      { key:'space_p', label:'P', text:'하나님의 약속' },
+      { key:'space_a', label:'A', text:'취해야 할 행동' },
+      { key:'space_c', label:'C', text:'순종해야 할 명령' },
+      { key:'space_e', label:'E', text:'따르거나 피해야 할 본' },
+    ];
+    const spaceRows = spaceItems
+      .filter(({ key }) => data[key])
+      .map(({ key, label }) =>
+        `<div style="display:flex;align-items:flex-start;gap:0.5rem;margin-bottom:0.35rem">
+          <span style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:0.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">${label}</span>
+          <div class="post-text" style="margin:0">${escHtml(data[key])}</div>
+        </div>`)
+      .join('');
+    if (spaceRows) contentHtml += `
+      <div class="post-section">
+        <span class="post-section-label label-stay">📚 STAY</span>
+        <div style="margin-top:0.35rem">${spaceRows}</div>
+      </div>`;
+
+    if (data.step) contentHtml += `
+      <div class="post-section">
+        <span class="post-section-label label-step">👣 STEP</span>
+        <div class="post-text">${escHtml(data.step)}</div>
+      </div>`;
+    if (data.prayer) contentHtml += `
+      <div class="post-section">
+        <span class="post-section-label" style="background:#e8f4fd;color:#0277bd">🙏 기도</span>
+        <div class="post-text">${escHtml(data.prayer)}</div>
+      </div>`;
+
+    const thanksList = [data.thanks1, data.thanks2, data.thanks3].filter(Boolean);
+    if (thanksList.length) contentHtml += `
+      <div class="post-section">
+        <span class="post-section-label" style="background:#f3fdf6;color:#2e7d32">😊 감사</span>
+        <div class="post-text">${thanksList.map((t, i) => `${i+1}. ${escHtml(t)}`).join('<br>')}</div>
+      </div>`;
+
+    if (data.declaration) contentHtml += `
+      <div style="background:linear-gradient(135deg,var(--navy) 0%,#243560 100%);border-radius:10px;padding:0.65rem 0.9rem;margin-top:0.4rem;text-align:center;color:#fff;font-size:0.85rem">
+        오늘 나는 <strong style="color:var(--gold-light)">${escHtml(data.declaration)}</strong> 로 하루를 승리합니다! 🏆
+      </div>`;
+
+  } else if (data.mode === 'stop-stay-step') {
+    // Legacy format (backward compatible)
     if (data.content?.stop) contentHtml += `
       <div class="post-section">
         <span class="post-section-label label-stop">🛑 STOP</span>
@@ -1395,7 +1566,7 @@ function renderPost(id, data) {
     contentHtml = `
       <div class="post-section">
         <span class="post-section-label label-free">💭 묵상</span>
-        <div class="post-text">${escHtml(data.content?.free || '')}</div>
+        <div class="post-text">${escHtml(typeof data.content === 'string' ? data.content : (data.content?.free || ''))}</div>
       </div>`;
   }
 
@@ -1484,12 +1655,19 @@ function renderDemoFeed() {
     { id: 'demo1', data: {
       name:'이승목', church:'승목교회', date:currentDateStr,
       scripture: scriptureRef,
-      mode:'stop-stay-step',
-      content:{
-        stop:'"부활하신 예수님을 처음 만난 막달라 마리아"',
-        stay:'P(약속): 예수님은 반드시 찾아오신다\nA(행동): 오늘도 말씀 앞에 먼저 멈추기',
-        step:'아침에 핸드폰 보기 전 성경 먼저 펴기'
-      },
+      mode:'sss',
+      stop:'"부활하신 예수님을 처음 만난 막달라 마리아"',
+      space_s:'',
+      space_p:'예수님은 반드시 찾아오신다',
+      space_a:'오늘도 말씀 앞에 먼저 멈추기',
+      space_c:'',
+      space_e:'',
+      step:'아침에 핸드폰 보기 전 성경 먼저 펴기',
+      prayer:'주님, 오늘도 말씀으로 하루를 시작하게 하소서',
+      thanks1:'건강한 아침을 주신 것',
+      thanks2:'함께하는 가족',
+      thanks3:'말씀을 주신 하나님',
+      declaration:'말씀 묵상',
       likes:5,
       timestamp:{ toDate:()=>new Date() }
     }},
