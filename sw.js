@@ -1,4 +1,4 @@
-const CACHE = 'win-the-day-v1';
+const CACHE = 'win-the-day-v2';
 const OFFLINE = ['./index.html','./community.html','./bible-readings-2026.js','./manifest.json','./icon.svg','./logo.png'];
 
 self.addEventListener('install', e => {
