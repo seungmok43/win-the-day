@@ -11,7 +11,6 @@
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 
   <style>
     :root {
@@ -309,22 +308,6 @@
     }
     @media (max-width:400px) { .form-row-2 { grid-template-columns:1fr; } }
 
-    /* image upload */
-    .image-upload-area {
-      border:2px dashed var(--border);
-      border-radius:10px;
-      padding:1rem;
-      text-align:center;
-      cursor:pointer;
-      transition:all 0.2s;
-      position:relative;
-    }
-    .image-upload-area:hover { border-color:var(--gold); background:#fffdf5; }
-    .image-upload-area input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-    .image-upload-icon { font-size:1.35rem; margin-bottom:0.2rem; }
-    .image-upload-text { font-size:0.78rem; color:var(--muted); }
-    #image-preview { width:100%; border-radius:8px; margin-top:0.5rem; display:none; max-height:180px; object-fit:cover; }
-
     .submit-btn {
       width:100%;
       padding:0.85rem;
@@ -483,8 +466,6 @@
 
     .post-divider { height:1px; background:var(--border); margin:0.75rem 0; }
 
-    .post-image { width:100%; border-radius:10px; margin-top:0.5rem; cursor:pointer; display:block; }
-
     .post-footer {
       display:flex;
       align-items:center;
@@ -534,26 +515,6 @@
       margin-left:0.4rem;
     }
     .delete-btn:hover { color:#c0392b; background:#fff0f0; }
-
-    /* ── IMAGE MODAL ── */
-    #img-modal {
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.92);
-      z-index:200;
-      align-items:center;
-      justify-content:center;
-    }
-    #img-modal.open { display:flex; }
-    #img-modal img { max-width:92vw; max-height:90vh; border-radius:8px; }
-    #img-modal-close {
-      position:absolute;
-      top:1rem; right:1rem;
-      color:white; font-size:2rem;
-      cursor:pointer; background:none; border:none;
-      line-height:1;
-    }
 
     /* ── BOTTOM BAR (mobile) ── */
     .bottom-bar {
@@ -636,7 +597,6 @@
       <li>웹 앱 추가 → 구성 코드 복사</li>
       <li>이 파일의 <code>FIREBASE_CONFIG</code> 부분에 붙여넣기</li>
       <li>Firestore Database → 테스트 모드로 시작</li>
-      <li>Storage → 시작</li>
     </ol>
   </div>
 
@@ -703,18 +663,6 @@
           </div>
         </div>
 
-        <!-- IMAGE UPLOAD -->
-        <div class="form-row">
-          <label class="form-label">📷 묵상 이미지 (선택)</label>
-          <div class="image-upload-area" id="upload-area">
-            <input type="file" id="input-image" accept="image/*" onchange="previewImage(event)" />
-            <div class="image-upload-icon">📷</div>
-            <div class="image-upload-text">사진을 탭하거나 클릭해서 첨부</div>
-          </div>
-          <img id="image-preview" src="" alt="미리보기" />
-          <button id="remove-image-btn" style="display:none;font-size:0.78rem;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:4px" onclick="removeImage()">✕ 이미지 제거</button>
-        </div>
-
         <button class="submit-btn" id="submit-btn" onclick="submitPost()">
           🏆 올리기
         </button>
@@ -740,12 +688,6 @@
   </div>
 
 </div><!-- /container -->
-
-<!-- IMAGE MODAL -->
-<div id="img-modal" onclick="closeModal()">
-  <button id="img-modal-close" onclick="closeModal()">✕</button>
-  <img id="modal-img" src="" alt="" />
-</div>
 
 <!-- BOTTOM BAR (mobile) -->
 <div class="bottom-bar">
@@ -779,7 +721,6 @@ const FIREBASE_CONFIG = {
 // ──────────────────────────────────────────────────────────────
 
 let db = null;
-let storage = null;
 let isFirebaseReady = false;
 
 function initFirebase() {
@@ -791,7 +732,6 @@ function initFirebase() {
     }
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.firestore();
-    storage = firebase.storage();
     isFirebaseReady = true;
   } catch(e) {
     console.error('Firebase init error:', e);
@@ -956,36 +896,6 @@ function setMode(mode) {
   document.getElementById('tab-free').classList.toggle('active', mode === 'free');
 }
 
-// ── 이미지 처리 ──
-let selectedImageFile = null;
-
-function previewImage(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (file.size > 5 * 1024 * 1024) {
-    alert('이미지 크기는 5MB 이하로 해주세요');
-    return;
-  }
-  selectedImageFile = file;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const preview = document.getElementById('image-preview');
-    preview.src = ev.target.result;
-    preview.style.display = 'block';
-    document.getElementById('remove-image-btn').style.display = 'block';
-    document.querySelector('.image-upload-area .image-upload-text').textContent = '이미지 선택됨 ✓';
-  };
-  reader.readAsDataURL(file);
-}
-
-function removeImage() {
-  selectedImageFile = null;
-  document.getElementById('image-preview').style.display = 'none';
-  document.getElementById('remove-image-btn').style.display = 'none';
-  document.getElementById('input-image').value = '';
-  document.querySelector('.image-upload-area .image-upload-text').textContent = '사진을 탭하거나 클릭해서 첨부';
-}
-
 // ── 게시 ──
 async function submitPost() {
   if (!isFirebaseReady) {
@@ -1022,13 +932,6 @@ async function submitPost() {
   btn.textContent = '올리는 중...';
 
   try {
-    let imageUrl = null;
-    if (selectedImageFile && storage) {
-      const ref = storage.ref(`meditations/${currentDateStr}/${Date.now()}_${selectedImageFile.name}`);
-      await ref.put(selectedImageFile);
-      imageUrl = await ref.getDownloadURL();
-    }
-
     const postData = {
       name,
       church: document.getElementById('input-church').value.trim() || null,
@@ -1036,7 +939,6 @@ async function submitPost() {
       scripture: (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '',
       mode: currentMode === 'sss' ? 'stop-stay-step' : 'free',
       content,
-      imageUrl,
       likes: 0,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     };
@@ -1061,7 +963,6 @@ async function submitPost() {
       const el = document.getElementById(id);
       if (el) el.value = '';
     });
-    removeImage();
 
   } catch(e) {
     console.error(e);
@@ -1148,10 +1049,6 @@ function renderPost(id, data) {
       </div>`;
   }
 
-  const imgHtml = data.imageUrl
-    ? `<img class="post-image" src="${data.imageUrl}" alt="묵상 이미지" loading="lazy" onclick="openModal('${data.imageUrl}')" />`
-    : '';
-
   const churchHtml = data.church
     ? ` <span class="post-name-church">· ${escHtml(data.church)}</span>`
     : '';
@@ -1166,7 +1063,6 @@ function renderPost(id, data) {
         </div>
       </div>
       ${contentHtml}
-      ${imgHtml}
       <div class="post-footer">
         <button class="like-btn${isLiked ? ' liked' : ''}" id="like-${id}" onclick="toggleLike('${id}', ${data.likes || 0})">
           ❤️ ${data.likes || 0}
@@ -1251,7 +1147,7 @@ function renderDemoFeed() {
         stay:'P(약속): 예수님은 반드시 찾아오신다\nA(행동): 오늘도 말씀 앞에 먼저 멈추기',
         step:'아침에 핸드폰 보기 전 성경 먼저 펴기'
       },
-      imageUrl:null, likes:5,
+      likes:5,
       timestamp:{ toDate:()=>new Date() }
     })}
     ${renderPost('demo2', {
@@ -1259,7 +1155,7 @@ function renderDemoFeed() {
       scripture: scriptureRef,
       mode:'free',
       content:{ free:'오늘 말씀을 읽으며 하나님의 신실하심이 느껴졌습니다. 매일 이 자리로 부르시는 주님께 감사합니다. Win the Day!' },
-      imageUrl:null, likes:2,
+      likes:2,
       timestamp:{ toDate:()=>new Date(Date.now()-600000) }
     })}`;
 }
@@ -1276,15 +1172,6 @@ function formatTime(date) {
 
 function escHtml(str) {
   return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function openModal(url) {
-  document.getElementById('modal-img').src = url;
-  document.getElementById('img-modal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('img-modal').classList.remove('open');
 }
 
 // ── 초기화 ──
