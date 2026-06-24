@@ -1176,7 +1176,7 @@ function updateScriptureCard() {
     ? getReadingByDate(currentDateStr)
     : '말씀 데이터 로딩 중...';
 
-  document.getElementById('scripture-date-label').textContent = `📅 ${korean}`;
+  document.getElementById('scripture-date-label').textContent = '오늘 묵상본문';
   document.getElementById('scripture-ref').textContent = scripture || '—';
   document.getElementById('scripture-card-meta').textContent =
     currentDateStr === getTodayStr() ? '오늘의 매일성경 읽기표' : `${short} 읽기표`;
