@@ -1013,6 +1013,34 @@
       color:#3C1E1E;
     }
     @media (max-width:480px) { .bottom-bar { display:block; } }
+
+  /* ── 도우미 패널 인터랙티브 폼 ── */
+  .helper-tool-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; padding:1rem; }
+  .helper-tool-card { background:var(--bg,#f3f4f6); border-radius:12px; padding:1rem; cursor:pointer; text-align:center; border:2px solid transparent; transition:border-color 0.15s; }
+  .helper-tool-card:hover { border-color:var(--gold); }
+  .helper-tool-card-icon { font-size:1.5rem; margin-bottom:0.4rem; }
+  .helper-tool-card-label { font-size:0.82rem; font-weight:700; color:var(--navy); }
+
+  .helper-form-view { padding:1rem; display:none; }
+  .helper-form-view.active { display:block; }
+  .helper-back-btn { background:none; border:none; color:var(--muted,#6b7280); font-size:0.85rem; cursor:pointer; padding:0 0 0.75rem; display:flex; align-items:center; gap:0.3rem; }
+  .helper-question-label { font-size:0.8rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem; margin-top:0.75rem; }
+  .helper-question-input { width:100%; border:1.5px solid var(--border,#e5e7eb); border-radius:8px; padding:0.6rem 0.75rem; font-family:'Noto Sans KR',sans-serif; font-size:0.85rem; resize:vertical; min-height:60px; background:var(--white,#fff); color:var(--text,#1a1a2e); }
+  .helper-question-input:focus { outline:none; border-color:var(--gold); }
+  .helper-question-input.single-line { min-height:auto; resize:none; height:42px; }
+  .helper-complete-btn { width:100%; margin-top:1rem; background:var(--navy); color:var(--white,#fff); border:none; border-radius:12px; padding:0.75rem; font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; }
+  .helper-complete-btn:hover { opacity:0.9; }
+
+  /* 장르 선택 */
+  .genre-grid { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; }
+  .genre-btn { background:var(--bg,#f3f4f6); border:2px solid var(--border,#e5e7eb); border-radius:100px; padding:0.35rem 0.85rem; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:'Noto Sans KR',sans-serif; }
+  .genre-btn.active { background:var(--navy); color:var(--white,#fff); border-color:var(--navy); }
+  .genre-questions { display:none; }
+  .genre-questions.active { display:block; }
+
+  /* SPACE in STEP */
+  .space-section { margin-top:0.75rem; border-top:1px dashed var(--border,#e5e7eb); padding-top:0.75rem; }
+  .space-section-label { font-size:0.75rem; color:var(--muted,#6b7280); font-weight:700; margin-bottom:0.5rem; letter-spacing:0.05em; }
   </style>
 </head>
 <body>
@@ -1135,6 +1163,33 @@
             <label class="form-label" style="color:var(--crimson);font-size:0.88rem">👣 STEP — 나아가라</label>
             <textarea class="form-textarea" id="input-step" rows="3" placeholder="오늘 하루 이 말씀을 어떻게 살아낼지 구체적으로 적어보세요..."></textarea>
             <button type="button" class="helper-trigger-btn" onclick="openSssPanel('step')">🔮 적용 도우미</button>
+            <!-- SPACE 접힘/펼침 -->
+            <div style="margin-top:0.6rem">
+              <button type="button" id="sssSpaceToggle" onclick="toggleSssSpace()" style="background:none;border:none;font-size:0.78rem;color:var(--muted);cursor:pointer;padding:0.2rem 0;font-family:'Noto Sans KR',sans-serif;">▶ SPACE 적용 항목 펼치기</button>
+              <div id="sssSpaceSection" style="display:none;margin-top:0.5rem;border-top:1px dashed var(--border);padding-top:0.5rem">
+                <div class="space-section-label">SPACE 적용 항목</div>
+                <div class="sss-space-item" style="margin-bottom:0.45rem">
+                  <span class="sss-space-label">S</span>
+                  <input class="form-input" id="input-space-s" type="text" placeholder="고백할 죄나 잘못된 태도" />
+                </div>
+                <div class="sss-space-item" style="margin-bottom:0.45rem">
+                  <span class="sss-space-label">P</span>
+                  <input class="form-input" id="input-space-p" type="text" placeholder="하나님의 약속" />
+                </div>
+                <div class="sss-space-item" style="margin-bottom:0.45rem">
+                  <span class="sss-space-label">A</span>
+                  <input class="form-input" id="input-space-a" type="text" placeholder="취해야 할 행동" />
+                </div>
+                <div class="sss-space-item" style="margin-bottom:0.45rem">
+                  <span class="sss-space-label">C</span>
+                  <input class="form-input" id="input-space-c" type="text" placeholder="순종해야 할 명령" />
+                </div>
+                <div class="sss-space-item">
+                  <span class="sss-space-label">E</span>
+                  <input class="form-input" id="input-space-e" type="text" placeholder="따르거나 피해야 할 본" />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="form-row">
@@ -1202,32 +1257,122 @@
     <span class="sss-helper-title">🔮 묵상 도우미</span>
     <button class="sss-helper-close" onclick="closeSssPanel('stay')">✕</button>
   </div>
-  <div class="sss-helper-tabs">
-    <button class="sss-helper-tab active" onclick="setSssHelperTab('stay','genre')">장르별 묵상</button>
-    <button class="sss-helper-tab" onclick="setSssHelperTab('stay','god')">하나님 찾기</button>
-    <button class="sss-helper-tab" onclick="setSssHelperTab('stay','inductive')">귀납적 연구</button>
-    <button class="sss-helper-tab" onclick="setSssHelperTab('stay','lectio')">렉시오 디비나</button>
-  </div>
-  <div class="sss-helper-body">
-    <div class="sss-helper-panel active" id="sss-stay-panel-genre">
-      <p class="sss-helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','서사: 등장인물은 누구이며 어떤 선택을 했나요?\n갈등과 해결의 흐름은?\n내가 이 이야기 속 인물이라면?')">📖 서사 — 이야기 흐름과 인물</button>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','시편: 이 시편의 감정의 흐름은?\n하나님께 무엇을 고백하고 있나요?\n나는 지금 이 감정에 공감하나요?')">🎵 시편 — 감정과 고백</button>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','서신서: 어떤 교리/진리를 가르치나요?\n어떤 권면이 담겨 있나요?\n이 진리가 내 삶에서 의미하는 것은?')">✉️ 서신서 — 교리와 권면</button>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','예언서: 이 말씀의 역사적 배경은?\n예수님을 통해 어떻게 성취되었나요?\n오늘 내게 주는 경고나 소망은?')">🔥 예언서 — 역사와 성취</button>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','지혜문학: 이 지혜의 핵심 원리는?\n어떤 대조가 있나요?\n내 일상의 어느 상황에 적용되나요?')">💡 지혜문학 — 원리와 대조</button>
+  <div class="sss-helper-body" style="padding:0;overflow-y:auto">
+    <!-- 도구 선택 화면 -->
+    <div id="sss-stay-tool-grid" class="helper-tool-grid">
+      <div class="helper-tool-card" onclick="sssStayShowTool('genre')">
+        <div class="helper-tool-card-icon">📖</div>
+        <div class="helper-tool-card-label">장르별 묵상</div>
+      </div>
+      <div class="helper-tool-card" onclick="sssStayShowTool('god')">
+        <div class="helper-tool-card-icon">✨</div>
+        <div class="helper-tool-card-label">하나님 찾기</div>
+      </div>
+      <div class="helper-tool-card" onclick="sssStayShowTool('oia')">
+        <div class="helper-tool-card-icon">🔍</div>
+        <div class="helper-tool-card-label">귀납적 연구 (OIA)</div>
+      </div>
+      <div class="helper-tool-card" onclick="sssStayShowTool('lectio')">
+        <div class="helper-tool-card-icon">🕯️</div>
+        <div class="helper-tool-card-label">렉시오 디비나</div>
+      </div>
     </div>
-    <div class="sss-helper-panel" id="sss-stay-panel-god">
-      <p class="sss-helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','이 본문에서 하나님은 어떤 분으로 나타나시나요?\n하나님이 하신 일이나 말씀하신 것은?\n하나님의 어떤 성품을 발견했나요?')">🔍 하나님 찾기 세 질문 삽입</button>
+
+    <!-- 장르별 묵상 폼 -->
+    <div class="helper-form-view" id="sss-stay-form-genre">
+      <button class="helper-back-btn" onclick="sssStayBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">📖 장르별 묵상</div>
+      <div class="genre-grid">
+        <button class="genre-btn" onclick="sssSelectGenre(this,'narrative')">서사</button>
+        <button class="genre-btn" onclick="sssSelectGenre(this,'psalm')">시편</button>
+        <button class="genre-btn" onclick="sssSelectGenre(this,'epistle')">서신서</button>
+        <button class="genre-btn" onclick="sssSelectGenre(this,'prophecy')">예언서</button>
+        <button class="genre-btn" onclick="sssSelectGenre(this,'wisdom')">지혜문학</button>
+      </div>
+      <div class="genre-questions" id="sss-genre-narrative">
+        <div class="helper-question-label">이 이야기에서 하나님은 어떤 역할을 하고 계십니까?</div>
+        <textarea class="helper-question-input" id="sss-genre-n-q1" rows="3"></textarea>
+        <div class="helper-question-label">등장인물은 어떤 선택을 했고 결과는?</div>
+        <textarea class="helper-question-input" id="sss-genre-n-q2" rows="3"></textarea>
+        <div class="helper-question-label">내가 이 이야기 속 인물이라면?</div>
+        <textarea class="helper-question-input" id="sss-genre-n-q3" rows="3"></textarea>
+      </div>
+      <div class="genre-questions" id="sss-genre-psalm">
+        <div class="helper-question-label">시인의 감정 흐름은 어떻습니까?</div>
+        <textarea class="helper-question-input" id="sss-genre-p-q1" rows="3"></textarea>
+        <div class="helper-question-label">반복되는 단어나 이미지와 그 의미는?</div>
+        <textarea class="helper-question-input" id="sss-genre-p-q2" rows="3"></textarea>
+        <div class="helper-question-label">이 시편이 나의 지금 상황과 어떻게 연결됩니까?</div>
+        <textarea class="helper-question-input" id="sss-genre-p-q3" rows="3"></textarea>
+      </div>
+      <div class="genre-questions" id="sss-genre-epistle">
+        <div class="helper-question-label">저자는 왜 이 편지를 썼습니까?</div>
+        <textarea class="helper-question-input" id="sss-genre-e-q1" rows="3"></textarea>
+        <div class="helper-question-label">이 단락의 핵심 논리와 주장은?</div>
+        <textarea class="helper-question-input" id="sss-genre-e-q2" rows="3"></textarea>
+        <div class="helper-question-label">이 진리가 오늘 내 삶에서 의미하는 것은?</div>
+        <textarea class="helper-question-input" id="sss-genre-e-q3" rows="3"></textarea>
+      </div>
+      <div class="genre-questions" id="sss-genre-prophecy">
+        <div class="helper-question-label">하나님의 백성은 지금 어떤 상황에 있습니까?</div>
+        <textarea class="helper-question-input" id="sss-genre-pr-q1" rows="3"></textarea>
+        <div class="helper-question-label">하나님이 책망하시는 것과 그 마음은?</div>
+        <textarea class="helper-question-input" id="sss-genre-pr-q2" rows="3"></textarea>
+        <div class="helper-question-label">소망과 회복의 약속은 무엇입니까?</div>
+        <textarea class="helper-question-input" id="sss-genre-pr-q3" rows="3"></textarea>
+      </div>
+      <div class="genre-questions" id="sss-genre-wisdom">
+        <div class="helper-question-label">이 말씀이 지혜롭다 vs 어리석다고 하는 것은?</div>
+        <textarea class="helper-question-input" id="sss-genre-w-q1" rows="3"></textarea>
+        <div class="helper-question-label">이 지혜의 핵심 원리는?</div>
+        <textarea class="helper-question-input" id="sss-genre-w-q2" rows="3"></textarea>
+        <div class="helper-question-label">내 일상 어느 상황에 적용됩니까?</div>
+        <textarea class="helper-question-input" id="sss-genre-w-q3" rows="3"></textarea>
+      </div>
+      <button class="helper-complete-btn" onclick="sssStayComplete('genre')">✓ 묵상 완성</button>
     </div>
-    <div class="sss-helper-panel" id="sss-stay-panel-inductive">
-      <p class="sss-helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','[관찰] 본문에서 반복되는 단어나 주제는?\n[해석] 이 말씀이 원래 독자에게 의미한 것은?\n[적용] 이 진리가 오늘 내 삶에서 의미하는 것은?')">📐 관찰 → 해석 → 적용 삽입</button>
+
+    <!-- 하나님 찾기 폼 -->
+    <div class="helper-form-view" id="sss-stay-form-god">
+      <button class="helper-back-btn" onclick="sssStayBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">✨ 하나님 찾기</div>
+      <div class="helper-question-label">이 본문에서 하나님은 어떤 분으로 나타나십니까?</div>
+      <textarea class="helper-question-input" id="sss-god-q1" rows="3"></textarea>
+      <div class="helper-question-label">하나님이 하신 일 또는 말씀하신 것은 무엇입니까?</div>
+      <textarea class="helper-question-input" id="sss-god-q2" rows="3"></textarea>
+      <div class="helper-question-label">하나님이 느끼시는 감정은 무엇입니까?</div>
+      <textarea class="helper-question-input" id="sss-god-q3" rows="3"></textarea>
+      <div class="helper-question-label">이 하나님 앞에서 나는 어떻게 응답하고 싶습니까?</div>
+      <textarea class="helper-question-input" id="sss-god-q4" rows="3"></textarea>
+      <button class="helper-complete-btn" onclick="sssStayComplete('god')">✓ 묵상 완성</button>
     </div>
-    <div class="sss-helper-panel" id="sss-stay-panel-lectio">
-      <p class="sss-helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','[읽기] 천천히 다시 읽으며 마음에 울리는 단어를 찾으세요.\n[묵상] 그 단어를 곱씹으며 하나님께서 말씀하시는 것은?\n[기도] 그 말씀에 응답하는 짧은 기도를 드리세요.\n[관상] 잠시 침묵하며 하나님의 임재 안에 머무세요.')">🕯️ 렉시오 디비나 4단계 삽입</button>
+
+    <!-- 귀납적 연구 폼 -->
+    <div class="helper-form-view" id="sss-stay-form-oia">
+      <button class="helper-back-btn" onclick="sssStayBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🔍 귀납적 연구 (OIA)</div>
+      <div class="helper-question-label">O (관찰): 본문에서 반복되는 단어, 등장인물, 대조되는 것은?</div>
+      <textarea class="helper-question-input" id="sss-oia-q1" rows="3"></textarea>
+      <div class="helper-question-label">I (해석): 저자의 의도와 시대를 초월한 진리는 무엇입니까?</div>
+      <textarea class="helper-question-input" id="sss-oia-q2" rows="3"></textarea>
+      <div class="helper-question-label">A (적용): 이 진리가 오늘 내 삶에서 도전하는 것은?</div>
+      <textarea class="helper-question-input" id="sss-oia-q3" rows="3"></textarea>
+      <button class="helper-complete-btn" onclick="sssStayComplete('oia')">✓ 묵상 완성</button>
+    </div>
+
+    <!-- 렉시오 디비나 폼 -->
+    <div class="helper-form-view" id="sss-stay-form-lectio">
+      <button class="helper-back-btn" onclick="sssStayBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🕯️ 렉시오 디비나</div>
+      <div class="helper-question-label">Lectio (읽기): 마음에 닿은 단어나 구절은?</div>
+      <textarea class="helper-question-input" id="sss-lectio-q1" rows="3"></textarea>
+      <div class="helper-question-label">Meditatio (묵상): 그 말씀이 내 마음 어느 부분을 건드립니까?</div>
+      <textarea class="helper-question-input" id="sss-lectio-q2" rows="3"></textarea>
+      <div class="helper-question-label">Oratio (기도): 말씀에 응답하는 나의 기도는?</div>
+      <textarea class="helper-question-input" id="sss-lectio-q3" rows="3"></textarea>
+      <div class="helper-question-label">Contemplatio (관상): 침묵 후, 하나님이 주시는 것은?</div>
+      <textarea class="helper-question-input" id="sss-lectio-q4" rows="3"></textarea>
+      <button class="helper-complete-btn" onclick="sssStayComplete('lectio')">✓ 묵상 완성</button>
     </div>
   </div>
 </div>
@@ -1239,28 +1384,77 @@
     <span class="sss-helper-title">🔮 적용 도우미</span>
     <button class="sss-helper-close" onclick="closeSssPanel('step')">✕</button>
   </div>
-  <div class="sss-helper-tabs">
-    <button class="sss-helper-tab active" onclick="setSssHelperTab('step','ifthen')">If-Then 계획</button>
-    <button class="sss-helper-tab" onclick="setSssHelperTab('step','smart')">SMART 적용</button>
-    <button class="sss-helper-tab" onclick="setSssHelperTab('step','relation')">관계 적용</button>
-    <button class="sss-helper-tab" onclick="setSssHelperTab('step','habit')">습관 연결</button>
-  </div>
-  <div class="sss-helper-body">
-    <div class="sss-helper-panel active" id="sss-step-panel-ifthen">
-      <p class="sss-helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('step','만약 오늘 _______ 상황이 오면,\n나는 _______를 실천하겠습니다.')">📋 If-Then 계획 삽입</button>
+  <div class="sss-helper-body" style="padding:0;overflow-y:auto">
+    <!-- 도구 선택 화면 -->
+    <div id="sss-step-tool-grid" class="helper-tool-grid">
+      <div class="helper-tool-card" onclick="sssStepShowTool('ifthen')">
+        <div class="helper-tool-card-icon">⚡</div>
+        <div class="helper-tool-card-label">If-Then 계획</div>
+      </div>
+      <div class="helper-tool-card" onclick="sssStepShowTool('smart')">
+        <div class="helper-tool-card-icon">🎯</div>
+        <div class="helper-tool-card-label">SMART 적용</div>
+      </div>
+      <div class="helper-tool-card" onclick="sssStepShowTool('relation')">
+        <div class="helper-tool-card-icon">💛</div>
+        <div class="helper-tool-card-label">관계로 살아내기</div>
+      </div>
+      <div class="helper-tool-card" onclick="sssStepShowTool('habit')">
+        <div class="helper-tool-card-icon">🔗</div>
+        <div class="helper-tool-card-label">습관에 말씀 심기</div>
+      </div>
     </div>
-    <div class="sss-helper-panel" id="sss-step-panel-smart">
-      <p class="sss-helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('step','구체적으로(S): 무엇을 정확히 할 것인가?\n언제까지(T): 오늘/이번 주 언제?\n누구와(R): 혼자인가, 누군가와 함께인가?')">🎯 SMART 적용 질문 삽입</button>
+
+    <!-- If-Then 폼 -->
+    <div class="helper-form-view" id="sss-step-form-ifthen">
+      <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">⚡ If-Then 계획</div>
+      <div class="helper-question-label">오늘 _________ 상황이 되면,</div>
+      <input type="text" class="helper-question-input single-line" id="sss-ifthen-q1" placeholder="상황을 입력하세요" />
+      <div class="helper-question-label">나는 _________ 을 한다.</div>
+      <input type="text" class="helper-question-input single-line" id="sss-ifthen-q2" placeholder="행동을 입력하세요" />
+      <button class="helper-complete-btn" onclick="sssStepComplete('ifthen')">✓ 적용 완성</button>
     </div>
-    <div class="sss-helper-panel" id="sss-step-panel-relation">
-      <p class="sss-helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('step','이 말씀을 오늘 누구에게 나눌 수 있을까요?\n내 가장 가까운 관계에서 이 말씀을 어떻게 적용하나요?')">❤️ 관계 적용 질문 삽입</button>
+
+    <!-- SMART 폼 -->
+    <div class="helper-form-view" id="sss-step-form-smart">
+      <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🎯 SMART 적용</div>
+      <div class="helper-question-label">S: 구체적으로 무엇을?</div>
+      <input type="text" class="helper-question-input single-line" id="sss-smart-s" />
+      <div class="helper-question-label">M: 어떻게 확인할 수 있는가?</div>
+      <input type="text" class="helper-question-input single-line" id="sss-smart-m" />
+      <div class="helper-question-label">A: 오늘 정말 할 수 있는가?</div>
+      <input type="text" class="helper-question-input single-line" id="sss-smart-a" />
+      <div class="helper-question-label">R: 이 말씀과 어떻게 연결되는가?</div>
+      <input type="text" class="helper-question-input single-line" id="sss-smart-r" />
+      <div class="helper-question-label">T: 오늘 몇 시에?</div>
+      <input type="text" class="helper-question-input single-line" id="sss-smart-t" />
+      <button class="helper-complete-btn" onclick="sssStepComplete('smart')">✓ 적용 완성</button>
     </div>
-    <div class="sss-helper-panel" id="sss-step-panel-habit">
-      <p class="sss-helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
-      <button class="sss-helper-insert-btn" onclick="insertSssHelper('step','나는 이미 매일 _______ 를 한다.\n그 전/후에 오늘의 실천 _______ 를 연결하겠습니다.')">🔗 습관 연결 템플릿 삽입</button>
+
+    <!-- 관계로 살아내기 폼 -->
+    <div class="helper-form-view" id="sss-step-form-relation">
+      <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">💛 관계로 살아내기</div>
+      <div class="helper-question-label">이 말씀을 나눌 사람은?</div>
+      <textarea class="helper-question-input" id="sss-relation-q1" rows="3"></textarea>
+      <div class="helper-question-label">어떤 관계에 적용할 것인가?</div>
+      <textarea class="helper-question-input" id="sss-relation-q2" rows="3"></textarea>
+      <div class="helper-question-label">구체적으로 무엇을 해줄 것인가? (전화/격려/사과/감사)</div>
+      <textarea class="helper-question-input" id="sss-relation-q3" rows="3"></textarea>
+      <button class="helper-complete-btn" onclick="sssStepComplete('relation')">✓ 적용 완성</button>
+    </div>
+
+    <!-- 습관에 말씀 심기 폼 -->
+    <div class="helper-form-view" id="sss-step-form-habit">
+      <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🔗 습관에 말씀 심기</div>
+      <div class="helper-question-label">나는 이미 매일 _________ 을 한다.</div>
+      <input type="text" class="helper-question-input single-line" id="sss-habit-q1" placeholder="기존 습관" />
+      <div class="helper-question-label">그 전/후에 _________ 을 추가한다.</div>
+      <input type="text" class="helper-question-input single-line" id="sss-habit-q2" placeholder="추가할 실천" />
+      <button class="helper-complete-btn" onclick="sssStepComplete('habit')">✓ 적용 완성</button>
     </div>
   </div>
 </div>
@@ -1577,6 +1771,11 @@ async function submitPost() {
       mode: 'sss',
       stop_time, stop_place, opening_prayer, stop_verse,
       stay, step, prayer, thanks1, thanks2, thanks3, declaration,
+      space_s: document.getElementById('input-space-s')?.value?.trim() || null,
+      space_p: document.getElementById('input-space-p')?.value?.trim() || null,
+      space_a: document.getElementById('input-space-a')?.value?.trim() || null,
+      space_c: document.getElementById('input-space-c')?.value?.trim() || null,
+      space_e: document.getElementById('input-space-e')?.value?.trim() || null,
       likes: 0,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     };
@@ -1624,6 +1823,7 @@ async function submitPost() {
      'input-stop-time','input-stop-place','input-stop-verse',
      'input-stay','input-step','input-prayer',
      'input-thanks1','input-thanks2','input-thanks3','input-declaration',
+     'input-space-s','input-space-p','input-space-a','input-space-c','input-space-e',
      'input-free'
     ].forEach(id => {
       const el = document.getElementById(id);
@@ -2082,15 +2282,12 @@ function insertPrayerStarter(text) {
 // ════════════════════════════════════════════════
 // STAY/STEP 묵상 도우미 바텀시트
 // ════════════════════════════════════════════════
-const sssHelperTabs = {
-  stay: ['genre','god','inductive','lectio'],
-  step: ['ifthen','smart','relation','habit']
-};
-
 function openSssPanel(type) {
   document.getElementById(`sss-${type}-overlay`).classList.add('open');
   document.getElementById(`sss-${type}-sheet`).classList.add('open');
   document.body.style.overflow = 'hidden';
+  if (type === 'stay') sssStayBackToGrid();
+  if (type === 'step') sssStepBackToGrid();
 }
 
 function closeSssPanel(type) {
@@ -2099,28 +2296,148 @@ function closeSssPanel(type) {
   document.body.style.overflow = '';
 }
 
-function setSssHelperTab(type, tab) {
-  const tabs = sssHelperTabs[type];
-  const sheet = document.getElementById(`sss-${type}-sheet`);
-  sheet.querySelectorAll('.sss-helper-tab').forEach((btn, i) => {
-    btn.classList.toggle('active', tabs[i] === tab);
-  });
-  tabs.forEach(t => {
-    const panel = document.getElementById(`sss-${type}-panel-${t}`);
-    if (panel) panel.classList.toggle('active', t === tab);
-  });
+/* STAY helpers */
+function sssStayShowTool(tool) {
+  document.getElementById('sss-stay-tool-grid').style.display = 'none';
+  document.querySelectorAll('#sss-stay-sheet .helper-form-view').forEach(el => el.classList.remove('active'));
+  const form = document.getElementById(`sss-stay-form-${tool}`);
+  if (form) form.classList.add('active');
+}
+function sssStayBackToGrid() {
+  document.getElementById('sss-stay-tool-grid').style.display = 'grid';
+  document.querySelectorAll('#sss-stay-sheet .helper-form-view').forEach(el => el.classList.remove('active'));
 }
 
-function insertSssHelper(type, text) {
-  const targetId = type === 'stay' ? 'input-stay' : 'input-step';
-  const el = document.getElementById(targetId);
-  if (el) {
-    const existing = el.value.trim();
-    el.value = existing ? existing + '\n' + text : text;
-    el.focus();
+let sssCurrentGenre = null;
+function sssSelectGenre(btn, genre) {
+  sssCurrentGenre = genre;
+  document.querySelectorAll('#sss-stay-form-genre .genre-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#sss-stay-form-genre .genre-questions').forEach(el => el.classList.remove('active'));
+  const map = { narrative:'sss-genre-narrative', psalm:'sss-genre-psalm', epistle:'sss-genre-epistle', prophecy:'sss-genre-prophecy', wisdom:'sss-genre-wisdom' };
+  const el = document.getElementById(map[genre]);
+  if (el) el.classList.add('active');
+}
+
+function sssStayComplete(tool) {
+  const stayEl = document.getElementById('input-stay');
+  if (!stayEl) { closeSssPanel('stay'); return; }
+  let result = '';
+
+  if (tool === 'genre' && sssCurrentGenre) {
+    const map = {
+      narrative: { label:'서사', ids:['sss-genre-n-q1','sss-genre-n-q2','sss-genre-n-q3'], labels:['하나님의 역할','선택과 결과','나라면'] },
+      psalm:     { label:'시편', ids:['sss-genre-p-q1','sss-genre-p-q2','sss-genre-p-q3'], labels:['감정 흐름','반복 이미지','나의 연결'] },
+      epistle:   { label:'서신서', ids:['sss-genre-e-q1','sss-genre-e-q2','sss-genre-e-q3'], labels:['집필 이유','핵심 주장','나의 적용'] },
+      prophecy:  { label:'예언서', ids:['sss-genre-pr-q1','sss-genre-pr-q2','sss-genre-pr-q3'], labels:['백성의 상황','책망의 마음','소망과 회복'] },
+      wisdom:    { label:'지혜문학', ids:['sss-genre-w-q1','sss-genre-w-q2','sss-genre-w-q3'], labels:['지혜 vs 어리석음','핵심 원리','일상 적용'] },
+    };
+    const info = map[sssCurrentGenre];
+    if (info) {
+      const lines = info.ids.map((id, i) => {
+        const v = (document.getElementById(id)||{}).value?.trim();
+        return v ? `${info.labels[i]}: ${v}` : '';
+      }).filter(Boolean);
+      if (lines.length) result = `[장르별 묵상 — ${info.label}]\n${lines.join('\n')}`;
+    }
+  } else if (tool === 'god') {
+    const labels = ['성품','행동','감정','나의 응답'];
+    const ids = ['sss-god-q1','sss-god-q2','sss-god-q3','sss-god-q4'];
+    const lines = ids.map((id,i) => {
+      const v = (document.getElementById(id)||{}).value?.trim();
+      return v ? `${labels[i]}: ${v}` : '';
+    }).filter(Boolean);
+    if (lines.length) result = `[하나님 찾기]\n${lines.join('\n')}`;
+  } else if (tool === 'oia') {
+    const labels = ['O (관찰)','I (해석)','A (적용)'];
+    const ids = ['sss-oia-q1','sss-oia-q2','sss-oia-q3'];
+    const lines = ids.map((id,i) => {
+      const v = (document.getElementById(id)||{}).value?.trim();
+      return v ? `${labels[i]}: ${v}` : '';
+    }).filter(Boolean);
+    if (lines.length) result = `[귀납적 연구 OIA]\n${lines.join('\n')}`;
+  } else if (tool === 'lectio') {
+    const labels = ['Lectio (읽기)','Meditatio (묵상)','Oratio (기도)','Contemplatio (관상)'];
+    const ids = ['sss-lectio-q1','sss-lectio-q2','sss-lectio-q3','sss-lectio-q4'];
+    const lines = ids.map((id,i) => {
+      const v = (document.getElementById(id)||{}).value?.trim();
+      return v ? `${labels[i]}: ${v}` : '';
+    }).filter(Boolean);
+    if (lines.length) result = `[렉시오 디비나]\n${lines.join('\n')}`;
   }
-  closeSssPanel(type);
+
+  if (result) {
+    const existing = stayEl.value.trim();
+    stayEl.value = existing ? existing + '\n\n' + result : result;
+    stayEl.focus();
+  }
+  closeSssPanel('stay');
   if (!formOpen) openForm();
+}
+
+/* STEP helpers */
+function sssStepShowTool(tool) {
+  document.getElementById('sss-step-tool-grid').style.display = 'none';
+  document.querySelectorAll('#sss-step-sheet .helper-form-view').forEach(el => el.classList.remove('active'));
+  const form = document.getElementById(`sss-step-form-${tool}`);
+  if (form) form.classList.add('active');
+}
+function sssStepBackToGrid() {
+  document.getElementById('sss-step-tool-grid').style.display = 'grid';
+  document.querySelectorAll('#sss-step-sheet .helper-form-view').forEach(el => el.classList.remove('active'));
+}
+
+function sssStepComplete(tool) {
+  const stepEl = document.getElementById('input-step');
+  if (!stepEl) { closeSssPanel('step'); return; }
+  let result = '';
+
+  if (tool === 'ifthen') {
+    const situation = (document.getElementById('sss-ifthen-q1')||{}).value?.trim();
+    const action = (document.getElementById('sss-ifthen-q2')||{}).value?.trim();
+    if (situation || action) {
+      result = `만약 ${situation || '___'}이 되면, 나는 ${action || '___'}을 한다.`;
+    }
+  } else if (tool === 'smart') {
+    const labels = ['S','M','A','R','T'];
+    const ids = ['sss-smart-s','sss-smart-m','sss-smart-a','sss-smart-r','sss-smart-t'];
+    const lines = ids.map((id,i) => {
+      const v = (document.getElementById(id)||{}).value?.trim();
+      return v ? `${labels[i]}: ${v}` : '';
+    }).filter(Boolean);
+    if (lines.length) result = `[SMART 적용]\n${lines.join('\n')}`;
+  } else if (tool === 'relation') {
+    const labels = ['나눌 사람','적용 관계','구체적 행동'];
+    const ids = ['sss-relation-q1','sss-relation-q2','sss-relation-q3'];
+    const lines = ids.map((id,i) => {
+      const v = (document.getElementById(id)||{}).value?.trim();
+      return v ? `${labels[i]}: ${v}` : '';
+    }).filter(Boolean);
+    if (lines.length) result = `[관계로 살아내기]\n${lines.join('\n')}`;
+  } else if (tool === 'habit') {
+    const existing_habit = (document.getElementById('sss-habit-q1')||{}).value?.trim();
+    const new_action = (document.getElementById('sss-habit-q2')||{}).value?.trim();
+    if (existing_habit || new_action) {
+      result = `나는 이미 매일 ${existing_habit || '___'}을 한다.\n그 전/후에 ${new_action || '___'}을 추가한다.`;
+    }
+  }
+
+  if (result) {
+    const existing = stepEl.value.trim();
+    stepEl.value = existing ? existing + '\n\n' + result : result;
+    stepEl.focus();
+  }
+  closeSssPanel('step');
+  if (!formOpen) openForm();
+}
+
+/* SPACE toggle */
+function toggleSssSpace() {
+  const section = document.getElementById('sssSpaceSection');
+  const btn = document.getElementById('sssSpaceToggle');
+  const isOpen = section.style.display !== 'none';
+  section.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '▶ SPACE 적용 항목 펼치기' : '▼ SPACE 적용 항목 접기';
 }
 
 // ── 초기화 ──

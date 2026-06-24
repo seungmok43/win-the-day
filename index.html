@@ -964,6 +964,33 @@
         <div class="chart-label" style="color:var(--crimson);font-size:0.9rem;margin-bottom:0.6rem">STEP — 나아가라</div>
         <textarea class="chart-input" id="chartStep" rows="3" placeholder="오늘 하루 이 말씀을 어떻게 살아낼지 구체적으로 적어보세요..." style="resize:vertical;line-height:1.6;padding-top:0.3rem"></textarea>
         <button type="button" onclick="openChartPanel('step')" style="margin-top:0.5rem;background:transparent;border:1.5px solid var(--gold);color:var(--gold);padding:0.3rem 0.75rem;border-radius:100px;font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='var(--gold)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">🔮 적용 도우미</button>
+        <!-- SPACE 접힘/펼침 -->
+        <div style="margin-top:0.6rem">
+          <button type="button" id="chartSpaceToggle" onclick="toggleChartSpace()" style="background:none;border:none;font-size:0.78rem;color:var(--text-muted,#6b7280);cursor:pointer;padding:0.2rem 0;font-family:'Noto Sans KR',sans-serif;">▶ SPACE 적용 항목 펼치기</button>
+          <div id="chartSpaceSection" style="display:none;margin-top:0.5rem;border-top:1px dashed var(--cream-dark,#f0e8d0);padding-top:0.5rem">
+            <div style="font-size:0.75rem;color:var(--text-muted,#6b7280);font-weight:700;margin-bottom:0.5rem;letter-spacing:0.05em">SPACE 적용 항목</div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.45rem">
+              <span style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:0.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">S</span>
+              <input class="chart-input" id="chartSpaceS" type="text" placeholder="고백할 죄나 잘못된 태도" />
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.45rem">
+              <span style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:0.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">P</span>
+              <input class="chart-input" id="chartSpaceP" type="text" placeholder="하나님의 약속" />
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.45rem">
+              <span style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:0.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">A</span>
+              <input class="chart-input" id="chartSpaceA" type="text" placeholder="취해야 할 행동" />
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.45rem">
+              <span style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:0.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">C</span>
+              <input class="chart-input" id="chartSpaceC" type="text" placeholder="순종해야 할 명령" />
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem">
+              <span style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:0.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">E</span>
+              <input class="chart-input" id="chartSpaceE" type="text" placeholder="따르거나 피해야 할 본" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1174,6 +1201,34 @@
   }
   .helper-insert-btn:hover { border-color:var(--gold); background:#fffbf0; }
   .helper-insert-note { font-size:0.78rem; color:#6b7280; margin-bottom:0.75rem; }
+
+  /* ── 도우미 패널 인터랙티브 폼 ── */
+  .helper-tool-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; padding:1rem; }
+  .helper-tool-card { background:var(--cream,#f3f4f6); border-radius:12px; padding:1rem; cursor:pointer; text-align:center; border:2px solid transparent; transition:border-color 0.15s; }
+  .helper-tool-card:hover { border-color:var(--gold); }
+  .helper-tool-card-icon { font-size:1.5rem; margin-bottom:0.4rem; }
+  .helper-tool-card-label { font-size:0.82rem; font-weight:700; color:var(--navy); }
+
+  .helper-form-view { padding:1rem; display:none; }
+  .helper-form-view.active { display:block; }
+  .helper-back-btn { background:none; border:none; color:var(--muted,#6b7280); font-size:0.85rem; cursor:pointer; padding:0 0 0.75rem; display:flex; align-items:center; gap:0.3rem; }
+  .helper-question-label { font-size:0.8rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem; margin-top:0.75rem; }
+  .helper-question-input { width:100%; border:1.5px solid var(--border,#e5e7eb); border-radius:8px; padding:0.6rem 0.75rem; font-family:'Noto Sans KR',sans-serif; font-size:0.85rem; resize:vertical; min-height:60px; background:var(--white,#fff); color:var(--text,#1a1a2e); }
+  .helper-question-input:focus { outline:none; border-color:var(--gold); }
+  .helper-question-input.single-line { min-height:auto; resize:none; height:42px; }
+  .helper-complete-btn { width:100%; margin-top:1rem; background:var(--navy); color:var(--white,#fff); border:none; border-radius:12px; padding:0.75rem; font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; }
+  .helper-complete-btn:hover { opacity:0.9; }
+
+  /* 장르 선택 */
+  .genre-grid { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; }
+  .genre-btn { background:var(--cream,#f3f4f6); border:2px solid var(--border,#e5e7eb); border-radius:100px; padding:0.35rem 0.85rem; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:'Noto Sans KR',sans-serif; }
+  .genre-btn.active { background:var(--navy); color:var(--white,#fff); border-color:var(--navy); }
+  .genre-questions { display:none; }
+  .genre-questions.active { display:block; }
+
+  /* SPACE in STEP */
+  .space-section { margin-top:0.75rem; border-top:1px dashed var(--border,#e5e7eb); padding-top:0.75rem; }
+  .space-section-label { font-size:0.75rem; color:var(--muted,#6b7280); font-weight:700; margin-bottom:0.5rem; letter-spacing:0.05em; }
 </style>
 
 <!-- STAY 도우미 패널 -->
@@ -1183,32 +1238,122 @@
     <span class="chart-helper-title">🔮 묵상 도우미</span>
     <button class="chart-helper-close" onclick="closeChartPanel('stay')">✕</button>
   </div>
-  <div class="chart-helper-tabs">
-    <button class="chart-helper-tab active" onclick="setChartHelperTab('stay','genre')">장르별 묵상</button>
-    <button class="chart-helper-tab" onclick="setChartHelperTab('stay','god')">하나님 찾기</button>
-    <button class="chart-helper-tab" onclick="setChartHelperTab('stay','inductive')">귀납적 연구</button>
-    <button class="chart-helper-tab" onclick="setChartHelperTab('stay','lectio')">렉시오 디비나</button>
-  </div>
-  <div class="chart-helper-body">
-    <div class="chart-helper-panel active" id="stay-panel-genre">
-      <p class="helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
-      <button class="helper-insert-btn" onclick="insertChartHelper('stay','서사: 등장인물은 누구이며 어떤 선택을 했나요?\n갈등과 해결의 흐름은?\n내가 이 이야기 속 인물이라면?')">📖 서사 — 이야기 흐름과 인물</button>
-      <button class="helper-insert-btn" onclick="insertChartHelper('stay','시편: 이 시편의 감정의 흐름은?\n하나님께 무엇을 고백하고 있나요?\n나는 지금 이 감정에 공감하나요?')">🎵 시편 — 감정과 고백</button>
-      <button class="helper-insert-btn" onclick="insertChartHelper('stay','서신서: 어떤 교리/진리를 가르치나요?\n어떤 권면이 담겨 있나요?\n이 진리가 내 삶에서 의미하는 것은?')">✉️ 서신서 — 교리와 권면</button>
-      <button class="helper-insert-btn" onclick="insertChartHelper('stay','예언서: 이 말씀의 역사적 배경은?\n예수님을 통해 어떻게 성취되었나요?\n오늘 내게 주는 경고나 소망은?')">🔥 예언서 — 역사와 성취</button>
-      <button class="helper-insert-btn" onclick="insertChartHelper('stay','지혜문학: 이 지혜의 핵심 원리는?\n어떤 대조가 있나요?\n내 일상의 어느 상황에 적용되나요?')">💡 지혜문학 — 원리와 대조</button>
+  <div class="chart-helper-body" style="padding:0">
+    <!-- 도구 선택 화면 -->
+    <div id="chart-stay-tool-grid" class="helper-tool-grid">
+      <div class="helper-tool-card" onclick="chartStayShowTool('genre')">
+        <div class="helper-tool-card-icon">📖</div>
+        <div class="helper-tool-card-label">장르별 묵상</div>
+      </div>
+      <div class="helper-tool-card" onclick="chartStayShowTool('god')">
+        <div class="helper-tool-card-icon">✨</div>
+        <div class="helper-tool-card-label">하나님 찾기</div>
+      </div>
+      <div class="helper-tool-card" onclick="chartStayShowTool('oia')">
+        <div class="helper-tool-card-icon">🔍</div>
+        <div class="helper-tool-card-label">귀납적 연구 (OIA)</div>
+      </div>
+      <div class="helper-tool-card" onclick="chartStayShowTool('lectio')">
+        <div class="helper-tool-card-icon">🕯️</div>
+        <div class="helper-tool-card-label">렉시오 디비나</div>
+      </div>
     </div>
-    <div class="chart-helper-panel" id="stay-panel-god">
-      <p class="helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
-      <button class="helper-insert-btn" onclick="insertChartHelper('stay','이 본문에서 하나님은 어떤 분으로 나타나시나요?\n하나님이 하신 일이나 말씀하신 것은?\n하나님의 어떤 성품을 발견했나요?')">🔍 하나님 찾기 세 질문 삽입</button>
+
+    <!-- 장르별 묵상 폼 -->
+    <div class="helper-form-view" id="chart-stay-form-genre">
+      <button class="helper-back-btn" onclick="chartStayBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">📖 장르별 묵상</div>
+      <div class="genre-grid">
+        <button class="genre-btn" onclick="chartSelectGenre(this,'narrative')">서사</button>
+        <button class="genre-btn" onclick="chartSelectGenre(this,'psalm')">시편</button>
+        <button class="genre-btn" onclick="chartSelectGenre(this,'epistle')">서신서</button>
+        <button class="genre-btn" onclick="chartSelectGenre(this,'prophecy')">예언서</button>
+        <button class="genre-btn" onclick="chartSelectGenre(this,'wisdom')">지혜문학</button>
+      </div>
+      <div class="genre-questions" id="chart-genre-narrative">
+        <div class="helper-question-label">이 이야기에서 하나님은 어떤 역할을 하고 계십니까?</div>
+        <textarea class="helper-question-input" id="chart-genre-n-q1" rows="3"></textarea>
+        <div class="helper-question-label">등장인물은 어떤 선택을 했고 결과는?</div>
+        <textarea class="helper-question-input" id="chart-genre-n-q2" rows="3"></textarea>
+        <div class="helper-question-label">내가 이 이야기 속 인물이라면?</div>
+        <textarea class="helper-question-input" id="chart-genre-n-q3" rows="3"></textarea>
+      </div>
+      <div class="genre-questions" id="chart-genre-psalm">
+        <div class="helper-question-label">시인의 감정 흐름은 어떻습니까?</div>
+        <textarea class="helper-question-input" id="chart-genre-p-q1" rows="3"></textarea>
+        <div class="helper-question-label">반복되는 단어나 이미지와 그 의미는?</div>
+        <textarea class="helper-question-input" id="chart-genre-p-q2" rows="3"></textarea>
+        <div class="helper-question-label">이 시편이 나의 지금 상황과 어떻게 연결됩니까?</div>
+        <textarea class="helper-question-input" id="chart-genre-p-q3" rows="3"></textarea>
+      </div>
+      <div class="genre-questions" id="chart-genre-epistle">
+        <div class="helper-question-label">저자는 왜 이 편지를 썼습니까?</div>
+        <textarea class="helper-question-input" id="chart-genre-e-q1" rows="3"></textarea>
+        <div class="helper-question-label">이 단락의 핵심 논리와 주장은?</div>
+        <textarea class="helper-question-input" id="chart-genre-e-q2" rows="3"></textarea>
+        <div class="helper-question-label">이 진리가 오늘 내 삶에서 의미하는 것은?</div>
+        <textarea class="helper-question-input" id="chart-genre-e-q3" rows="3"></textarea>
+      </div>
+      <div class="genre-questions" id="chart-genre-prophecy">
+        <div class="helper-question-label">하나님의 백성은 지금 어떤 상황에 있습니까?</div>
+        <textarea class="helper-question-input" id="chart-genre-pr-q1" rows="3"></textarea>
+        <div class="helper-question-label">하나님이 책망하시는 것과 그 마음은?</div>
+        <textarea class="helper-question-input" id="chart-genre-pr-q2" rows="3"></textarea>
+        <div class="helper-question-label">소망과 회복의 약속은 무엇입니까?</div>
+        <textarea class="helper-question-input" id="chart-genre-pr-q3" rows="3"></textarea>
+      </div>
+      <div class="genre-questions" id="chart-genre-wisdom">
+        <div class="helper-question-label">이 말씀이 지혜롭다 vs 어리석다고 하는 것은?</div>
+        <textarea class="helper-question-input" id="chart-genre-w-q1" rows="3"></textarea>
+        <div class="helper-question-label">이 지혜의 핵심 원리는?</div>
+        <textarea class="helper-question-input" id="chart-genre-w-q2" rows="3"></textarea>
+        <div class="helper-question-label">내 일상 어느 상황에 적용됩니까?</div>
+        <textarea class="helper-question-input" id="chart-genre-w-q3" rows="3"></textarea>
+      </div>
+      <button class="helper-complete-btn" onclick="chartStayComplete('genre')">✓ 묵상 완성</button>
     </div>
-    <div class="chart-helper-panel" id="stay-panel-inductive">
-      <p class="helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
-      <button class="helper-insert-btn" onclick="insertChartHelper('stay','[관찰] 본문에서 반복되는 단어나 주제는?\n[해석] 이 말씀이 원래 독자에게 의미한 것은?\n[적용] 이 진리가 오늘 내 삶에서 의미하는 것은?')">📐 관찰 → 해석 → 적용 삽입</button>
+
+    <!-- 하나님 찾기 폼 -->
+    <div class="helper-form-view" id="chart-stay-form-god">
+      <button class="helper-back-btn" onclick="chartStayBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">✨ 하나님 찾기</div>
+      <div class="helper-question-label">이 본문에서 하나님은 어떤 분으로 나타나십니까?</div>
+      <textarea class="helper-question-input" id="chart-god-q1" rows="3"></textarea>
+      <div class="helper-question-label">하나님이 하신 일 또는 말씀하신 것은 무엇입니까?</div>
+      <textarea class="helper-question-input" id="chart-god-q2" rows="3"></textarea>
+      <div class="helper-question-label">하나님이 느끼시는 감정은 무엇입니까?</div>
+      <textarea class="helper-question-input" id="chart-god-q3" rows="3"></textarea>
+      <div class="helper-question-label">이 하나님 앞에서 나는 어떻게 응답하고 싶습니까?</div>
+      <textarea class="helper-question-input" id="chart-god-q4" rows="3"></textarea>
+      <button class="helper-complete-btn" onclick="chartStayComplete('god')">✓ 묵상 완성</button>
     </div>
-    <div class="chart-helper-panel" id="stay-panel-lectio">
-      <p class="helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
-      <button class="helper-insert-btn" onclick="insertChartHelper('stay','[읽기] 천천히 다시 읽으며 마음에 울리는 단어를 찾으세요.\n[묵상] 그 단어를 곱씹으며 하나님께서 말씀하시는 것은?\n[기도] 그 말씀에 응답하는 짧은 기도를 드리세요.\n[관상] 잠시 침묵하며 하나님의 임재 안에 머무세요.')">🕯️ 렉시오 디비나 4단계 삽입</button>
+
+    <!-- 귀납적 연구 폼 -->
+    <div class="helper-form-view" id="chart-stay-form-oia">
+      <button class="helper-back-btn" onclick="chartStayBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🔍 귀납적 연구 (OIA)</div>
+      <div class="helper-question-label">O (관찰): 본문에서 반복되는 단어, 등장인물, 대조되는 것은?</div>
+      <textarea class="helper-question-input" id="chart-oia-q1" rows="3"></textarea>
+      <div class="helper-question-label">I (해석): 저자의 의도와 시대를 초월한 진리는 무엇입니까?</div>
+      <textarea class="helper-question-input" id="chart-oia-q2" rows="3"></textarea>
+      <div class="helper-question-label">A (적용): 이 진리가 오늘 내 삶에서 도전하는 것은?</div>
+      <textarea class="helper-question-input" id="chart-oia-q3" rows="3"></textarea>
+      <button class="helper-complete-btn" onclick="chartStayComplete('oia')">✓ 묵상 완성</button>
+    </div>
+
+    <!-- 렉시오 디비나 폼 -->
+    <div class="helper-form-view" id="chart-stay-form-lectio">
+      <button class="helper-back-btn" onclick="chartStayBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🕯️ 렉시오 디비나</div>
+      <div class="helper-question-label">Lectio (읽기): 마음에 닿은 단어나 구절은?</div>
+      <textarea class="helper-question-input" id="chart-lectio-q1" rows="3"></textarea>
+      <div class="helper-question-label">Meditatio (묵상): 그 말씀이 내 마음 어느 부분을 건드립니까?</div>
+      <textarea class="helper-question-input" id="chart-lectio-q2" rows="3"></textarea>
+      <div class="helper-question-label">Oratio (기도): 말씀에 응답하는 나의 기도는?</div>
+      <textarea class="helper-question-input" id="chart-lectio-q3" rows="3"></textarea>
+      <div class="helper-question-label">Contemplatio (관상): 침묵 후, 하나님이 주시는 것은?</div>
+      <textarea class="helper-question-input" id="chart-lectio-q4" rows="3"></textarea>
+      <button class="helper-complete-btn" onclick="chartStayComplete('lectio')">✓ 묵상 완성</button>
     </div>
   </div>
 </div>
@@ -1220,28 +1365,77 @@
     <span class="chart-helper-title">🔮 적용 도우미</span>
     <button class="chart-helper-close" onclick="closeChartPanel('step')">✕</button>
   </div>
-  <div class="chart-helper-tabs">
-    <button class="chart-helper-tab active" onclick="setChartHelperTab('step','ifthen')">If-Then 계획</button>
-    <button class="chart-helper-tab" onclick="setChartHelperTab('step','smart')">SMART 적용</button>
-    <button class="chart-helper-tab" onclick="setChartHelperTab('step','relation')">관계 적용</button>
-    <button class="chart-helper-tab" onclick="setChartHelperTab('step','habit')">습관 연결</button>
-  </div>
-  <div class="chart-helper-body">
-    <div class="chart-helper-panel active" id="step-panel-ifthen">
-      <p class="helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
-      <button class="helper-insert-btn" onclick="insertChartHelper('step','만약 오늘 _______ 상황이 오면,\n나는 _______를 실천하겠습니다.')">📋 If-Then 계획 삽입</button>
+  <div class="chart-helper-body" style="padding:0">
+    <!-- 도구 선택 화면 -->
+    <div id="chart-step-tool-grid" class="helper-tool-grid">
+      <div class="helper-tool-card" onclick="chartStepShowTool('ifthen')">
+        <div class="helper-tool-card-icon">⚡</div>
+        <div class="helper-tool-card-label">If-Then 계획</div>
+      </div>
+      <div class="helper-tool-card" onclick="chartStepShowTool('smart')">
+        <div class="helper-tool-card-icon">🎯</div>
+        <div class="helper-tool-card-label">SMART 적용</div>
+      </div>
+      <div class="helper-tool-card" onclick="chartStepShowTool('relation')">
+        <div class="helper-tool-card-icon">💛</div>
+        <div class="helper-tool-card-label">관계로 살아내기</div>
+      </div>
+      <div class="helper-tool-card" onclick="chartStepShowTool('habit')">
+        <div class="helper-tool-card-icon">🔗</div>
+        <div class="helper-tool-card-label">습관에 말씀 심기</div>
+      </div>
     </div>
-    <div class="chart-helper-panel" id="step-panel-smart">
-      <p class="helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
-      <button class="helper-insert-btn" onclick="insertChartHelper('step','구체적으로(S): 무엇을 정확히 할 것인가?\n언제까지(T): 오늘/이번 주 언제?\n누구와(R): 혼자인가, 누군가와 함께인가?')">🎯 SMART 적용 질문 삽입</button>
+
+    <!-- If-Then 폼 -->
+    <div class="helper-form-view" id="chart-step-form-ifthen">
+      <button class="helper-back-btn" onclick="chartStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">⚡ If-Then 계획</div>
+      <div class="helper-question-label">오늘 _________ 상황이 되면,</div>
+      <input type="text" class="helper-question-input single-line" id="chart-ifthen-q1" placeholder="상황을 입력하세요" />
+      <div class="helper-question-label">나는 _________ 을 한다.</div>
+      <input type="text" class="helper-question-input single-line" id="chart-ifthen-q2" placeholder="행동을 입력하세요" />
+      <button class="helper-complete-btn" onclick="chartStepComplete('ifthen')">✓ 적용 완성</button>
     </div>
-    <div class="chart-helper-panel" id="step-panel-relation">
-      <p class="helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
-      <button class="helper-insert-btn" onclick="insertChartHelper('step','이 말씀을 오늘 누구에게 나눌 수 있을까요?\n내 가장 가까운 관계에서 이 말씀을 어떻게 적용하나요?')">❤️ 관계 적용 질문 삽입</button>
+
+    <!-- SMART 폼 -->
+    <div class="helper-form-view" id="chart-step-form-smart">
+      <button class="helper-back-btn" onclick="chartStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🎯 SMART 적용</div>
+      <div class="helper-question-label">S: 구체적으로 무엇을?</div>
+      <input type="text" class="helper-question-input single-line" id="chart-smart-s" />
+      <div class="helper-question-label">M: 어떻게 확인할 수 있는가?</div>
+      <input type="text" class="helper-question-input single-line" id="chart-smart-m" />
+      <div class="helper-question-label">A: 오늘 정말 할 수 있는가?</div>
+      <input type="text" class="helper-question-input single-line" id="chart-smart-a" />
+      <div class="helper-question-label">R: 이 말씀과 어떻게 연결되는가?</div>
+      <input type="text" class="helper-question-input single-line" id="chart-smart-r" />
+      <div class="helper-question-label">T: 오늘 몇 시에?</div>
+      <input type="text" class="helper-question-input single-line" id="chart-smart-t" />
+      <button class="helper-complete-btn" onclick="chartStepComplete('smart')">✓ 적용 완성</button>
     </div>
-    <div class="chart-helper-panel" id="step-panel-habit">
-      <p class="helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
-      <button class="helper-insert-btn" onclick="insertChartHelper('step','나는 이미 매일 _______ 를 한다.\n그 전/후에 오늘의 실천 _______ 를 연결하겠습니다.')">🔗 습관 연결 템플릿 삽입</button>
+
+    <!-- 관계로 살아내기 폼 -->
+    <div class="helper-form-view" id="chart-step-form-relation">
+      <button class="helper-back-btn" onclick="chartStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">💛 관계로 살아내기</div>
+      <div class="helper-question-label">이 말씀을 나눌 사람은?</div>
+      <textarea class="helper-question-input" id="chart-relation-q1" rows="3"></textarea>
+      <div class="helper-question-label">어떤 관계에 적용할 것인가?</div>
+      <textarea class="helper-question-input" id="chart-relation-q2" rows="3"></textarea>
+      <div class="helper-question-label">구체적으로 무엇을 해줄 것인가? (전화/격려/사과/감사)</div>
+      <textarea class="helper-question-input" id="chart-relation-q3" rows="3"></textarea>
+      <button class="helper-complete-btn" onclick="chartStepComplete('relation')">✓ 적용 완성</button>
+    </div>
+
+    <!-- 습관에 말씀 심기 폼 -->
+    <div class="helper-form-view" id="chart-step-form-habit">
+      <button class="helper-back-btn" onclick="chartStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🔗 습관에 말씀 심기</div>
+      <div class="helper-question-label">나는 이미 매일 _________ 을 한다.</div>
+      <input type="text" class="helper-question-input single-line" id="chart-habit-q1" placeholder="기존 습관" />
+      <div class="helper-question-label">그 전/후에 _________ 을 추가한다.</div>
+      <input type="text" class="helper-question-input single-line" id="chart-habit-q2" placeholder="추가할 실천" />
+      <button class="helper-complete-btn" onclick="chartStepComplete('habit')">✓ 적용 완성</button>
     </div>
   </div>
 </div>
@@ -1399,15 +1593,13 @@
   })();
 
   /* ── 차트 도우미 패널 ── */
-  const chartHelperTabs = {
-    stay: ['genre','god','inductive','lectio'],
-    step: ['ifthen','smart','relation','habit']
-  };
-
   function openChartPanel(type) {
     document.getElementById(`chart-${type}-overlay`).classList.add('open');
     document.getElementById(`chart-${type}-sheet`).classList.add('open');
     document.body.style.overflow = 'hidden';
+    // Reset to grid view
+    if (type === 'stay') chartStayBackToGrid();
+    if (type === 'step') chartStepBackToGrid();
   }
 
   function closeChartPanel(type) {
@@ -1416,27 +1608,146 @@
     document.body.style.overflow = '';
   }
 
-  function setChartHelperTab(type, tab) {
-    const tabs = chartHelperTabs[type];
-    const sheet = document.getElementById(`chart-${type}-sheet`);
-    sheet.querySelectorAll('.chart-helper-tab').forEach((btn, i) => {
-      btn.classList.toggle('active', tabs[i] === tab);
-    });
-    tabs.forEach(t => {
-      const panel = document.getElementById(`${type}-panel-${t}`);
-      if (panel) panel.classList.toggle('active', t === tab);
-    });
+  /* STAY helpers */
+  function chartStayShowTool(tool) {
+    document.getElementById('chart-stay-tool-grid').style.display = 'none';
+    document.querySelectorAll('#chart-stay-sheet .helper-form-view').forEach(el => el.classList.remove('active'));
+    const form = document.getElementById(`chart-stay-form-${tool}`);
+    if (form) form.classList.add('active');
+  }
+  function chartStayBackToGrid() {
+    document.getElementById('chart-stay-tool-grid').style.display = 'grid';
+    document.querySelectorAll('#chart-stay-sheet .helper-form-view').forEach(el => el.classList.remove('active'));
   }
 
-  function insertChartHelper(type, text) {
-    const targetId = type === 'stay' ? 'chartStay' : 'chartStep';
-    const el = document.getElementById(targetId);
-    if (el) {
-      const existing = el.value.trim();
-      el.value = existing ? existing + '\n' + text : text;
-      el.focus();
+  let chartCurrentGenre = null;
+  function chartSelectGenre(btn, genre) {
+    chartCurrentGenre = genre;
+    document.querySelectorAll('#chart-stay-form-genre .genre-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#chart-stay-form-genre .genre-questions').forEach(el => el.classList.remove('active'));
+    const map = { narrative:'chart-genre-narrative', psalm:'chart-genre-psalm', epistle:'chart-genre-epistle', prophecy:'chart-genre-prophecy', wisdom:'chart-genre-wisdom' };
+    const el = document.getElementById(map[genre]);
+    if (el) el.classList.add('active');
+  }
+
+  function chartStayComplete(tool) {
+    const stayEl = document.getElementById('chartStay');
+    if (!stayEl) { closeChartPanel('stay'); return; }
+    let result = '';
+
+    if (tool === 'genre' && chartCurrentGenre) {
+      const map = {
+        narrative: { label:'서사', ids:['chart-genre-n-q1','chart-genre-n-q2','chart-genre-n-q3'], labels:['하나님의 역할','선택과 결과','나라면'] },
+        psalm:     { label:'시편', ids:['chart-genre-p-q1','chart-genre-p-q2','chart-genre-p-q3'], labels:['감정 흐름','반복 이미지','나의 연결'] },
+        epistle:   { label:'서신서', ids:['chart-genre-e-q1','chart-genre-e-q2','chart-genre-e-q3'], labels:['집필 이유','핵심 주장','나의 적용'] },
+        prophecy:  { label:'예언서', ids:['chart-genre-pr-q1','chart-genre-pr-q2','chart-genre-pr-q3'], labels:['백성의 상황','책망의 마음','소망과 회복'] },
+        wisdom:    { label:'지혜문학', ids:['chart-genre-w-q1','chart-genre-w-q2','chart-genre-w-q3'], labels:['지혜 vs 어리석음','핵심 원리','일상 적용'] },
+      };
+      const info = map[chartCurrentGenre];
+      if (info) {
+        const lines = info.ids.map((id, i) => {
+          const v = (document.getElementById(id)||{}).value?.trim();
+          return v ? `${info.labels[i]}: ${v}` : '';
+        }).filter(Boolean);
+        if (lines.length) result = `[장르별 묵상 — ${info.label}]\n${lines.join('\n')}`;
+      }
+    } else if (tool === 'god') {
+      const labels = ['성품','행동','감정','나의 응답'];
+      const ids = ['chart-god-q1','chart-god-q2','chart-god-q3','chart-god-q4'];
+      const lines = ids.map((id,i) => {
+        const v = (document.getElementById(id)||{}).value?.trim();
+        return v ? `${labels[i]}: ${v}` : '';
+      }).filter(Boolean);
+      if (lines.length) result = `[하나님 찾기]\n${lines.join('\n')}`;
+    } else if (tool === 'oia') {
+      const labels = ['O (관찰)','I (해석)','A (적용)'];
+      const ids = ['chart-oia-q1','chart-oia-q2','chart-oia-q3'];
+      const lines = ids.map((id,i) => {
+        const v = (document.getElementById(id)||{}).value?.trim();
+        return v ? `${labels[i]}: ${v}` : '';
+      }).filter(Boolean);
+      if (lines.length) result = `[귀납적 연구 OIA]\n${lines.join('\n')}`;
+    } else if (tool === 'lectio') {
+      const labels = ['Lectio (읽기)','Meditatio (묵상)','Oratio (기도)','Contemplatio (관상)'];
+      const ids = ['chart-lectio-q1','chart-lectio-q2','chart-lectio-q3','chart-lectio-q4'];
+      const lines = ids.map((id,i) => {
+        const v = (document.getElementById(id)||{}).value?.trim();
+        return v ? `${labels[i]}: ${v}` : '';
+      }).filter(Boolean);
+      if (lines.length) result = `[렉시오 디비나]\n${lines.join('\n')}`;
     }
-    closeChartPanel(type);
+
+    if (result) {
+      const existing = stayEl.value.trim();
+      stayEl.value = existing ? existing + '\n\n' + result : result;
+      stayEl.focus();
+    }
+    closeChartPanel('stay');
+  }
+
+  /* STEP helpers */
+  function chartStepShowTool(tool) {
+    document.getElementById('chart-step-tool-grid').style.display = 'none';
+    document.querySelectorAll('#chart-step-sheet .helper-form-view').forEach(el => el.classList.remove('active'));
+    const form = document.getElementById(`chart-step-form-${tool}`);
+    if (form) form.classList.add('active');
+  }
+  function chartStepBackToGrid() {
+    document.getElementById('chart-step-tool-grid').style.display = 'grid';
+    document.querySelectorAll('#chart-step-sheet .helper-form-view').forEach(el => el.classList.remove('active'));
+  }
+
+  function chartStepComplete(tool) {
+    const stepEl = document.getElementById('chartStep');
+    if (!stepEl) { closeChartPanel('step'); return; }
+    let result = '';
+
+    if (tool === 'ifthen') {
+      const situation = (document.getElementById('chart-ifthen-q1')||{}).value?.trim();
+      const action = (document.getElementById('chart-ifthen-q2')||{}).value?.trim();
+      if (situation || action) {
+        result = `만약 ${situation || '___'}이 되면, 나는 ${action || '___'}을 한다.`;
+      }
+    } else if (tool === 'smart') {
+      const labels = ['S','M','A','R','T'];
+      const ids = ['chart-smart-s','chart-smart-m','chart-smart-a','chart-smart-r','chart-smart-t'];
+      const lines = ids.map((id,i) => {
+        const v = (document.getElementById(id)||{}).value?.trim();
+        return v ? `${labels[i]}: ${v}` : '';
+      }).filter(Boolean);
+      if (lines.length) result = `[SMART 적용]\n${lines.join('\n')}`;
+    } else if (tool === 'relation') {
+      const labels = ['나눌 사람','적용 관계','구체적 행동'];
+      const ids = ['chart-relation-q1','chart-relation-q2','chart-relation-q3'];
+      const lines = ids.map((id,i) => {
+        const v = (document.getElementById(id)||{}).value?.trim();
+        return v ? `${labels[i]}: ${v}` : '';
+      }).filter(Boolean);
+      if (lines.length) result = `[관계로 살아내기]\n${lines.join('\n')}`;
+    } else if (tool === 'habit') {
+      const existing_habit = (document.getElementById('chart-habit-q1')||{}).value?.trim();
+      const new_action = (document.getElementById('chart-habit-q2')||{}).value?.trim();
+      if (existing_habit || new_action) {
+        result = `나는 이미 매일 ${existing_habit || '___'}을 한다.\n그 전/후에 ${new_action || '___'}을 추가한다.`;
+      }
+    }
+
+    if (result) {
+      const existing = stepEl.value.trim();
+      stepEl.value = existing ? existing + '\n\n' + result : result;
+      stepEl.focus();
+    }
+    closeChartPanel('step');
+  }
+
+  /* SPACE toggle */
+  function toggleChartSpace() {
+    const section = document.getElementById('chartSpaceSection');
+    const btn = document.getElementById('chartSpaceToggle');
+    const isOpen = section.style.display !== 'none';
+    section.style.display = isOpen ? 'none' : 'block';
+    btn.textContent = isOpen ? '▶ SPACE 적용 항목 펼치기' : '▼ SPACE 적용 항목 접기';
   }
 
   /* ── 차트 초기화 ── */
@@ -1447,6 +1758,10 @@
     });
     document.getElementById('declarationInput').value = '';
     document.getElementById('chartDate').value = new Date().toISOString().split('T')[0];
+    ['chartSpaceS','chartSpaceP','chartSpaceA','chartSpaceC','chartSpaceE'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
   }
 
   /* ── 스크롤 시 NAV 배경 ── */
