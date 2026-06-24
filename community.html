@@ -248,7 +248,7 @@
       overflow:hidden;
       transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1);
     }
-    .form-body.open { max-height:2000px; }
+    .form-body.open { max-height:4000px; }
     .form-body-inner { padding:0 1.25rem 1.25rem; }
 
     /* mode tabs */
@@ -849,6 +849,119 @@
     }
     .sss-declaration-input::placeholder { color:rgba(255,255,255,0.4); }
 
+    /* ── 묵상/적용 도우미 버튼 ── */
+    .helper-trigger-btn {
+      background:transparent;
+      border:1.5px solid var(--gold);
+      color:var(--gold);
+      padding:0.3rem 0.75rem;
+      border-radius:100px;
+      font-family:'Noto Sans KR',sans-serif;
+      font-size:0.78rem;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:0.5rem;
+      transition:background 0.2s, color 0.2s;
+    }
+    .helper-trigger-btn:hover { background:var(--gold); color:#fff; }
+
+    /* ── STAY/STEP 도우미 바텀시트 ── */
+    .sss-helper-overlay {
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.45);
+      z-index:300;
+      animation:overlayIn 0.2s ease;
+    }
+    .sss-helper-overlay.open { display:block; }
+
+    .sss-helper-sheet {
+      position:fixed;
+      bottom:0; left:0; right:0;
+      background:var(--white);
+      border-radius:20px 20px 0 0;
+      padding:0 0 env(safe-area-inset-bottom,0);
+      max-height:82vh;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      z-index:301;
+      transform:translateY(100%);
+      transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
+      max-width:680px;
+      margin:0 auto;
+    }
+    .sss-helper-sheet.open { transform:translateY(0); }
+
+    .sss-helper-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:1rem 1.25rem 0.75rem;
+      border-bottom:1px solid var(--border);
+      flex-shrink:0;
+    }
+    .sss-helper-title { font-size:1rem; font-weight:700; color:var(--navy); }
+    .sss-helper-close {
+      background:none; border:none; font-size:1.2rem;
+      cursor:pointer; color:var(--muted); padding:0.25rem;
+      line-height:1; border-radius:6px; transition:color 0.15s;
+    }
+    .sss-helper-close:hover { color:var(--navy); background:#f3f4f6; }
+
+    .sss-helper-tabs {
+      display:flex;
+      padding:0.75rem 1.25rem 0;
+      border-bottom:2px solid var(--border);
+      flex-shrink:0;
+      overflow-x:auto;
+      gap:0;
+    }
+    .sss-helper-tab {
+      padding:0.45rem 0.75rem;
+      border:none; background:none;
+      font-family:'Noto Sans KR',sans-serif;
+      font-size:0.8rem; font-weight:700;
+      color:var(--muted); cursor:pointer;
+      border-bottom:2.5px solid transparent;
+      margin-bottom:-2px;
+      transition:color 0.15s, border-color 0.15s;
+      white-space:nowrap;
+    }
+    .sss-helper-tab.active { color:var(--navy); border-bottom-color:var(--navy); }
+
+    .sss-helper-body { overflow-y:auto; padding:1.1rem 1.25rem 1.5rem; flex:1; }
+    .sss-helper-panel { display:none; }
+    .sss-helper-panel.active { display:block; }
+
+    .sss-helper-insert-btn {
+      display:block; width:100%;
+      background:#f8faff;
+      border:1.5px solid var(--border);
+      border-radius:12px;
+      padding:0.85rem 1rem;
+      margin-bottom:0.65rem;
+      text-align:left;
+      cursor:pointer;
+      font-family:'Noto Sans KR',sans-serif;
+      font-size:0.875rem;
+      color:var(--text);
+      line-height:1.6;
+      transition:border-color 0.15s, background 0.15s;
+    }
+    .sss-helper-insert-btn:hover { border-color:var(--gold); background:#fffbf0; }
+    .sss-helper-insert-note { font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem; }
+
+    /* ── STOP 섹션 2컬럼 그리드 ── */
+    .stop-time-place {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:0.65rem;
+      margin-bottom:0.85rem;
+    }
+    @media (max-width:400px) { .stop-time-place { grid-template-columns:1fr; } }
+
     /* ── BOTTOM BAR (mobile) ── */
     .bottom-bar {
       display:none;
@@ -986,39 +1099,44 @@
 
         <!-- STOP-STAY-STEP -->
         <div id="mode-sss">
+
+          <!-- 🛑 STOP -->
           <div class="form-row">
-            <label class="form-label">🛑 STOP — 내게 말씀하신 한 구절</label>
-            <input class="form-input" id="input-stop" type="text" placeholder="마음에 닿은 구절을 적으세요" />
-          </div>
-          <div class="form-row">
-            <label class="form-label">📚 STAY — SPACE 적용</label>
-            <div class="sss-space">
-              <div class="sss-space-item">
-                <span class="sss-space-label">S</span>
-                <input class="form-input" id="input-space-s" type="text" placeholder="고백할 죄나 잘못된 태도" />
+            <label class="form-label" style="color:var(--crimson);font-size:0.88rem;margin-bottom:0.5rem">🛑 STOP — 멈추라</label>
+            <div class="stop-time-place">
+              <div>
+                <label class="form-label">⏰ 시간</label>
+                <input class="form-input" id="input-stop-time" type="time" />
               </div>
-              <div class="sss-space-item">
-                <span class="sss-space-label">P</span>
-                <input class="form-input" id="input-space-p" type="text" placeholder="하나님의 약속" />
-              </div>
-              <div class="sss-space-item">
-                <span class="sss-space-label">A</span>
-                <input class="form-input" id="input-space-a" type="text" placeholder="취해야 할 행동" />
-              </div>
-              <div class="sss-space-item">
-                <span class="sss-space-label">C</span>
-                <input class="form-input" id="input-space-c" type="text" placeholder="순종해야 할 명령" />
-              </div>
-              <div class="sss-space-item">
-                <span class="sss-space-label">E</span>
-                <input class="form-input" id="input-space-e" type="text" placeholder="따르거나 피해야 할 본" />
+              <div>
+                <label class="form-label">📍 장소</label>
+                <input class="form-input" id="input-stop-place" type="text" placeholder="예: 거실, 카페, 교회..." />
               </div>
             </div>
+            <div class="form-row" style="margin-bottom:0.65rem">
+              <label class="form-label">🙏 나의 시작기도</label>
+              <textarea class="form-textarea" id="input-opening-prayer" rows="2" style="min-height:60px" placeholder="묵상을 시작하며 늘 드리는 나만의 기도 문장..."></textarea>
+            </div>
+            <div>
+              <label class="form-label">🛑 내게 닿은 구절</label>
+              <input class="form-input" id="input-stop-verse" type="text" placeholder="마음에 멈춘 구절이나 절 번호" />
+            </div>
           </div>
+
+          <!-- 📚 STAY -->
           <div class="form-row">
-            <label class="form-label">👣 STEP — 오늘의 한 가지 실천</label>
-            <input class="form-input" id="input-step" type="text" placeholder="구체적으로, 오늘 할 수 있는 것을" />
+            <label class="form-label" style="color:var(--crimson);font-size:0.88rem">📚 STAY — 머물라</label>
+            <textarea class="form-textarea" id="input-stay" rows="5" placeholder="말씀을 통해 하나님이 내게 말씀하신 것을 자유롭게 적어보세요..."></textarea>
+            <button type="button" class="helper-trigger-btn" onclick="openSssPanel('stay')">🔮 묵상 도우미</button>
           </div>
+
+          <!-- 👣 STEP -->
+          <div class="form-row">
+            <label class="form-label" style="color:var(--crimson);font-size:0.88rem">👣 STEP — 나아가라</label>
+            <textarea class="form-textarea" id="input-step" rows="3" placeholder="오늘 하루 이 말씀을 어떻게 살아낼지 구체적으로 적어보세요..."></textarea>
+            <button type="button" class="helper-trigger-btn" onclick="openSssPanel('step')">🔮 적용 도우미</button>
+          </div>
+
           <div class="form-row">
             <label class="form-label">🙏 오늘의 기도</label>
             <input class="form-input" id="input-prayer" type="text" placeholder="한 줄 기도 제목" />
@@ -1076,6 +1194,76 @@
   </div>
 
 </div><!-- /container -->
+
+<!-- STAY 묵상 도우미 바텀시트 -->
+<div class="sss-helper-overlay" id="sss-stay-overlay" onclick="closeSssPanel('stay')"></div>
+<div class="sss-helper-sheet" id="sss-stay-sheet" role="dialog" aria-modal="true" aria-label="묵상 도우미">
+  <div class="sss-helper-header">
+    <span class="sss-helper-title">🔮 묵상 도우미</span>
+    <button class="sss-helper-close" onclick="closeSssPanel('stay')">✕</button>
+  </div>
+  <div class="sss-helper-tabs">
+    <button class="sss-helper-tab active" onclick="setSssHelperTab('stay','genre')">장르별 묵상</button>
+    <button class="sss-helper-tab" onclick="setSssHelperTab('stay','god')">하나님 찾기</button>
+    <button class="sss-helper-tab" onclick="setSssHelperTab('stay','inductive')">귀납적 연구</button>
+    <button class="sss-helper-tab" onclick="setSssHelperTab('stay','lectio')">렉시오 디비나</button>
+  </div>
+  <div class="sss-helper-body">
+    <div class="sss-helper-panel active" id="sss-stay-panel-genre">
+      <p class="sss-helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','서사: 등장인물은 누구이며 어떤 선택을 했나요?\n갈등과 해결의 흐름은?\n내가 이 이야기 속 인물이라면?')">📖 서사 — 이야기 흐름과 인물</button>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','시편: 이 시편의 감정의 흐름은?\n하나님께 무엇을 고백하고 있나요?\n나는 지금 이 감정에 공감하나요?')">🎵 시편 — 감정과 고백</button>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','서신서: 어떤 교리/진리를 가르치나요?\n어떤 권면이 담겨 있나요?\n이 진리가 내 삶에서 의미하는 것은?')">✉️ 서신서 — 교리와 권면</button>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','예언서: 이 말씀의 역사적 배경은?\n예수님을 통해 어떻게 성취되었나요?\n오늘 내게 주는 경고나 소망은?')">🔥 예언서 — 역사와 성취</button>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','지혜문학: 이 지혜의 핵심 원리는?\n어떤 대조가 있나요?\n내 일상의 어느 상황에 적용되나요?')">💡 지혜문학 — 원리와 대조</button>
+    </div>
+    <div class="sss-helper-panel" id="sss-stay-panel-god">
+      <p class="sss-helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','이 본문에서 하나님은 어떤 분으로 나타나시나요?\n하나님이 하신 일이나 말씀하신 것은?\n하나님의 어떤 성품을 발견했나요?')">🔍 하나님 찾기 세 질문 삽입</button>
+    </div>
+    <div class="sss-helper-panel" id="sss-stay-panel-inductive">
+      <p class="sss-helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','[관찰] 본문에서 반복되는 단어나 주제는?\n[해석] 이 말씀이 원래 독자에게 의미한 것은?\n[적용] 이 진리가 오늘 내 삶에서 의미하는 것은?')">📐 관찰 → 해석 → 적용 삽입</button>
+    </div>
+    <div class="sss-helper-panel" id="sss-stay-panel-lectio">
+      <p class="sss-helper-insert-note">클릭하면 STAY 묵상 입력란에 질문이 추가됩니다.</p>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('stay','[읽기] 천천히 다시 읽으며 마음에 울리는 단어를 찾으세요.\n[묵상] 그 단어를 곱씹으며 하나님께서 말씀하시는 것은?\n[기도] 그 말씀에 응답하는 짧은 기도를 드리세요.\n[관상] 잠시 침묵하며 하나님의 임재 안에 머무세요.')">🕯️ 렉시오 디비나 4단계 삽입</button>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 적용 도우미 바텀시트 -->
+<div class="sss-helper-overlay" id="sss-step-overlay" onclick="closeSssPanel('step')"></div>
+<div class="sss-helper-sheet" id="sss-step-sheet" role="dialog" aria-modal="true" aria-label="적용 도우미">
+  <div class="sss-helper-header">
+    <span class="sss-helper-title">🔮 적용 도우미</span>
+    <button class="sss-helper-close" onclick="closeSssPanel('step')">✕</button>
+  </div>
+  <div class="sss-helper-tabs">
+    <button class="sss-helper-tab active" onclick="setSssHelperTab('step','ifthen')">If-Then 계획</button>
+    <button class="sss-helper-tab" onclick="setSssHelperTab('step','smart')">SMART 적용</button>
+    <button class="sss-helper-tab" onclick="setSssHelperTab('step','relation')">관계 적용</button>
+    <button class="sss-helper-tab" onclick="setSssHelperTab('step','habit')">습관 연결</button>
+  </div>
+  <div class="sss-helper-body">
+    <div class="sss-helper-panel active" id="sss-step-panel-ifthen">
+      <p class="sss-helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('step','만약 오늘 _______ 상황이 오면,\n나는 _______를 실천하겠습니다.')">📋 If-Then 계획 삽입</button>
+    </div>
+    <div class="sss-helper-panel" id="sss-step-panel-smart">
+      <p class="sss-helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('step','구체적으로(S): 무엇을 정확히 할 것인가?\n언제까지(T): 오늘/이번 주 언제?\n누구와(R): 혼자인가, 누군가와 함께인가?')">🎯 SMART 적용 질문 삽입</button>
+    </div>
+    <div class="sss-helper-panel" id="sss-step-panel-relation">
+      <p class="sss-helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('step','이 말씀을 오늘 누구에게 나눌 수 있을까요?\n내 가장 가까운 관계에서 이 말씀을 어떻게 적용하나요?')">❤️ 관계 적용 질문 삽입</button>
+    </div>
+    <div class="sss-helper-panel" id="sss-step-panel-habit">
+      <p class="sss-helper-insert-note">클릭하면 STEP 적용 입력란에 내용이 추가됩니다.</p>
+      <button class="sss-helper-insert-btn" onclick="insertSssHelper('step','나는 이미 매일 _______ 를 한다.\n그 전/후에 오늘의 실천 _______ 를 연결하겠습니다.')">🔗 습관 연결 템플릿 삽입</button>
+    </div>
+  </div>
+</div>
 
 <!-- 기능 3: 묵상 도움말 패널 -->
 <div class="help-overlay" id="help-overlay" onclick="closeHelpPanel()"></div>
@@ -1364,20 +1552,19 @@ async function submitPost() {
 
   let postData = {};
   if (currentMode === 'sss') {
-    const stop        = document.getElementById('input-stop').value.trim();
-    const space_s     = document.getElementById('input-space-s').value.trim();
-    const space_p     = document.getElementById('input-space-p').value.trim();
-    const space_a     = document.getElementById('input-space-a').value.trim();
-    const space_c     = document.getElementById('input-space-c').value.trim();
-    const space_e     = document.getElementById('input-space-e').value.trim();
-    const step        = document.getElementById('input-step').value.trim();
-    const prayer      = document.getElementById('input-prayer').value.trim();
-    const thanks1     = document.getElementById('input-thanks1').value.trim();
-    const thanks2     = document.getElementById('input-thanks2').value.trim();
-    const thanks3     = document.getElementById('input-thanks3').value.trim();
-    const declaration = document.getElementById('input-declaration').value.trim();
+    const stop_time      = document.getElementById('input-stop-time').value.trim();
+    const stop_place     = document.getElementById('input-stop-place').value.trim();
+    const opening_prayer = document.getElementById('input-opening-prayer').value.trim();
+    const stop_verse     = document.getElementById('input-stop-verse').value.trim();
+    const stay           = document.getElementById('input-stay').value.trim();
+    const step           = document.getElementById('input-step').value.trim();
+    const prayer         = document.getElementById('input-prayer').value.trim();
+    const thanks1        = document.getElementById('input-thanks1').value.trim();
+    const thanks2        = document.getElementById('input-thanks2').value.trim();
+    const thanks3        = document.getElementById('input-thanks3').value.trim();
+    const declaration    = document.getElementById('input-declaration').value.trim();
 
-    if (!stop && !space_s && !space_p && !space_a && !space_c && !space_e && !step) {
+    if (!stop_verse && !stay && !step) {
       alert('묵상 내용을 하나 이상 입력해주세요');
       return;
     }
@@ -1388,8 +1575,8 @@ async function submitPost() {
       date: currentDateStr,
       scripture: (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '',
       mode: 'sss',
-      stop, space_s, space_p, space_a, space_c, space_e,
-      step, prayer, thanks1, thanks2, thanks3, declaration,
+      stop_time, stop_place, opening_prayer, stop_verse,
+      stay, step, prayer, thanks1, thanks2, thanks3, declaration,
       likes: 0,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     };
@@ -1434,13 +1621,18 @@ async function submitPost() {
     btn.textContent = '🏆 올리기';
     // 폼 초기화
     ['input-name','input-church',
-     'input-stop','input-space-s','input-space-p','input-space-a','input-space-c','input-space-e',
-     'input-step','input-prayer','input-thanks1','input-thanks2','input-thanks3','input-declaration',
+     'input-stop-time','input-stop-place','input-stop-verse',
+     'input-stay','input-step','input-prayer',
+     'input-thanks1','input-thanks2','input-thanks3','input-declaration',
      'input-free'
     ].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = '';
     });
+    // 시작기도는 localStorage에서 복원 (개인 기도 유지)
+    const savedPrayer = localStorage.getItem('wtd_opening_prayer');
+    const prayerEl = document.getElementById('input-opening-prayer');
+    if (prayerEl) prayerEl.value = savedPrayer || '';
 
   } catch(e) {
     console.error(e);
@@ -1491,33 +1683,55 @@ function renderPost(id, data) {
 
   let contentHtml = '';
   if (data.mode === 'sss') {
-    // New SSS format
-    if (data.stop) contentHtml += `
+    // STOP 섹션 (새 형식: 시간/장소/시작기도/닿은 구절)
+    const stopMeta = [
+      data.stop_time ? `⏰ ${escHtml(data.stop_time)}` : '',
+      data.stop_place ? `📍 ${escHtml(data.stop_place)}` : '',
+    ].filter(Boolean).join('&nbsp;&nbsp;');
+
+    let stopHtml = '';
+    if (stopMeta) stopHtml += `<div class="post-text" style="font-size:0.8rem;color:var(--muted);margin-bottom:0.35rem">${stopMeta}</div>`;
+    if (data.opening_prayer) stopHtml += `<div class="post-text" style="font-style:italic;color:var(--muted);font-size:0.83rem;margin-bottom:0.35rem">🙏 ${escHtml(data.opening_prayer)}</div>`;
+    if (data.stop_verse) stopHtml += `<div class="post-text">${escHtml(data.stop_verse)}</div>`;
+    // 하위호환: 구 'stop' 필드
+    if (!data.stop_verse && data.stop) stopHtml += `<div class="post-text">${escHtml(data.stop)}</div>`;
+
+    if (stopHtml) contentHtml += `
       <div class="post-section">
         <span class="post-section-label label-stop">🛑 STOP</span>
-        <div class="post-text">${escHtml(data.stop)}</div>
+        <div style="margin-top:0.3rem">${stopHtml}</div>
       </div>`;
 
-    const spaceItems = [
-      { key:'space_s', label:'S', text:'고백할 죄나 잘못된 태도' },
-      { key:'space_p', label:'P', text:'하나님의 약속' },
-      { key:'space_a', label:'A', text:'취해야 할 행동' },
-      { key:'space_c', label:'C', text:'순종해야 할 명령' },
-      { key:'space_e', label:'E', text:'따르거나 피해야 할 본' },
-    ];
-    const spaceRows = spaceItems
-      .filter(({ key }) => data[key])
-      .map(({ key, label }) =>
-        `<div style="display:flex;align-items:flex-start;gap:0.5rem;margin-bottom:0.35rem">
-          <span style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:0.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">${label}</span>
-          <div class="post-text" style="margin:0">${escHtml(data[key])}</div>
-        </div>`)
-      .join('');
-    if (spaceRows) contentHtml += `
+    // STAY 섹션 (새 형식: 자유 묵상)
+    if (data.stay) contentHtml += `
       <div class="post-section">
         <span class="post-section-label label-stay">📚 STAY</span>
-        <div style="margin-top:0.35rem">${spaceRows}</div>
+        <div class="post-text">${escHtml(data.stay)}</div>
       </div>`;
+
+    // 하위호환: 구 SPACE S/P/A/C/E 형식
+    if (!data.stay) {
+      const spaceItems = [
+        { key:'space_s', label:'S' },
+        { key:'space_p', label:'P' },
+        { key:'space_a', label:'A' },
+        { key:'space_c', label:'C' },
+        { key:'space_e', label:'E' },
+      ];
+      const spaceRows = spaceItems
+        .filter(({ key }) => data[key])
+        .map(({ key, label }) =>
+          `<div style="display:flex;align-items:flex-start;gap:0.5rem;margin-bottom:0.35rem">
+            <span style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:0.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">${label}</span>
+            <div class="post-text" style="margin:0">${escHtml(data[key])}</div>
+          </div>`)
+        .join('');
+      if (spaceRows) contentHtml += `
+        <div class="post-section">
+          <span class="post-section-label label-stay">📚 STAY</span>
+          <div style="margin-top:0.35rem">${spaceRows}</div>
+        </div>`;
+    }
 
     if (data.step) contentHtml += `
       <div class="post-section">
@@ -1849,6 +2063,64 @@ function insertPrayerStarter(text) {
   if (!formOpen) openForm();
   // SSS 탭으로 전환
   setMode('sss');
+}
+
+// ════════════════════════════════════════════════
+// 나의 시작기도 localStorage 연동
+// ════════════════════════════════════════════════
+(function initOpeningPrayer() {
+  const saved = localStorage.getItem('wtd_opening_prayer');
+  const el = document.getElementById('input-opening-prayer');
+  if (el && saved) el.value = saved;
+  if (el) {
+    el.addEventListener('input', (e) => {
+      localStorage.setItem('wtd_opening_prayer', e.target.value);
+    });
+  }
+})();
+
+// ════════════════════════════════════════════════
+// STAY/STEP 묵상 도우미 바텀시트
+// ════════════════════════════════════════════════
+const sssHelperTabs = {
+  stay: ['genre','god','inductive','lectio'],
+  step: ['ifthen','smart','relation','habit']
+};
+
+function openSssPanel(type) {
+  document.getElementById(`sss-${type}-overlay`).classList.add('open');
+  document.getElementById(`sss-${type}-sheet`).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSssPanel(type) {
+  document.getElementById(`sss-${type}-overlay`).classList.remove('open');
+  document.getElementById(`sss-${type}-sheet`).classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function setSssHelperTab(type, tab) {
+  const tabs = sssHelperTabs[type];
+  const sheet = document.getElementById(`sss-${type}-sheet`);
+  sheet.querySelectorAll('.sss-helper-tab').forEach((btn, i) => {
+    btn.classList.toggle('active', tabs[i] === tab);
+  });
+  tabs.forEach(t => {
+    const panel = document.getElementById(`sss-${type}-panel-${t}`);
+    if (panel) panel.classList.toggle('active', t === tab);
+  });
+}
+
+function insertSssHelper(type, text) {
+  const targetId = type === 'stay' ? 'input-stay' : 'input-step';
+  const el = document.getElementById(targetId);
+  if (el) {
+    const existing = el.value.trim();
+    el.value = existing ? existing + '\n' + text : text;
+    el.focus();
+  }
+  closeSssPanel(type);
+  if (!formOpen) openForm();
 }
 
 // ── 초기화 ──
