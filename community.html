@@ -516,6 +516,282 @@
     }
     .delete-btn:hover { color:#c0392b; background:#fff0f0; }
 
+    /* ── CHECKIN CARD (기능 1) ── */
+    .checkin-card {
+      background:linear-gradient(135deg, var(--green) 0%, #2d6b43 100%);
+      border-radius:20px;
+      padding:1.25rem 1.5rem;
+      margin-bottom:0.9rem;
+      box-shadow:0 4px 20px rgba(28,74,46,0.3);
+      color:var(--white);
+    }
+    .checkin-title {
+      font-size:1rem;
+      font-weight:700;
+      margin-bottom:0.85rem;
+    }
+    .checkin-btns {
+      display:flex;
+      gap:0.6rem;
+      margin-bottom:0.75rem;
+    }
+    .checkin-btn {
+      flex:1;
+      padding:0.6rem 0.5rem;
+      border:none;
+      border-radius:12px;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.85rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform 0.1s, opacity 0.15s;
+    }
+    .checkin-btn:active { transform:scale(0.97); }
+    .checkin-btn.done-btn {
+      background:var(--gold);
+      color:var(--navy);
+    }
+    .checkin-btn.done-btn:hover { background:var(--gold-light); }
+    .checkin-btn.tomorrow-btn {
+      background:rgba(255,255,255,0.2);
+      color:var(--white);
+      border:1.5px solid rgba(255,255,255,0.4);
+    }
+    .checkin-btn.tomorrow-btn:hover { background:rgba(255,255,255,0.3); }
+    .checkin-memo {
+      width:100%;
+      background:rgba(255,255,255,0.15);
+      border:1.5px solid rgba(255,255,255,0.3);
+      border-radius:10px;
+      padding:0.55rem 0.85rem;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.85rem;
+      color:var(--white);
+      outline:none;
+      transition:border-color 0.2s;
+    }
+    .checkin-memo::placeholder { color:rgba(255,255,255,0.55); }
+    .checkin-memo:focus { border-color:rgba(255,255,255,0.7); }
+    .checkin-complete {
+      font-size:0.95rem;
+      font-weight:700;
+      text-align:center;
+      padding:0.75rem 0;
+      letter-spacing:0.01em;
+    }
+
+    /* ── FEED FILTER TABS (기능 2) ── */
+    .feed-filter-tabs {
+      display:flex;
+      gap:0.4rem;
+    }
+    .feed-filter-tab {
+      padding:0.28rem 0.75rem;
+      border-radius:100px;
+      border:1.5px solid var(--border);
+      background:none;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.78rem;
+      font-weight:700;
+      color:var(--muted);
+      cursor:pointer;
+      transition:background 0.15s, color 0.15s, border-color 0.15s;
+      white-space:nowrap;
+    }
+    .feed-filter-tab.active {
+      background:var(--navy);
+      color:var(--white);
+      border-color:var(--navy);
+    }
+    .feed-filter-tab:hover:not(.active) { border-color:var(--navy); color:var(--navy); }
+
+    /* ── HELP PANEL (기능 3) ── */
+    .help-trigger {
+      display:block;
+      width:100%;
+      background:none;
+      border:none;
+      text-align:center;
+      padding:0.65rem 0 0.1rem;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.82rem;
+      color:var(--muted);
+      cursor:pointer;
+      text-decoration:underline;
+      text-underline-offset:3px;
+      transition:color 0.15s;
+    }
+    .help-trigger:hover { color:var(--navy); }
+
+    .help-overlay {
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.45);
+      z-index:200;
+      animation:overlayIn 0.2s ease;
+    }
+    .help-overlay.open { display:block; }
+    @keyframes overlayIn { from { opacity:0; } to { opacity:1; } }
+
+    .help-sheet {
+      position:fixed;
+      bottom:0; left:0; right:0;
+      background:var(--white);
+      border-radius:20px 20px 0 0;
+      padding:0 0 env(safe-area-inset-bottom,0);
+      max-height:85vh;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      z-index:201;
+      transform:translateY(100%);
+      transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
+      max-width:680px;
+      margin:0 auto;
+    }
+    .help-sheet.open { transform:translateY(0); }
+
+    .help-sheet-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:1rem 1.25rem 0.75rem;
+      border-bottom:1px solid var(--border);
+      flex-shrink:0;
+    }
+    .help-sheet-title {
+      font-size:1rem;
+      font-weight:700;
+      color:var(--navy);
+    }
+    .help-close-btn {
+      background:none;
+      border:none;
+      font-size:1.2rem;
+      cursor:pointer;
+      color:var(--muted);
+      padding:0.25rem;
+      line-height:1;
+      transition:color 0.15s;
+      border-radius:6px;
+    }
+    .help-close-btn:hover { color:var(--navy); background:#f3f4f6; }
+
+    .help-tabs {
+      display:flex;
+      gap:0;
+      padding:0.75rem 1.25rem 0;
+      border-bottom:2px solid var(--border);
+      flex-shrink:0;
+    }
+    .help-tab {
+      padding:0.45rem 0.75rem;
+      border:none;
+      background:none;
+      font-family:'Noto Sans KR', sans-serif;
+      font-size:0.8rem;
+      font-weight:700;
+      color:var(--muted);
+      cursor:pointer;
+      border-bottom:2.5px solid transparent;
+      margin-bottom:-2px;
+      transition:color 0.15s, border-color 0.15s;
+      white-space:nowrap;
+    }
+    .help-tab.active {
+      color:var(--navy);
+      border-bottom-color:var(--navy);
+    }
+
+    .help-body {
+      overflow-y:auto;
+      padding:1.1rem 1.25rem 1.5rem;
+      flex:1;
+    }
+
+    .help-panel { display:none; }
+    .help-panel.active { display:block; }
+
+    .help-section-title {
+      font-size:0.78rem;
+      font-weight:700;
+      letter-spacing:0.07em;
+      color:var(--muted);
+      margin-bottom:0.75rem;
+      text-transform:uppercase;
+    }
+    .help-step {
+      display:flex;
+      gap:0.75rem;
+      margin-bottom:1rem;
+      align-items:flex-start;
+    }
+    .help-step-badge {
+      background:var(--navy);
+      color:var(--white);
+      border-radius:8px;
+      padding:0.2rem 0.55rem;
+      font-size:0.75rem;
+      font-weight:700;
+      flex-shrink:0;
+      line-height:1.6;
+    }
+    .help-step-text {
+      font-size:0.875rem;
+      line-height:1.7;
+      color:var(--text);
+    }
+    .help-step-sub {
+      font-size:0.8rem;
+      color:var(--muted);
+      margin-top:0.2rem;
+      line-height:1.6;
+      font-style:italic;
+    }
+
+    .prayer-starter {
+      background:#f8faff;
+      border:1.5px solid var(--border);
+      border-radius:12px;
+      padding:0.7rem 1rem;
+      margin-bottom:0.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:0.5rem;
+      cursor:pointer;
+      transition:border-color 0.15s, background 0.15s;
+    }
+    .prayer-starter:hover { border-color:var(--gold); background:#fffbf0; }
+    .prayer-starter-text {
+      font-size:0.875rem;
+      color:var(--text);
+      line-height:1.6;
+      flex:1;
+    }
+    .prayer-starter-icon {
+      font-size:1rem;
+      flex-shrink:0;
+      color:var(--gold);
+    }
+    .prayer-insert-note {
+      font-size:0.78rem;
+      color:var(--muted);
+      margin-bottom:0.75rem;
+    }
+
+    .finding-q {
+      background:#f3fdf6;
+      border-left:3px solid var(--green);
+      border-radius:0 10px 10px 0;
+      padding:0.65rem 0.9rem;
+      margin-bottom:0.6rem;
+      font-size:0.875rem;
+      color:var(--text);
+      line-height:1.65;
+    }
+
     /* ── BOTTOM BAR (mobile) ── */
     .bottom-bar {
       display:none;
@@ -611,6 +887,18 @@
     </div>
   </div>
 
+  <!-- 기능 1: 저녁 적용 체크인 -->
+  <div class="checkin-card" id="checkin-card" style="display:none">
+    <div class="checkin-title">✅ 오늘 말씀, 삶에 적용했나요?</div>
+    <div id="checkin-content">
+      <div class="checkin-btns">
+        <button class="checkin-btn done-btn" onclick="doCheckin('done')">✓ 네, 했어요</button>
+        <button class="checkin-btn tomorrow-btn" onclick="doCheckin('tomorrow')">내일 더 노력할게요</button>
+      </div>
+      <input class="checkin-memo" id="checkin-memo" type="text" placeholder="오늘 어떻게 적용했나요? (선택)" maxlength="80" />
+    </div>
+  </div>
+
   <!-- FORM ACCORDION -->
   <div class="form-accordion" id="form-accordion">
     <div class="form-toggle-row" onclick="toggleForm()" id="form-toggle-row">
@@ -666,6 +954,7 @@
         <button class="submit-btn" id="submit-btn" onclick="submitPost()">
           🏆 올리기
         </button>
+        <button class="help-trigger" onclick="openHelpPanel()" type="button">📖 묵상 도움말</button>
       </div><!-- /form-body-inner -->
     </div><!-- /form-body -->
     <div class="submit-success" id="submit-success">
@@ -675,7 +964,13 @@
 
   <!-- FEED -->
   <div class="feed-top">
-    <div class="feed-title" id="feed-title">오늘 함께한 묵상 0개</div>
+    <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;min-width:0">
+      <div class="feed-title" id="feed-title">오늘 함께한 묵상 0개</div>
+      <div class="feed-filter-tabs" id="feed-filter-tabs">
+        <button class="feed-filter-tab active" id="tab-all" onclick="setFeedFilter('all')">전체</button>
+        <button class="feed-filter-tab" id="tab-mine" onclick="setFeedFilter('mine')">내 묵상</button>
+      </div>
+    </div>
     <div class="date-nav-row">
       <button class="date-arrow" id="prev-btn" onclick="changeDate(-1)" title="어제">&#8249;</button>
       <button class="date-label-btn" onclick="goToday()">오늘</button>
@@ -688,6 +983,75 @@
   </div>
 
 </div><!-- /container -->
+
+<!-- 기능 3: 묵상 도움말 패널 -->
+<div class="help-overlay" id="help-overlay" onclick="closeHelpPanel()"></div>
+<div class="help-sheet" id="help-sheet" role="dialog" aria-modal="true" aria-label="묵상 도움말">
+  <div class="help-sheet-header">
+    <span class="help-sheet-title">📖 묵상 도움말</span>
+    <button class="help-close-btn" onclick="closeHelpPanel()" aria-label="닫기">✕</button>
+  </div>
+  <div class="help-tabs">
+    <button class="help-tab active" id="htab-sss" onclick="setHelpTab('sss')">STOP/STAY/STEP</button>
+    <button class="help-tab" id="htab-prayer" onclick="setHelpTab('prayer')">기도 시작 문장</button>
+    <button class="help-tab" id="htab-finding" onclick="setHelpTab('finding')">하나님 찾기</button>
+  </div>
+  <div class="help-body">
+
+    <!-- 탭 1: STOP/STAY/STEP -->
+    <div class="help-panel active" id="hpanel-sss">
+      <div class="help-section-title">3단계 묵상 가이드</div>
+      <div class="help-step">
+        <span class="help-step-badge">🛑 STOP</span>
+        <div>
+          <div class="help-step-text">읽다가 마음에 닿는 구절에서 멈추기</div>
+          <div class="help-step-sub">억지로 계속 읽지 말고, 마음이 머무는 그 자리에 서세요.</div>
+        </div>
+      </div>
+      <div class="help-step">
+        <span class="help-step-badge">📚 STAY</span>
+        <div>
+          <div class="help-step-text">그 구절과 함께 머물기</div>
+          <div class="help-step-sub">"하나님, 이 말씀이 왜 제게 닿나요?" — 조용히 여쭤보세요.</div>
+        </div>
+      </div>
+      <div class="help-step">
+        <span class="help-step-badge">👣 STEP</span>
+        <div>
+          <div class="help-step-text">오늘 하루 한 가지 구체적 행동</div>
+          <div class="help-step-sub">추상적인 결단보다 오늘 내가 실제로 할 수 있는 한 가지를 써보세요.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 탭 2: 기도 시작 문장 -->
+    <div class="help-panel" id="hpanel-prayer">
+      <div class="help-section-title">클릭하면 STEP 입력칸에 자동 삽입돼요</div>
+      <p class="prayer-insert-note">아래 문장을 클릭하면 STEP 입력칸에 붙여넣어집니다.</p>
+      <div class="prayer-starter" onclick="insertPrayerStarter('하나님, 오늘 말씀을 통해 ')">
+        <span class="prayer-starter-text">하나님, 오늘 말씀을 통해...</span>
+        <span class="prayer-starter-icon">＋</span>
+      </div>
+      <div class="prayer-starter" onclick="insertPrayerStarter('주님, 제 삶의 ___ 부분에 이 말씀을 적용하겠습니다. ')">
+        <span class="prayer-starter-text">주님, 제 삶의 _____ 부분에 이 말씀을 적용하겠습니다</span>
+        <span class="prayer-starter-icon">＋</span>
+      </div>
+      <div class="prayer-starter" onclick="insertPrayerStarter('오늘 하루 ___을 실천하겠습니다. ')">
+        <span class="prayer-starter-text">오늘 하루 _____을 실천하겠습니다</span>
+        <span class="prayer-starter-icon">＋</span>
+      </div>
+    </div>
+
+    <!-- 탭 3: 하나님 찾기 -->
+    <div class="help-panel" id="hpanel-finding">
+      <div class="help-section-title">오늘 본문에서 하나님을 발견하기</div>
+      <div class="finding-q">이 본문에서 하나님은 어떤 분으로 나타나시나요?</div>
+      <div class="finding-q">하나님이 원하시는 것은 무엇인가요?</div>
+      <div class="finding-q">내가 받은 약속이나 명령은 무엇인가요?</div>
+    </div>
+
+  </div>
+</div>
 
 <!-- BOTTOM BAR (mobile) -->
 <div class="bottom-bar">
@@ -988,22 +1352,9 @@ function loadFeed() {
       const dateLabel = isToday ? '오늘' : formatDateShort(currentDateStr);
       document.getElementById('feed-title').textContent = `${dateLabel} 함께한 묵상 ${count}개`;
 
-      if (count === 0) {
-        document.getElementById('feed-container').innerHTML = `
-          <div class="feed-empty">
-            <div class="feed-empty-icon">🌅</div>
-            <p>아직 오늘의 묵상이 없어요<br>첫 번째로 나눠보세요!</p>
-            <button class="feed-empty-btn" onclick="openForm()">✍️ 묵상 쓰기</button>
-          </div>`;
-        return;
-      }
-      document.getElementById('feed-container').innerHTML =
-        snapshot.docs.map(doc => renderPost(doc.id, doc.data())).join('');
-      // restore liked states
-      likedPosts.forEach(id => {
-        const btn = document.getElementById(`like-${id}`);
-        if (btn) btn.classList.add('liked');
-      });
+      // 기능 2: 전역 캐시 업데이트 후 필터 렌더링
+      allPostsCache = snapshot.docs.map(doc => ({ id: doc.id, data: doc.data() }));
+      renderFilteredFeed();
     }, err => {
       console.error(err);
       document.getElementById('feed-container').innerHTML =
@@ -1129,16 +1480,9 @@ async function deletePost(docId, postName) {
 
 // ── 데모 피드 (Firebase 미설정 시) ──
 function renderDemoFeed() {
-  const count = 2;
-  document.getElementById('post-count-badge').textContent = `묵상 ${count}개 (데모)`;
-  document.getElementById('feed-title').textContent = `오늘 함께한 묵상 ${count}개 (데모)`;
   const scriptureRef = (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '';
-
-  document.getElementById('feed-container').innerHTML = `
-    <div style="background:#fff3cd;border-radius:8px;padding:0.75rem 1rem;margin-bottom:0.75rem;font-size:0.8rem;color:#856404;border:1px solid #ffc10733">
-      📌 데모 모드입니다. Firebase 설정 후 실제 묵상을 나눌 수 있습니다.
-    </div>
-    ${renderPost('demo1', {
+  const demoData = [
+    { id: 'demo1', data: {
       name:'이승목', church:'승목교회', date:currentDateStr,
       scripture: scriptureRef,
       mode:'stop-stay-step',
@@ -1149,15 +1493,34 @@ function renderDemoFeed() {
       },
       likes:5,
       timestamp:{ toDate:()=>new Date() }
-    })}
-    ${renderPost('demo2', {
+    }},
+    { id: 'demo2', data: {
       name:'홍길동', church:'', date:currentDateStr,
       scripture: scriptureRef,
       mode:'free',
       content:{ free:'오늘 말씀을 읽으며 하나님의 신실하심이 느껴졌습니다. 매일 이 자리로 부르시는 주님께 감사합니다. Win the Day!' },
       likes:2,
       timestamp:{ toDate:()=>new Date(Date.now()-600000) }
-    })}`;
+    }}
+  ];
+
+  // 기능 2: 캐시 업데이트
+  allPostsCache = demoData;
+
+  const count = demoData.length;
+  document.getElementById('post-count-badge').textContent = `묵상 ${count}개 (데모)`;
+  document.getElementById('feed-title').textContent = `오늘 함께한 묵상 ${count}개 (데모)`;
+
+  const demoBanner = `<div style="background:#fff3cd;border-radius:8px;padding:0.75rem 1rem;margin-bottom:0.75rem;font-size:0.8rem;color:#856404;border:1px solid #ffc10733">
+    📌 데모 모드입니다. Firebase 설정 후 실제 묵상을 나눌 수 있습니다.
+  </div>`;
+
+  if (currentFeedFilter === 'mine') {
+    renderFilteredFeed();
+  } else {
+    document.getElementById('feed-container').innerHTML =
+      demoBanner + demoData.map(({id, data}) => renderPost(id, data)).join('');
+  }
 }
 
 // ── 유틸 ──
@@ -1174,11 +1537,154 @@ function escHtml(str) {
   return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// ════════════════════════════════════════════════
+// 기능 1: 저녁 적용 체크인
+// ════════════════════════════════════════════════
+function checkinKey() {
+  return `wtd_checkin_${getTodayStr()}`;
+}
+
+function renderCheckin() {
+  const card = document.getElementById('checkin-card');
+  const hour = new Date().getHours();
+  // 오전 9시 이전 숨김, 오후 5시(17) 이후 표시
+  if (hour < 9 || (hour >= 9 && hour < 17)) {
+    card.style.display = 'none';
+    return;
+  }
+
+  const saved = localStorage.getItem(checkinKey());
+  card.style.display = 'block';
+
+  if (saved) {
+    const label = saved === 'done' ? '오늘 적용 완료 🎉' : '내일 더 노력해봐요 💪';
+    document.getElementById('checkin-content').innerHTML =
+      `<div class="checkin-complete">${label}</div>`;
+  }
+}
+
+function doCheckin(type) {
+  const memo = document.getElementById('checkin-memo');
+  const memoVal = memo ? memo.value.trim() : '';
+  const payload = JSON.stringify({ type, memo: memoVal });
+  localStorage.setItem(checkinKey(), type);
+  if (memoVal) localStorage.setItem(checkinKey() + '_memo', memoVal);
+
+  const label = type === 'done' ? '오늘 적용 완료 🎉' : '내일 더 노력해봐요 💪';
+  document.getElementById('checkin-content').innerHTML =
+    `<div class="checkin-complete">${label}</div>`;
+}
+
+// ════════════════════════════════════════════════
+// 기능 2: 내 묵상 필터 탭
+// ════════════════════════════════════════════════
+let allPostsCache = []; // [{id, data}, ...]
+let currentFeedFilter = 'all';
+
+function setFeedFilter(filter) {
+  currentFeedFilter = filter;
+  document.getElementById('tab-all').classList.toggle('active', filter === 'all');
+  document.getElementById('tab-mine').classList.toggle('active', filter === 'mine');
+  renderFilteredFeed();
+}
+
+function renderFilteredFeed() {
+  const container = document.getElementById('feed-container');
+  const raw = localStorage.getItem('wtd_pledge_v1');
+  const myName = raw ? JSON.parse(raw).name : null;
+
+  if (currentFeedFilter === 'mine') {
+    if (!myName) {
+      container.innerHTML = `
+        <div class="feed-empty">
+          <div class="feed-empty-icon">📝</div>
+          <p>서약 후 묵상을 작성하면<br>여기서 모아볼 수 있어요</p>
+          <button class="feed-empty-btn" onclick="location.href='index.html#pledge'">서약하러 가기 →</button>
+        </div>`;
+      return;
+    }
+    const mine = allPostsCache.filter(({data}) => data.name === myName);
+    if (mine.length === 0) {
+      container.innerHTML = `
+        <div class="feed-empty">
+          <div class="feed-empty-icon">✍️</div>
+          <p>아직 내 묵상이 없어요<br>첫 번째로 나눠보세요!</p>
+          <button class="feed-empty-btn" onclick="openForm()">묵상 쓰기</button>
+        </div>`;
+      return;
+    }
+    container.innerHTML = mine.map(({id, data}) => renderPost(id, data)).join('');
+    likedPosts.forEach(id => {
+      const btn = document.getElementById(`like-${id}`);
+      if (btn) btn.classList.add('liked');
+    });
+    return;
+  }
+
+  // 전체
+  if (allPostsCache.length === 0) {
+    container.innerHTML = `
+      <div class="feed-empty">
+        <div class="feed-empty-icon">🌅</div>
+        <p>아직 오늘의 묵상이 없어요<br>첫 번째로 나눠보세요!</p>
+        <button class="feed-empty-btn" onclick="openForm()">✍️ 묵상 쓰기</button>
+      </div>`;
+    return;
+  }
+  container.innerHTML = allPostsCache.map(({id, data}) => renderPost(id, data)).join('');
+  likedPosts.forEach(id => {
+    const btn = document.getElementById(`like-${id}`);
+    if (btn) btn.classList.add('liked');
+  });
+}
+
+// ════════════════════════════════════════════════
+// 기능 3: 도움 틀 슬라이드 패널
+// ════════════════════════════════════════════════
+let helpOpen = false;
+
+function openHelpPanel() {
+  helpOpen = true;
+  document.getElementById('help-overlay').classList.add('open');
+  document.getElementById('help-sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHelpPanel() {
+  helpOpen = false;
+  document.getElementById('help-overlay').classList.remove('open');
+  document.getElementById('help-sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function setHelpTab(tab) {
+  ['sss','prayer','finding'].forEach(t => {
+    document.getElementById(`htab-${t}`).classList.toggle('active', t === tab);
+    document.getElementById(`hpanel-${t}`).classList.toggle('active', t === tab);
+  });
+}
+
+function insertPrayerStarter(text) {
+  // STEP 입력칸에 자동 삽입 후 패널 닫기
+  const stepInput = document.getElementById('input-step');
+  if (stepInput) {
+    stepInput.value = text;
+    stepInput.focus();
+  }
+  closeHelpPanel();
+  // 폼이 닫혀 있으면 열기
+  if (!formOpen) openForm();
+  // SSS 탭으로 전환
+  setMode('sss');
+}
+
 // ── 초기화 ──
 renderStreak();
 initDate();
 initFirebase();
 if (isFirebaseReady) loadFeed();
+// 기능 1 체크인 렌더
+renderCheckin();
 
 // PWA 서비스워커 등록
 if ('serviceWorker' in navigator) {
