@@ -1357,6 +1357,10 @@
         <div class="helper-tool-card-icon">📚</div>
         <div class="helper-tool-card-label">SPACE 적용</div>
       </div>
+      <div class="helper-tool-card" onclick="chartStepShowTool('fivep')">
+        <div class="helper-tool-card-icon">✋</div>
+        <div class="helper-tool-card-label">5P 점검</div>
+      </div>
     </div>
 
     <!-- If-Then 폼 -->
@@ -1391,9 +1395,9 @@
     <div class="helper-form-view" id="chart-step-form-relation">
       <button class="helper-back-btn" onclick="chartStepBackToGrid()">← 뒤로</button>
       <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">💛 관계로 살아내기</div>
-      <div class="helper-question-label">이 말씀을 나눌 사람은?</div>
+      <div class="helper-question-label">이 말씀을 적용할 대상은?</div>
       <textarea class="helper-question-input" id="chart-relation-q1" rows="3"></textarea>
-      <div class="helper-question-label">어떤 관계에 적용할 것인가?</div>
+      <div class="helper-question-label">오늘 말씀은 위의 사람과 어떤 관계가 되라고 하는가?</div>
       <textarea class="helper-question-input" id="chart-relation-q2" rows="3"></textarea>
       <div class="helper-question-label">구체적으로 무엇을 해줄 것인가? (전화/격려/사과/감사)</div>
       <textarea class="helper-question-input" id="chart-relation-q3" rows="3"></textarea>
@@ -1415,17 +1419,34 @@
     <div class="helper-form-view" id="chart-step-form-space">
       <button class="helper-back-btn" onclick="chartStepBackToGrid()">← 뒤로</button>
       <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">📚 SPACE 적용</div>
-      <div class="helper-question-label">S (Sin) — 이 말씀이 드러내는 죄 또는 경고는?</div>
-      <textarea class="helper-question-input" id="chart-space-s" rows="2" placeholder="말씀이 가리키는 죄나 경고"></textarea>
-      <div class="helper-question-label">P (Promise) — 약속하신 것은?</div>
-      <textarea class="helper-question-input" id="chart-space-p" rows="2" placeholder="하나님의 약속"></textarea>
-      <div class="helper-question-label">A (Attitude) — 바꿔야 할 태도나 마음가짐은?</div>
-      <textarea class="helper-question-input" id="chart-space-a" rows="2" placeholder="바꿔야 할 태도"></textarea>
-      <div class="helper-question-label">C (Command) — 순종해야 할 명령은?</div>
-      <textarea class="helper-question-input" id="chart-space-c" rows="2" placeholder="말씀의 명령"></textarea>
-      <div class="helper-question-label">E (Example) — 본받거나 피해야 할 본보기는?</div>
-      <textarea class="helper-question-input" id="chart-space-e" rows="2" placeholder="본받을/피할 예"></textarea>
+      <div class="helper-question-label">S (Sins to confess) — 내가 고백해야 할 죄</div>
+      <textarea class="helper-question-input" id="chart-space-s" rows="2" placeholder="말씀이 드러내는 내 죄나 잘못된 태도"></textarea>
+      <div class="helper-question-label">P (Promise to claim) — 내가 붙잡아야 할 구체적 약속</div>
+      <textarea class="helper-question-input" id="chart-space-p" rows="2" placeholder="하나님이 약속하신 것"></textarea>
+      <div class="helper-question-label">A (Action to avoid) — 내가 고쳐야 할 행동</div>
+      <textarea class="helper-question-input" id="chart-space-a" rows="2" placeholder="피하거나 고쳐야 할 행동"></textarea>
+      <div class="helper-question-label">C (Commands to obey) — 내가 순종해야 할 행동</div>
+      <textarea class="helper-question-input" id="chart-space-c" rows="2" placeholder="말씀이 명령하는 것"></textarea>
+      <div class="helper-question-label">E (Examples to follow) — 본받거나 본받지 못할 행동</div>
+      <textarea class="helper-question-input" id="chart-space-e" rows="2" placeholder="따르거나 경계해야 할 본보기"></textarea>
       <button class="helper-complete-btn" onclick="chartStepComplete('space')">✓ 적용 완성</button>
+    </div>
+
+    <!-- 5P 점검 폼 -->
+    <div class="helper-form-view" id="chart-step-form-fivep">
+      <button class="helper-back-btn" onclick="chartStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">✋ 5P 점검</div>
+      <div class="helper-question-label">Personal — 나로부터 시작되는 적용인가?</div>
+      <textarea class="helper-question-input" id="chart-5p-personal" rows="2" placeholder="내 삶에 먼저 적용되는가?"></textarea>
+      <div class="helper-question-label">Possible — 실행 가능한 적용인가?</div>
+      <textarea class="helper-question-input" id="chart-5p-possible" rows="2" placeholder="오늘 실제로 할 수 있는가?"></textarea>
+      <div class="helper-question-label">Practical — 구체적인 적용인가?</div>
+      <textarea class="helper-question-input" id="chart-5p-practical" rows="2" placeholder="막연하지 않고 구체적인가?"></textarea>
+      <div class="helper-question-label">Provable — 검증 가능한 적용인가?</div>
+      <textarea class="helper-question-input" id="chart-5p-provable" rows="2" placeholder="했는지 확인할 수 있는가?"></textarea>
+      <div class="helper-question-label">Permissible — 공동체가 납득할 수 있는 적용인가?</div>
+      <textarea class="helper-question-input" id="chart-5p-permissible" rows="2" placeholder="공동체 안에서 무리 없는 적용인가?"></textarea>
+      <button class="helper-complete-btn" onclick="chartStepComplete('fivep')">✓ 적용 완성</button>
     </div>
   </div>
 </div>
@@ -1722,13 +1743,21 @@
         result = `나는 이미 매일 ${existing_habit || '___'}을 한다.\n그 전/후에 ${new_action || '___'}을 추가한다.`;
       }
     } else if (tool === 'space') {
-      const spaceLabels = [['S','죄/경고'],['P','약속'],['A','태도'],['C','명령'],['E','본보기']];
+      const spaceLabels = [['S','고백할 죄'],['P','붙잡을 약속'],['A','고쳐야 할 행동'],['C','순종할 명령'],['E','따를 본보기']];
       const spaceIds = ['chart-space-s','chart-space-p','chart-space-a','chart-space-c','chart-space-e'];
       const lines = spaceIds.map((id, i) => {
         const v = (document.getElementById(id)||{}).value?.trim();
         return v ? `${spaceLabels[i][0]} (${spaceLabels[i][1]}): ${v}` : '';
       }).filter(Boolean);
       if (lines.length) result = `[SPACE 적용]\n${lines.join('\n')}`;
+    } else if (tool === 'fivep') {
+      const fivepLabels = ['Personal','Possible','Practical','Provable','Permissible'];
+      const fivepIds = ['chart-5p-personal','chart-5p-possible','chart-5p-practical','chart-5p-provable','chart-5p-permissible'];
+      const lines = fivepIds.map((id, i) => {
+        const v = (document.getElementById(id)||{}).value?.trim();
+        return v ? `${fivepLabels[i]}: ${v}` : '';
+      }).filter(Boolean);
+      if (lines.length) result = `[5P 점검]\n${lines.join('\n')}`;
     }
 
     if (result) {
