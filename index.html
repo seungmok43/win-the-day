@@ -1287,7 +1287,7 @@
         <textarea class="helper-question-input" id="chart-genre-e-q1" rows="3"></textarea>
         <div class="helper-question-label">이 단락의 핵심 논리와 주장은?</div>
         <textarea class="helper-question-input" id="chart-genre-e-q2" rows="3"></textarea>
-        <div class="helper-question-label">이 진리가 오늘 내 삶에서 의미하는 것은?</div>
+        <div class="helper-question-label">수신자는 이 편지를 받고 어떠한 마음과 생각이 들었을까요?</div>
         <textarea class="helper-question-input" id="chart-genre-e-q3" rows="3"></textarea>
       </div>
       <div class="genre-questions" id="chart-genre-prophecy">
@@ -1303,7 +1303,7 @@
         <textarea class="helper-question-input" id="chart-genre-w-q1" rows="3"></textarea>
         <div class="helper-question-label">이 지혜의 핵심 원리는?</div>
         <textarea class="helper-question-input" id="chart-genre-w-q2" rows="3"></textarea>
-        <div class="helper-question-label">내 일상 어느 상황에 적용됩니까?</div>
+        <div class="helper-question-label">이 지혜가 빚어내는 결과 또는 예상되는 결과는 무엇인가요?</div>
         <textarea class="helper-question-input" id="chart-genre-w-q3" rows="3"></textarea>
       </div>
       <button class="helper-complete-btn" onclick="chartStayComplete('genre')">✓ 묵상 완성</button>
@@ -1380,6 +1380,10 @@
         <div class="helper-tool-card-icon">🔗</div>
         <div class="helper-tool-card-label">습관에 말씀 심기</div>
       </div>
+      <div class="helper-tool-card" onclick="chartStepShowTool('space')">
+        <div class="helper-tool-card-icon">📚</div>
+        <div class="helper-tool-card-label">SPACE 적용</div>
+      </div>
     </div>
 
     <!-- If-Then 폼 -->
@@ -1432,6 +1436,23 @@
       <div class="helper-question-label">그 전/후에 _________ 을 추가한다.</div>
       <input type="text" class="helper-question-input single-line" id="chart-habit-q2" placeholder="추가할 실천" />
       <button class="helper-complete-btn" onclick="chartStepComplete('habit')">✓ 적용 완성</button>
+    </div>
+
+    <!-- SPACE 적용 폼 -->
+    <div class="helper-form-view" id="chart-step-form-space">
+      <button class="helper-back-btn" onclick="chartStepBackToGrid()">← 뒤로</button>
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">📚 SPACE 적용</div>
+      <div class="helper-question-label">S (Sin) — 이 말씀이 드러내는 죄 또는 경고는?</div>
+      <textarea class="helper-question-input" id="chart-space-s" rows="2" placeholder="말씀이 가리키는 죄나 경고"></textarea>
+      <div class="helper-question-label">P (Promise) — 약속하신 것은?</div>
+      <textarea class="helper-question-input" id="chart-space-p" rows="2" placeholder="하나님의 약속"></textarea>
+      <div class="helper-question-label">A (Attitude) — 바꿔야 할 태도나 마음가짐은?</div>
+      <textarea class="helper-question-input" id="chart-space-a" rows="2" placeholder="바꿔야 할 태도"></textarea>
+      <div class="helper-question-label">C (Command) — 순종해야 할 명령은?</div>
+      <textarea class="helper-question-input" id="chart-space-c" rows="2" placeholder="말씀의 명령"></textarea>
+      <div class="helper-question-label">E (Example) — 본받거나 피해야 할 본보기는?</div>
+      <textarea class="helper-question-input" id="chart-space-e" rows="2" placeholder="본받을/피할 예"></textarea>
+      <button class="helper-complete-btn" onclick="chartStepComplete('space')">✓ 적용 완성</button>
     </div>
   </div>
 </div>
@@ -1727,6 +1748,14 @@
       if (existing_habit || new_action) {
         result = `나는 이미 매일 ${existing_habit || '___'}을 한다.\n그 전/후에 ${new_action || '___'}을 추가한다.`;
       }
+    } else if (tool === 'space') {
+      const spaceLabels = [['S','죄/경고'],['P','약속'],['A','태도'],['C','명령'],['E','본보기']];
+      const spaceIds = ['chart-space-s','chart-space-p','chart-space-a','chart-space-c','chart-space-e'];
+      const lines = spaceIds.map((id, i) => {
+        const v = (document.getElementById(id)||{}).value?.trim();
+        return v ? `${spaceLabels[i][0]} (${spaceLabels[i][1]}): ${v}` : '';
+      }).filter(Boolean);
+      if (lines.length) result = `[SPACE 적용]\n${lines.join('\n')}`;
     }
 
     if (result) {
