@@ -310,21 +310,23 @@
 
     .submit-btn {
       width:100%;
-      padding:0.85rem;
-      background:var(--crimson);
+      padding:1rem;
+      background:linear-gradient(135deg, var(--crimson) 0%, #6b1238 100%);
       color:var(--white);
       border:none;
-      border-radius:12px;
-      font-family:'Noto Sans KR', sans-serif;
-      font-size:1rem;
+      border-radius:14px;
+      font-family:'Noto Serif KR', serif;
+      font-size:1.05rem;
       font-weight:700;
       cursor:pointer;
-      transition:background 0.15s, transform 0.1s;
-      margin-top:0.25rem;
+      transition:all 0.2s;
+      margin-top:0.5rem;
+      letter-spacing:0.01em;
+      box-shadow:0 4px 18px rgba(139,26,74,0.4);
     }
-    .submit-btn:hover { background:#a12058; }
+    .submit-btn:hover { background:linear-gradient(135deg, #a12058 0%, #8b1a4a 100%); transform:translateY(-2px); box-shadow:0 6px 24px rgba(139,26,74,0.5); }
     .submit-btn:active { transform:scale(0.98); }
-    .submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .submit-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
 
     .submit-success {
       display:none;
@@ -1218,7 +1220,7 @@
         </div>
 
         <button class="submit-btn" id="submit-btn" onclick="submitPost()">
-          🏆 올리기
+          하루를 승리로 쟁취하라! Win the Day! 🏆
         </button>
         <button class="help-trigger" onclick="openHelpPanel()" type="button">📖 묵상 도움말</button>
       </div><!-- /form-body-inner -->
@@ -1732,6 +1734,28 @@ function setMode(mode) {
 }
 
 // ── 게시 ──
+function playVictorySound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // 승리 팡파레: C-E-G-C 상승 4음
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.13;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.28, t + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+      osc.start(t);
+      osc.stop(t + 0.45);
+    });
+  } catch(e) {}
+}
+
 async function submitPost() {
   if (!isFirebaseReady) {
     alert('Firebase 설정이 필요합니다. 상단 안내를 확인해주세요.');
@@ -1811,13 +1835,14 @@ async function submitPost() {
     document.getElementById('form-toggle-label').textContent = '✍️ 오늘의 묵상을 나눠주세요...';
     formOpen = false;
 
+    playVictorySound();
     document.getElementById('submit-success').style.display = 'block';
     setTimeout(() => {
       document.getElementById('submit-success').style.display = 'none';
     }, 3000);
 
     btn.disabled = false;
-    btn.textContent = '🏆 올리기';
+    btn.textContent = '하루를 승리로 쟁취하라! Win the Day! 🏆';
     // 폼 초기화
     ['input-name','input-church',
      'input-stop-time','input-stop-place','input-stop-verse',
@@ -1838,7 +1863,7 @@ async function submitPost() {
     console.error(e);
     alert('오류가 발생했습니다: ' + e.message);
     btn.disabled = false;
-    btn.textContent = '🏆 올리기';
+    btn.textContent = '하루를 승리로 쟁취하라! Win the Day! 🏆';
   }
 }
 
