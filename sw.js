@@ -1,8 +1,8 @@
-const CACHE = 'win-the-day-v3';
-const OFFLINE = ['./index.html','./community.html','./bible-readings-2026.js','./manifest.json','./icon.svg','./logo.png'];
+const CACHE = 'win-the-day-v4';
+const STATIC = ['./bible-readings-2026.js','./manifest.json','./icon.svg','./logo.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(OFFLINE)));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)));
   self.skipWaiting();
 });
 
@@ -16,6 +16,11 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   if (e.request.url.includes('firestore') || e.request.url.includes('googleapis')) return;
+  // HTML은 항상 네트워크에서 최신 버전을 가져옴
+  if (e.request.destination === 'document') {
+    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
       if (res && res.status === 200 && res.type === 'basic') {
