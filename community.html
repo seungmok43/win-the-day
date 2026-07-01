@@ -15,29 +15,43 @@
   <style>
     :root {
       --navy:    #1a2744;
+      --navy-light: #243560;
       --crimson: #8b1a4a;
+      --crimson-light: #b52260;
       --gold:    #c9980a;
       --gold-light: #f0c040;
       --cream:   #faf6ee;
       --green:   #1c4a2e;
-      --text:    #1a1a2e;
-      --muted:   #6b7280;
-      --border:  #e5e7eb;
+      /* Dark surface */
+      --surface: #0c1220;
+      --surface-1: #0f1729;
+      --surface-card: #16202f;
+      --surface-card-hover: #1c2a3d;
+      --surface-input: #111e30;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-muted: rgba(255,255,255,0.12);
+      /* Text */
+      --text:    #dde6f5;
+      --text-primary: #eef2ff;
+      --muted:   rgba(220,232,255,0.45);
+      --border:  rgba(255,255,255,0.1);
       --white:   #ffffff;
-      --bg:      #f3f4f6;
+      --bg:      #0c1220;
     }
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
     html { scroll-behavior:smooth; }
     body {
       font-family:'Noto Sans KR', sans-serif;
-      background:var(--bg);
+      background:var(--surface);
       color:var(--text);
       min-height:100vh;
     }
 
     /* ── HEADER ── */
     .app-header {
-      background:var(--navy);
+      background:rgba(10,16,30,0.75);
+      backdrop-filter:blur(20px) saturate(1.4);
+      -webkit-backdrop-filter:blur(20px) saturate(1.4);
       height:56px;
       display:flex;
       align-items:center;
@@ -46,33 +60,34 @@
       position:sticky;
       top:0;
       z-index:100;
-      box-shadow:0 2px 12px rgba(0,0,0,0.25);
+      border-bottom:1px solid var(--border-subtle);
     }
     .header-back {
-      color:rgba(255,255,255,0.75);
+      color:rgba(255,255,255,0.6);
       text-decoration:none;
-      font-size:1.4rem;
+      font-size:1.25rem;
       line-height:1;
-      padding:0.4rem;
+      padding:0.45rem;
       display:flex;
       align-items:center;
       justify-content:center;
-      border-radius:8px;
-      transition:background 0.15s;
+      border-radius:10px;
+      transition:background 0.15s, color 0.15s;
     }
-    .header-back:hover { background:rgba(255,255,255,0.1); color:var(--white); }
+    .header-back:hover { background:rgba(255,255,255,0.08); color:var(--white); }
     .header-logo img {
-      height:26px;
+      height:24px;
       filter:brightness(0) invert(1);
       vertical-align:middle;
       display:block;
+      opacity:0.88;
     }
     .header-kakao {
       background:#FEE500;
       color:#3C1E1E;
-      padding:0.3rem 0.75rem;
+      padding:0.3rem 0.7rem;
       border-radius:100px;
-      font-size:0.8rem;
+      font-size:0.78rem;
       font-weight:700;
       text-decoration:none;
       white-space:nowrap;
@@ -219,30 +234,31 @@
 
     /* ── FORM ACCORDION ── */
     .form-accordion {
-      background:var(--white);
-      border-radius:20px;
-      margin-bottom:0.9rem;
-      box-shadow:0 2px 8px rgba(0,0,0,0.07);
+      background:var(--surface-card);
+      border:1px solid var(--border-subtle);
+      border-radius:22px;
+      margin-bottom:0.75rem;
+      box-shadow:0 4px 24px rgba(0,0,0,0.3);
       overflow:hidden;
     }
     .form-toggle-row {
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:1rem 1.25rem;
+      padding:1.1rem 1.25rem;
       cursor:pointer;
       user-select:none;
       transition:background 0.15s;
     }
-    .form-toggle-row:hover { background:#f9f9fb; }
+    .form-toggle-row:hover { background:rgba(255,255,255,0.03); }
     .form-toggle-label {
-      font-size:0.95rem;
-      color:var(--muted);
+      font-size:0.92rem;
+      color:rgba(220,232,255,0.6);
       font-weight:500;
     }
     .form-toggle-arrow {
       font-size:0.75rem;
-      color:var(--muted);
+      color:rgba(220,232,255,0.35);
       transition:transform 0.25s;
     }
     .form-toggle-arrow.open { transform:rotate(180deg); }
@@ -259,10 +275,11 @@
     .mode-tabs {
       display:flex;
       gap:0;
-      border:2px solid var(--border);
-      border-radius:10px;
+      background:var(--surface-input);
+      border-radius:12px;
       overflow:hidden;
       margin-bottom:1rem;
+      padding:3px;
     }
     .mode-tab {
       flex:1;
@@ -276,69 +293,77 @@
       color:var(--muted);
       transition:background 0.15s, color 0.15s;
       text-align:center;
+      border-radius:9px;
     }
     .mode-tab.active {
-      background:var(--navy);
-      color:var(--white);
+      background:var(--surface-card-hover);
+      color:var(--text-primary);
+      box-shadow:0 2px 8px rgba(0,0,0,0.2);
     }
 
     .form-row { margin-bottom:0.85rem; }
     .form-label {
-      font-size:0.8rem;
+      font-size:0.76rem;
       font-weight:700;
-      color:var(--text);
+      color:rgba(220,232,255,0.55);
       margin-bottom:0.3rem;
       display:block;
+      letter-spacing:0.03em;
     }
     .form-input, .form-textarea {
       width:100%;
-      padding:0.65rem 0.9rem;
-      border:2px solid var(--border);
-      border-radius:10px;
+      padding:0.7rem 1rem;
+      border:1px solid var(--border-subtle);
+      border-radius:12px;
       font-family:'Noto Sans KR', sans-serif;
       font-size:0.9rem;
-      color:var(--text);
+      color:var(--text-primary);
       outline:none;
-      transition:border-color 0.2s;
-      background:var(--white);
+      transition:border-color 0.2s, background 0.2s;
+      background:var(--surface-input);
     }
-    .form-input:focus, .form-textarea:focus { border-color:var(--gold); }
+    .form-input:focus, .form-textarea:focus {
+      border-color:rgba(201,152,10,0.6);
+      background:rgba(15,26,46,0.9);
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color:rgba(220,232,255,0.28); }
     .form-textarea { min-height:90px; resize:vertical; line-height:1.65; }
     .form-row-2 {
       display:grid;
       grid-template-columns:1fr 1fr;
-      gap:0.75rem;
+      gap:0.65rem;
       margin-bottom:0.85rem;
     }
     @media (max-width:400px) { .form-row-2 { grid-template-columns:1fr; } }
 
     .submit-btn {
       width:100%;
-      padding:1rem;
-      background:linear-gradient(135deg, var(--crimson) 0%, #6b1238 100%);
+      padding:1.1rem 1rem;
+      background:linear-gradient(135deg, var(--crimson) 0%, #5a0e30 100%);
       color:var(--white);
       border:none;
-      border-radius:14px;
+      border-radius:16px;
       font-family:'Noto Serif KR', serif;
-      font-size:1.05rem;
+      font-size:1rem;
       font-weight:700;
       cursor:pointer;
       transition:all 0.2s;
-      margin-top:0.5rem;
+      margin-top:0.75rem;
       letter-spacing:0.01em;
-      box-shadow:0 4px 18px rgba(139,26,74,0.4);
+      box-shadow:0 6px 28px rgba(139,26,74,0.45);
     }
-    .submit-btn:hover { background:linear-gradient(135deg, #a12058 0%, #8b1a4a 100%); transform:translateY(-2px); box-shadow:0 6px 24px rgba(139,26,74,0.5); }
+    .submit-btn:hover { background:linear-gradient(135deg, var(--crimson-light) 0%, #8b1a4a 100%); transform:translateY(-2px); box-shadow:0 10px 36px rgba(139,26,74,0.55); }
     .submit-btn:active { transform:scale(0.98); }
-    .submit-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .submit-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
 
     .submit-success {
       display:none;
-      background:#e8f5e9;
-      border-radius:10px;
+      background:rgba(28,74,46,0.3);
+      border:1px solid rgba(28,74,46,0.5);
+      border-radius:12px;
       padding:1rem;
       text-align:center;
-      color:var(--green);
+      color:#6fcf97;
       font-weight:500;
       font-size:0.9rem;
       margin:0 1.25rem 1.25rem;
@@ -365,7 +390,7 @@
     }
     .date-arrow {
       background:none;
-      border:1.5px solid var(--border);
+      border:1.5px solid var(--border-muted);
       border-radius:6px;
       width:28px;
       height:28px;
@@ -374,15 +399,15 @@
       justify-content:center;
       font-size:0.8rem;
       cursor:pointer;
-      color:var(--text);
-      transition:border-color 0.15s;
+      color:var(--text-secondary);
+      transition:border-color 0.15s, color 0.15s;
     }
-    .date-arrow:hover { border-color:var(--navy); }
+    .date-arrow:hover { border-color:var(--gold); color:var(--gold-light); }
     .date-arrow:disabled { opacity:0.3; cursor:not-allowed; }
     .date-label-btn {
       font-size:0.78rem;
       font-weight:700;
-      color:var(--navy);
+      color:var(--text-primary);
       background:none;
       border:none;
       cursor:pointer;
@@ -391,13 +416,13 @@
 
     /* ── EMPTY FEED ── */
     .feed-empty {
-      background:var(--white);
-      border-radius:16px;
+      background:var(--surface-card);
+      border:1px solid var(--border-subtle);
+      border-radius:18px;
       padding:3rem 1.5rem;
       text-align:center;
       color:var(--muted);
       font-size:0.9rem;
-      box-shadow:0 2px 8px rgba(0,0,0,0.06);
     }
     .feed-empty-icon { font-size:3rem; margin-bottom:0.75rem; }
     .feed-empty p { margin-bottom:1rem; line-height:1.6; }
@@ -417,14 +442,15 @@
 
     /* ── POST CARD ── */
     .post-card {
-      background:var(--white);
-      border-radius:16px;
-      padding:1.15rem 1.25rem;
-      margin-bottom:0.75rem;
-      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      background:var(--surface-card);
+      border:1px solid var(--border-subtle);
+      border-radius:18px;
+      padding:1.2rem 1.25rem;
+      margin-bottom:0.65rem;
+      box-shadow:0 4px 20px rgba(0,0,0,0.25);
       animation:fadeIn 0.3s ease;
     }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
 
     .post-header {
       display:flex;
@@ -433,59 +459,60 @@
       margin-bottom:0.9rem;
     }
     .post-avatar {
-      width:38px; height:38px;
+      width:36px; height:36px;
       border-radius:50%;
-      background:var(--navy);
+      background:linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border:1px solid var(--border-muted);
       display:flex; align-items:center; justify-content:center;
       color:var(--gold-light);
       font-weight:700;
-      font-size:0.95rem;
+      font-size:0.9rem;
       flex-shrink:0;
     }
     .post-meta { flex:1; min-width:0; }
     .post-name {
       font-weight:700;
-      font-size:0.9rem;
-      color:var(--navy);
+      font-size:0.88rem;
+      color:var(--text-primary);
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .post-name-church { font-weight:400; color:var(--muted); font-size:0.85rem; }
-    .post-time { font-size:0.72rem; color:var(--muted); margin-top:1px; }
+    .post-name-church { font-weight:400; color:var(--muted); font-size:0.82rem; }
+    .post-time { font-size:0.7rem; color:var(--muted); margin-top:1px; opacity:0.7; }
 
     .post-section { margin-bottom:0.65rem; }
     .post-section-label {
-      font-size:0.68rem;
+      font-size:0.65rem;
       font-weight:700;
-      letter-spacing:0.06em;
-      padding:0.18rem 0.5rem;
+      letter-spacing:0.07em;
+      padding:0.15rem 0.5rem;
       border-radius:4px;
       display:inline-block;
       margin-bottom:0.3rem;
     }
-    .label-stop { background:#e8eaf6; color:#3949ab; }
-    .label-stay { background:#e8f5e9; color:#2e7d32; }
-    .label-step { background:#fff8e1; color:#f57f17; }
-    .label-free { background:#f3e5f5; color:#6a1b9a; }
-    .post-text { font-size:0.88rem; line-height:1.75; color:var(--text); white-space:pre-wrap; }
+    .label-stop { background:rgba(57,73,171,0.2); color:#90a3f5; }
+    .label-stay { background:rgba(46,125,50,0.2); color:#81c784; }
+    .label-step { background:rgba(245,127,23,0.2); color:#ffb74d; }
+    .label-free { background:rgba(106,27,154,0.2); color:#ce93d8; }
+    .post-text { font-size:0.875rem; line-height:1.8; color:rgba(220,232,255,0.8); white-space:pre-wrap; }
 
-    .post-divider { height:1px; background:var(--border); margin:0.75rem 0; }
+    .post-divider { height:1px; background:var(--border-subtle); margin:0.75rem 0; }
 
     .post-footer {
       display:flex;
       align-items:center;
       justify-content:space-between;
-      margin-top:0.75rem;
-      padding-top:0.65rem;
-      border-top:1px solid var(--border);
+      margin-top:0.65rem;
+      padding-top:0.6rem;
+      border-top:1px solid var(--border-subtle);
     }
     .like-btn {
       background:none;
-      border:1px solid var(--border);
+      border:1px solid var(--border-subtle);
       border-radius:100px;
-      padding:0.28rem 0.8rem;
-      font-size:0.82rem;
+      padding:0.25rem 0.75rem;
+      font-size:0.8rem;
       cursor:pointer;
       display:flex;
       align-items:center;
@@ -493,14 +520,15 @@
       transition:all 0.15s;
       color:var(--muted);
     }
-    .like-btn:hover, .like-btn.liked { background:#fff0f3; border-color:#f06292; color:#c2185b; }
+    .like-btn:hover { background:rgba(192,33,91,0.12); border-color:rgba(192,33,91,0.3); color:#f48fb1; }
+    .like-btn.liked { background:rgba(192,33,91,0.15); border-color:rgba(192,33,91,0.4); color:#f48fb1; }
     .post-scripture-tag {
-      font-size:0.72rem;
+      font-size:0.7rem;
       color:var(--muted);
-      background:#f3f4f6;
-      padding:0.18rem 0.55rem;
+      background:rgba(255,255,255,0.05);
+      padding:0.15rem 0.5rem;
       border-radius:100px;
-      max-width:140px;
+      max-width:130px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -509,7 +537,7 @@
       background:none;
       border:none;
       cursor:pointer;
-      font-size:0.75rem;
+      font-size:0.73rem;
       color:var(--muted);
       padding:0.2rem 0.45rem;
       border-radius:6px;
@@ -520,7 +548,7 @@
       line-height:1;
       margin-left:0.4rem;
     }
-    .delete-btn:hover { color:#c0392b; background:#fff0f0; }
+    .delete-btn:hover { color:#ef5350; background:rgba(239,83,80,0.1); }
 
     /* ── CHECKIN CARD (기능 1) ── */
     .checkin-card {
@@ -594,22 +622,22 @@
     .feed-filter-tab {
       padding:0.28rem 0.75rem;
       border-radius:100px;
-      border:1.5px solid var(--border);
+      border:1.5px solid var(--border-muted);
       background:none;
       font-family:'Noto Sans KR', sans-serif;
       font-size:0.78rem;
       font-weight:700;
-      color:var(--muted);
+      color:var(--text-muted);
       cursor:pointer;
       transition:background 0.15s, color 0.15s, border-color 0.15s;
       white-space:nowrap;
     }
     .feed-filter-tab.active {
-      background:var(--navy);
+      background:var(--crimson);
       color:var(--white);
-      border-color:var(--navy);
+      border-color:var(--crimson);
     }
-    .feed-filter-tab:hover:not(.active) { border-color:var(--navy); color:var(--navy); }
+    .feed-filter-tab:hover:not(.active) { border-color:var(--gold); color:var(--gold-light); }
 
     /* ── HELP PANEL (기능 3) ── */
     .help-trigger {
@@ -627,7 +655,7 @@
       text-underline-offset:3px;
       transition:color 0.15s;
     }
-    .help-trigger:hover { color:var(--navy); }
+    .help-trigger:hover { color:var(--gold-light); }
 
     .help-overlay {
       display:none;
@@ -643,8 +671,8 @@
     .help-sheet {
       position:fixed;
       bottom:0; left:0; right:0;
-      background:var(--white);
-      border-radius:20px 20px 0 0;
+      background:var(--surface-card);
+      border-radius:24px 24px 0 0;
       padding:0 0 env(safe-area-inset-bottom,0);
       max-height:85vh;
       overflow:hidden;
@@ -655,40 +683,52 @@
       transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
       max-width:680px;
       margin:0 auto;
+      border:1px solid var(--border-subtle);
+      border-bottom:none;
     }
     .help-sheet.open { transform:translateY(0); }
+    .help-sheet::before {
+      content:'';
+      display:block;
+      width:36px;
+      height:4px;
+      background:rgba(255,255,255,0.18);
+      border-radius:2px;
+      margin:12px auto 0;
+      flex-shrink:0;
+    }
 
     .help-sheet-header {
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:1rem 1.25rem 0.75rem;
-      border-bottom:1px solid var(--border);
+      padding:0.75rem 1.25rem 0.65rem;
+      border-bottom:1px solid var(--border-subtle);
       flex-shrink:0;
     }
     .help-sheet-title {
-      font-size:1rem;
+      font-size:0.95rem;
       font-weight:700;
-      color:var(--navy);
+      color:var(--text-primary);
     }
     .help-close-btn {
       background:none;
       border:none;
-      font-size:1.2rem;
+      font-size:1.1rem;
       cursor:pointer;
       color:var(--muted);
       padding:0.25rem;
       line-height:1;
       transition:color 0.15s;
-      border-radius:6px;
+      border-radius:8px;
     }
-    .help-close-btn:hover { color:var(--navy); background:#f3f4f6; }
+    .help-close-btn:hover { color:var(--text-primary); background:rgba(255,255,255,0.06); }
 
     .help-tabs {
       display:flex;
       gap:0;
-      padding:0.75rem 1.25rem 0;
-      border-bottom:2px solid var(--border);
+      padding:0.65rem 1.25rem 0;
+      border-bottom:1px solid var(--border-subtle);
       flex-shrink:0;
     }
     .help-tab {
@@ -706,8 +746,8 @@
       white-space:nowrap;
     }
     .help-tab.active {
-      color:var(--navy);
-      border-bottom-color:var(--navy);
+      color:var(--gold-light);
+      border-bottom-color:var(--gold);
     }
 
     .help-body {
@@ -720,9 +760,9 @@
     .help-panel.active { display:block; }
 
     .help-section-title {
-      font-size:0.78rem;
+      font-size:0.72rem;
       font-weight:700;
-      letter-spacing:0.07em;
+      letter-spacing:0.08em;
       color:var(--muted);
       margin-bottom:0.75rem;
       text-transform:uppercase;
@@ -734,11 +774,12 @@
       align-items:flex-start;
     }
     .help-step-badge {
-      background:var(--navy);
-      color:var(--white);
+      background:rgba(26,39,68,0.8);
+      border:1px solid var(--border-muted);
+      color:var(--gold-light);
       border-radius:8px;
       padding:0.2rem 0.55rem;
-      font-size:0.75rem;
+      font-size:0.72rem;
       font-weight:700;
       flex-shrink:0;
       line-height:1.6;
@@ -746,7 +787,7 @@
     .help-step-text {
       font-size:0.875rem;
       line-height:1.7;
-      color:var(--text);
+      color:var(--text-primary);
     }
     .help-step-sub {
       font-size:0.8rem;
@@ -757,10 +798,10 @@
     }
 
     .prayer-starter {
-      background:#f8faff;
-      border:1.5px solid var(--border);
+      background:rgba(255,255,255,0.04);
+      border:1px solid var(--border-subtle);
       border-radius:12px;
-      padding:0.7rem 1rem;
+      padding:0.75rem 1rem;
       margin-bottom:0.6rem;
       display:flex;
       align-items:center;
@@ -769,7 +810,7 @@
       cursor:pointer;
       transition:border-color 0.15s, background 0.15s;
     }
-    .prayer-starter:hover { border-color:var(--gold); background:#fffbf0; }
+    .prayer-starter:hover { border-color:rgba(201,152,10,0.4); background:rgba(201,152,10,0.06); }
     .prayer-starter-text {
       font-size:0.875rem;
       color:var(--text);
@@ -788,8 +829,8 @@
     }
 
     .finding-q {
-      background:#f3fdf6;
-      border-left:3px solid var(--green);
+      background:rgba(28,74,46,0.15);
+      border-left:3px solid rgba(28,74,46,0.7);
       border-radius:0 10px 10px 0;
       padding:0.65rem 0.9rem;
       margin-bottom:0.6rem;
@@ -885,8 +926,8 @@
     .sss-helper-sheet {
       position:fixed;
       bottom:0; left:0; right:0;
-      background:var(--white);
-      border-radius:20px 20px 0 0;
+      background:var(--surface-card);
+      border-radius:24px 24px 0 0;
       padding:0 0 env(safe-area-inset-bottom,0);
       max-height:82vh;
       overflow:hidden;
@@ -897,29 +938,41 @@
       transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
       max-width:680px;
       margin:0 auto;
+      border:1px solid var(--border-subtle);
+      border-bottom:none;
     }
     .sss-helper-sheet.open { transform:translateY(0); }
+    .sss-helper-sheet::before {
+      content:'';
+      display:block;
+      width:36px;
+      height:4px;
+      background:rgba(255,255,255,0.18);
+      border-radius:2px;
+      margin:12px auto 0;
+      flex-shrink:0;
+    }
 
     .sss-helper-header {
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:1rem 1.25rem 0.75rem;
-      border-bottom:1px solid var(--border);
+      padding:0.75rem 1.25rem 0.65rem;
+      border-bottom:1px solid var(--border-subtle);
       flex-shrink:0;
     }
-    .sss-helper-title { font-size:1rem; font-weight:700; color:var(--navy); }
+    .sss-helper-title { font-size:0.95rem; font-weight:700; color:var(--text-primary); }
     .sss-helper-close {
-      background:none; border:none; font-size:1.2rem;
+      background:none; border:none; font-size:1.1rem;
       cursor:pointer; color:var(--muted); padding:0.25rem;
-      line-height:1; border-radius:6px; transition:color 0.15s;
+      line-height:1; border-radius:8px; transition:color 0.15s, background 0.15s;
     }
-    .sss-helper-close:hover { color:var(--navy); background:#f3f4f6; }
+    .sss-helper-close:hover { color:var(--text-primary); background:rgba(255,255,255,0.06); }
 
     .sss-helper-tabs {
       display:flex;
-      padding:0.75rem 1.25rem 0;
-      border-bottom:2px solid var(--border);
+      padding:0.65rem 1.25rem 0;
+      border-bottom:1px solid var(--border-subtle);
       flex-shrink:0;
       overflow-x:auto;
       gap:0;
@@ -930,12 +983,12 @@
       font-family:'Noto Sans KR',sans-serif;
       font-size:0.8rem; font-weight:700;
       color:var(--muted); cursor:pointer;
-      border-bottom:2.5px solid transparent;
-      margin-bottom:-2px;
+      border-bottom:2px solid transparent;
+      margin-bottom:-1px;
       transition:color 0.15s, border-color 0.15s;
       white-space:nowrap;
     }
-    .sss-helper-tab.active { color:var(--navy); border-bottom-color:var(--navy); }
+    .sss-helper-tab.active { color:var(--gold-light); border-bottom-color:var(--gold); }
 
     .sss-helper-body { overflow-y:auto; padding:1.1rem 1.25rem 1.5rem; flex:1; }
     .sss-helper-panel { display:none; }
@@ -943,8 +996,8 @@
 
     .sss-helper-insert-btn {
       display:block; width:100%;
-      background:#f8faff;
-      border:1.5px solid var(--border);
+      background:var(--surface-input);
+      border:1.5px solid var(--border-subtle);
       border-radius:12px;
       padding:0.85rem 1rem;
       margin-bottom:0.65rem;
@@ -956,8 +1009,8 @@
       line-height:1.6;
       transition:border-color 0.15s, background 0.15s;
     }
-    .sss-helper-insert-btn:hover { border-color:var(--gold); background:#fffbf0; }
-    .sss-helper-insert-note { font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem; }
+    .sss-helper-insert-btn:hover { border-color:var(--gold); background:rgba(212,163,56,0.06); }
+    .sss-helper-insert-note { font-size:0.78rem; color:var(--text-muted); margin-bottom:0.75rem; }
 
     /* ── STOP 섹션 2컬럼 그리드 ── */
     .stop-time-place {
@@ -973,11 +1026,12 @@
       display:none;
       position:fixed;
       bottom:0; left:0; right:0;
-      background:var(--white);
-      border-top:1px solid var(--border);
-      box-shadow:0 -2px 12px rgba(0,0,0,0.08);
+      background:var(--surface-card);
+      border-top:1px solid var(--border-subtle);
+      box-shadow:0 -4px 24px rgba(0,0,0,0.35);
       padding:0.6rem 1rem 0.75rem;
       z-index:90;
+      backdrop-filter:blur(12px);
     }
     .bottom-bar-inner {
       display:flex;
@@ -1004,16 +1058,16 @@
     }
     .bottom-bar-btn .btn-icon { font-size:1.2rem; }
     .bottom-bar-btn.outline {
-      background:none;
-      border:2px solid var(--border);
-      color:var(--text);
+      background:rgba(255,255,255,0.05);
+      border:1.5px solid var(--border-muted);
+      color:var(--text-secondary);
     }
-    .bottom-bar-btn.outline:hover { border-color:var(--navy); }
+    .bottom-bar-btn.outline:hover { border-color:var(--gold); color:var(--gold-light); }
     .bottom-bar-btn.primary {
-      background:var(--crimson);
+      background:linear-gradient(135deg,var(--crimson),#c0264a);
       color:var(--white);
     }
-    .bottom-bar-btn.primary:hover { background:#a12058; }
+    .bottom-bar-btn.primary:hover { opacity:0.9; }
     .bottom-bar-btn.kakao {
       background:#FEE500;
       color:#3C1E1E;
@@ -1022,30 +1076,32 @@
 
   /* ── 도우미 패널 인터랙티브 폼 ── */
   .helper-tool-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; padding:1rem; }
-  .helper-tool-card { background:var(--bg,#f3f4f6); border-radius:12px; padding:1rem; cursor:pointer; text-align:center; border:2px solid transparent; transition:border-color 0.15s; }
-  .helper-tool-card:hover { border-color:var(--gold); }
+  .helper-tool-card { background:var(--surface-input); border-radius:14px; padding:1rem; cursor:pointer; text-align:center; border:1.5px solid var(--border-subtle); transition:border-color 0.15s, background 0.15s; }
+  .helper-tool-card:hover { border-color:var(--gold); background:rgba(212,163,56,0.06); }
   .helper-tool-card-icon { font-size:1.5rem; margin-bottom:0.4rem; }
-  .helper-tool-card-label { font-size:0.82rem; font-weight:700; color:var(--navy); }
+  .helper-tool-card-label { font-size:0.82rem; font-weight:700; color:var(--text-primary); }
 
   .helper-form-view { padding:1rem; display:none; }
   .helper-form-view.active { display:block; }
-  .helper-back-btn { background:none; border:none; color:var(--muted,#6b7280); font-size:0.85rem; cursor:pointer; padding:0 0 0.75rem; display:flex; align-items:center; gap:0.3rem; }
-  .helper-question-label { font-size:0.8rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem; margin-top:0.75rem; }
-  .helper-question-input { width:100%; border:1.5px solid var(--border,#e5e7eb); border-radius:8px; padding:0.6rem 0.75rem; font-family:'Noto Sans KR',sans-serif; font-size:0.85rem; resize:vertical; min-height:60px; background:var(--white,#fff); color:var(--text,#1a1a2e); }
+  .helper-back-btn { background:none; border:none; color:var(--text-muted); font-size:0.85rem; cursor:pointer; padding:0 0 0.75rem; display:flex; align-items:center; gap:0.3rem; transition:color 0.15s; }
+  .helper-back-btn:hover { color:var(--text-secondary); }
+  .helper-question-label { font-size:0.8rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem; margin-top:0.75rem; }
+  .helper-question-input { width:100%; border:none; border-bottom:1.5px solid var(--border-muted); border-radius:0; padding:0.55rem 0; font-family:'Noto Sans KR',sans-serif; font-size:0.85rem; resize:vertical; min-height:60px; background:transparent; color:var(--text-primary); transition:border-color 0.15s; }
   .helper-question-input:focus { outline:none; border-color:var(--gold); }
   .helper-question-input.single-line { min-height:auto; resize:none; height:42px; }
-  .helper-complete-btn { width:100%; margin-top:1rem; background:var(--navy); color:var(--white,#fff); border:none; border-radius:12px; padding:0.75rem; font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; }
-  .helper-complete-btn:hover { opacity:0.9; }
+  .helper-complete-btn { width:100%; margin-top:1rem; background:linear-gradient(135deg,var(--crimson),#c0264a); color:var(--white); border:none; border-radius:14px; padding:0.75rem; font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; transition:opacity 0.15s; }
+  .helper-complete-btn:hover { opacity:0.88; }
 
   /* 장르 선택 */
   .genre-grid { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; }
-  .genre-btn { background:var(--bg,#f3f4f6); border:2px solid var(--border,#e5e7eb); border-radius:100px; padding:0.35rem 0.85rem; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:'Noto Sans KR',sans-serif; }
-  .genre-btn.active { background:var(--navy); color:var(--white,#fff); border-color:var(--navy); }
+  .genre-btn { background:var(--surface-input); border:1.5px solid var(--border-muted); border-radius:100px; padding:0.35rem 0.85rem; font-size:0.8rem; font-weight:700; color:var(--text-secondary); cursor:pointer; transition:all 0.15s; font-family:'Noto Sans KR',sans-serif; }
+  .genre-btn.active { background:var(--crimson); color:var(--white); border-color:var(--crimson); }
+  .genre-btn:hover:not(.active) { border-color:var(--gold); color:var(--gold-light); }
   .genre-questions { display:none; }
   .genre-questions.active { display:block; }
 
   /* SPACE in STEP */
-  .space-section { margin-top:0.75rem; border-top:1px dashed var(--border,#e5e7eb); padding-top:0.75rem; }
+  .space-section { margin-top:0.75rem; border-top:1px dashed var(--border-subtle); padding-top:0.75rem; }
   .space-section-label { font-size:0.75rem; color:var(--muted,#6b7280); font-weight:700; margin-bottom:0.5rem; letter-spacing:0.05em; }
   </style>
 </head>
@@ -1256,7 +1312,7 @@
     <!-- 장르별 묵상 폼 -->
     <div class="helper-form-view" id="sss-stay-form-genre">
       <button class="helper-back-btn" onclick="sssStayBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">📖 장르별 묵상</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">📖 장르별 묵상</div>
       <div class="genre-grid">
         <button class="genre-btn" onclick="sssSelectGenre(this,'narrative')">서사</button>
         <button class="genre-btn" onclick="sssSelectGenre(this,'psalm')">시편</button>
@@ -1310,7 +1366,7 @@
     <!-- 하나님 찾기 폼 -->
     <div class="helper-form-view" id="sss-stay-form-god">
       <button class="helper-back-btn" onclick="sssStayBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">✨ 하나님 찾기</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">✨ 하나님 찾기</div>
       <div class="helper-question-label">이 본문에서 하나님은 어떤 분으로 나타나십니까?</div>
       <textarea class="helper-question-input" id="sss-god-q1" rows="3"></textarea>
       <div class="helper-question-label">하나님이 하신 일 또는 말씀하신 것은 무엇입니까?</div>
@@ -1325,7 +1381,7 @@
     <!-- 귀납적 연구 폼 -->
     <div class="helper-form-view" id="sss-stay-form-oia">
       <button class="helper-back-btn" onclick="sssStayBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🔍 귀납적 연구 (OIA)</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">🔍 귀납적 연구 (OIA)</div>
       <div class="helper-question-label">O (관찰): 본문에서 반복되는 단어, 등장인물, 대조되는 것은?</div>
       <textarea class="helper-question-input" id="sss-oia-q1" rows="3"></textarea>
       <div class="helper-question-label">I (해석): 저자의 의도와 시대를 초월한 진리는 무엇입니까?</div>
@@ -1338,7 +1394,7 @@
     <!-- 렉시오 디비나 폼 -->
     <div class="helper-form-view" id="sss-stay-form-lectio">
       <button class="helper-back-btn" onclick="sssStayBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🕯️ 렉시오 디비나</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">🕯️ 렉시오 디비나</div>
       <div class="helper-question-label">Lectio (읽기): 마음에 닿은 단어나 구절은?</div>
       <textarea class="helper-question-input" id="sss-lectio-q1" rows="3"></textarea>
       <div class="helper-question-label">Meditatio (묵상): 그 말씀이 내 마음 어느 부분을 건드립니까?</div>
@@ -1391,7 +1447,7 @@
     <!-- If-Then 폼 -->
     <div class="helper-form-view" id="sss-step-form-ifthen">
       <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">⚡ If-Then 계획</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">⚡ If-Then 계획</div>
       <div class="helper-question-label">오늘 _________ 상황이 되면,</div>
       <input type="text" class="helper-question-input single-line" id="sss-ifthen-q1" placeholder="상황을 입력하세요" />
       <div class="helper-question-label">나는 _________ 을 한다.</div>
@@ -1402,7 +1458,7 @@
     <!-- SMART 폼 -->
     <div class="helper-form-view" id="sss-step-form-smart">
       <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🎯 SMART 적용</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">🎯 SMART 적용</div>
       <div class="helper-question-label">S (Specific) — 구체적으로 무엇을?</div>
       <input type="text" class="helper-question-input single-line" id="sss-smart-s" />
       <div class="helper-question-label">M (Measurable) — 어떻게 확인할 수 있는가?</div>
@@ -1419,7 +1475,7 @@
     <!-- 관계로 살아내기 폼 -->
     <div class="helper-form-view" id="sss-step-form-relation">
       <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">💛 관계로 살아내기</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">💛 관계로 살아내기</div>
       <div class="helper-question-label">이 말씀을 적용할 대상은?</div>
       <textarea class="helper-question-input" id="sss-relation-q1" rows="3"></textarea>
       <div class="helper-question-label">오늘 말씀은 위의 사람과 어떤 관계가 되라고 하는가?</div>
@@ -1432,7 +1488,7 @@
     <!-- 습관에 말씀 심기 폼 -->
     <div class="helper-form-view" id="sss-step-form-habit">
       <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">🔗 습관에 말씀 심기</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">🔗 습관에 말씀 심기</div>
       <div class="helper-question-label">나는 이미 매일 _________ 을 한다.</div>
       <input type="text" class="helper-question-input single-line" id="sss-habit-q1" placeholder="기존 습관" />
       <div class="helper-question-label">그 전/후에 _________ 을 추가한다.</div>
@@ -1443,7 +1499,7 @@
     <!-- SPACE 적용 폼 -->
     <div class="helper-form-view" id="sss-step-form-space">
       <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">📚 SPACE 적용</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">📚 SPACE 적용</div>
       <div class="helper-question-label">S (Sins to confess) — 내가 고백해야 할 죄</div>
       <textarea class="helper-question-input" id="input-space-s" rows="2" placeholder="말씀이 드러내는 내 죄나 잘못된 태도"></textarea>
       <div class="helper-question-label">P (Promise to claim) — 내가 붙잡아야 할 구체적 약속</div>
@@ -1460,7 +1516,7 @@
     <!-- 5P 점검 폼 -->
     <div class="helper-form-view" id="sss-step-form-fivep">
       <button class="helper-back-btn" onclick="sssStepBackToGrid()">← 뒤로</button>
-      <div style="font-weight:700;color:var(--navy);margin-bottom:0.75rem">✋ 5P 점검</div>
+      <div style="font-weight:700;color:var(--text-primary);margin-bottom:0.75rem">✋ 5P 점검</div>
       <div class="helper-question-label">Personal — 나로부터 시작되는 적용인가?</div>
       <textarea class="helper-question-input" id="sss-5p-personal" rows="2" placeholder="내 삶에 먼저 적용되는가?"></textarea>
       <div class="helper-question-label">Possible — 실행 가능한 적용인가?</div>
