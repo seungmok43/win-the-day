@@ -160,11 +160,15 @@
 
     /* ── TODAY SCRIPTURE CARD ── */
     .scripture-card {
-      background:linear-gradient(135deg, var(--navy) 0%, #243560 100%);
+      background:
+        linear-gradient(135deg, rgba(26,39,68,0.88) 0%, rgba(36,53,96,0.92) 100%),
+        url('https://images.unsplash.com/photo-1437603568260-1950d3ca6eab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80');
+      background-size:cover;
+      background-position:center 40%;
       border-radius:20px;
       padding:1.5rem 1.5rem 1.25rem;
       margin-bottom:0.9rem;
-      box-shadow:0 4px 20px rgba(26,39,68,0.25);
+      box-shadow:0 4px 20px rgba(26,39,68,0.35);
     }
     .scripture-date-label {
       font-size:0.75rem;
