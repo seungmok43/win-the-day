@@ -45,6 +45,10 @@
       --radius-card: 20px;
       --radius-btn: 100px;
       --shadow-card: 0 4px 32px rgba(0,0,0,0.4);
+      /* Dark Luxury */
+      --gold-dim: rgba(201,152,10,0.15);
+      --gold-glow: rgba(240,192,64,0.25);
+      --surface-luxury: rgba(201,152,10,0.06);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -894,6 +898,87 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* ════ DARK LUXURY ════ */
+
+    /* 골드 그라데이션 텍스트 */
+    .gold-text {
+      background: linear-gradient(135deg, #c9980a 0%, #f0c040 50%, #c9980a 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Shimmer sweep */
+    @keyframes shimmerSweep {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+    .shimmer-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, transparent 0%, rgba(240,192,64,0.12) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmerSweep 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 스크롤 입장 */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .lux-animate {
+      opacity: 0;
+    }
+    .lux-animate.lux-visible {
+      animation: fadeSlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* 골드 포커스 glow */
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--gold) !important;
+      box-shadow: 0 2px 14px var(--gold-glow);
+    }
+
+    /* 버튼 shimmer hover */
+    .hero-cta {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-cta::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(240,192,64,0.22), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.55s ease;
+      border-radius: inherit;
+    }
+    .hero-cta:hover::after { transform: translateX(100%); }
+
+    /* 골드 장식선 */
+    .gold-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.35;
+      border: none;
+      margin: 0;
+    }
+
+    /* HOW 카드 골드 hover 테두리 */
+    .how-card:hover {
+      border-color: rgba(201,152,10,0.35);
+    }
+
+    /* section-title 미묘한 shimmer 밑줄 */
+    .section-title {
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
@@ -918,7 +1003,7 @@
 <section class="hero" id="home">
   <img src="logo.png" alt="Win the Day" class="hero-logo" />
 
-  <p class="hero-slogan">하루를 승리로 쟁취하라</p>
+  <p class="hero-slogan gold-text">하루를 승리로 쟁취하라</p>
   <p class="hero-sub">아침을 말씀으로 · Win the Day</p>
 
   <div class="today-card">
@@ -938,25 +1023,25 @@
 <!-- ════ HOW ════ -->
 <section class="how" id="how">
   <div class="section-center">
-    <h2 class="section-title how-title">어떻게 하나요?</h2>
+    <h2 class="section-title how-title gold-text">어떻게 하나요?</h2>
     <p class="how-subtitle">3단계로 완성되는 아침 말씀묵상</p>
   </div>
   <div class="how-grid">
-    <div class="how-card fade-in">
+    <div class="how-card fade-in lux-animate">
       <span class="how-icon">🛑</span>
-      <div class="how-en">STOP</div>
+      <div class="how-en gold-text">STOP</div>
       <div class="how-ko">멈추라</div>
       <p class="how-desc">핸드폰 내려놓고<br>성경을 펴라</p>
     </div>
-    <div class="how-card fade-in">
+    <div class="how-card fade-in lux-animate">
       <span class="how-icon">📖</span>
-      <div class="how-en">STAY</div>
+      <div class="how-en gold-text">STAY</div>
       <div class="how-ko">머물라</div>
       <p class="how-desc">말씀 안에서<br>깊이 머물라</p>
     </div>
-    <div class="how-card fade-in">
+    <div class="how-card fade-in lux-animate">
       <span class="how-icon">👣</span>
-      <div class="how-en">STEP</div>
+      <div class="how-en gold-text">STEP</div>
       <div class="how-ko">나아가라</div>
       <p class="how-desc">오늘 하나를<br>실천하라</p>
     </div>
@@ -964,10 +1049,12 @@
 </section>
 
 
+<hr class="gold-divider" />
+
 <!-- ════ CHART ════ -->
 <section class="chart-section" id="chart">
   <div class="chart-header">
-    <h2 class="section-title">아침 5분, Win the Day</h2>
+    <h2 class="section-title gold-text">아침 5분, Win the Day</h2>
     <p>핸드폰을 잡기 전, 이것부터</p>
   </div>
 
@@ -1877,6 +1964,22 @@
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  /* Dark Luxury: lux-animate scroll entrance */
+  const luxObs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        const delay = e.target.dataset.luxDelay || 0;
+        setTimeout(() => e.target.classList.add('lux-visible'), Number(delay));
+        luxObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.lux-animate').forEach((el, i) => {
+    el.dataset.luxDelay = i * 80;
+    luxObs.observe(el);
+  });
 </script>
 
 </body>
