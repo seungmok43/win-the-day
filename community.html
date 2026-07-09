@@ -1336,6 +1336,85 @@
     margin-left: 0.25rem;
     font-family: 'Noto Sans KR', sans-serif;
   }
+
+  /* ── 댓글 ── */
+  .comment-toggle {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 0.82rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 8px;
+    transition: color 0.15s, background 0.15s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .comment-toggle:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+  .comment-section {
+    border-top: 1px solid var(--border-subtle);
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    display: none;
+  }
+  .comment-section.open { display: block; }
+  .comment-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.75rem; }
+  .comment-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.82rem;
+  }
+  .comment-name {
+    font-weight: 700;
+    color: var(--gold);
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .comment-text { color: var(--text); line-height: 1.5; flex: 1; word-break: break-word; }
+  .comment-del {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.72rem;
+    padding: 0 0.2rem;
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+  .comment-del:hover { color: #ef5350; }
+  .comment-input-row { display: flex; gap: 0.5rem; }
+  .comment-input {
+    flex: 1;
+    background: var(--surface-input);
+    border: 1px solid var(--border-muted);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    color: var(--text-primary);
+    font-size: 0.83rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .comment-input:focus { border-color: var(--gold); }
+  .comment-send {
+    background: var(--gold);
+    color: #0c1220;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: opacity 0.15s;
+  }
+  .comment-send:active { opacity: 0.8; }
+  .comment-empty { font-size: 0.8rem; color: var(--muted); text-align: center; padding: 0.5rem 0; }
   </style>
 </head>
 <body>
@@ -2362,14 +2441,26 @@ function renderPost(id, data) {
       </div>
       ${contentHtml}
       <div class="post-footer">
-        <button class="like-btn${isLiked ? ' liked' : ''}" id="like-${id}" onclick="toggleLike('${id}', ${data.likes || 0})">
-          ❤️ ${data.likes || 0}
-        </button>
+        <div style="display:flex;align-items:center;gap:0.35rem">
+          <button class="like-btn${isLiked ? ' liked' : ''}" id="like-${id}" onclick="toggleLike('${id}', ${data.likes || 0})">
+            ❤️ ${data.likes || 0}
+          </button>
+          ${!isDemo ? `<button class="comment-toggle" onclick="toggleComments('${id}')">💬 <span id="ccount-${id}">0</span></button>` : ''}
+        </div>
         <div style="display:flex;align-items:center;gap:0.25rem;min-width:0">
           <span class="post-scripture-tag">📖 ${escHtml(data.scripture || '')}</span>
           ${deleteBtnHtml}
         </div>
       </div>
+      ${!isDemo ? `
+      <div class="comment-section" id="comments-${id}">
+        <div class="comment-list" id="clist-${id}"></div>
+        <div class="comment-input-row">
+          <input class="comment-input" id="cinput-${id}" placeholder="댓글을 입력하세요 (100자)" maxlength="100"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitComment('${id}')}" />
+          <button class="comment-send" onclick="submitComment('${id}')">전송</button>
+        </div>
+      </div>` : ''}
     </div>`;
 }
 
@@ -2431,6 +2522,88 @@ async function deletePost(docId, postName, postUserId) {
   } else {
     alert('비밀번호가 틀렸습니다.');
   }
+}
+
+// ── 댓글 ──
+function toggleComments(postId) {
+  const section = document.getElementById('comments-' + postId);
+  if (!section) return;
+  const isOpen = section.classList.toggle('open');
+  if (isOpen && section.dataset.loaded !== 'true') {
+    section.dataset.loaded = 'true';
+    loadComments(postId);
+  }
+}
+
+async function loadComments(postId) {
+  if (!isFirebaseReady) return;
+  const listEl = document.getElementById('clist-' + postId);
+  const countEl = document.getElementById('ccount-' + postId);
+  if (!listEl) return;
+  try {
+    const snap = await db.collection('meditations').doc(postId)
+      .collection('comments').orderBy('timestamp', 'asc').limit(30).get();
+    const myUserId = (JSON.parse(localStorage.getItem('wtd_pledge_v1') || '{}')).userId;
+    listEl.innerHTML = '';
+    if (snap.empty) {
+      listEl.innerHTML = '<div class="comment-empty">첫 댓글을 남겨보세요 🙏</div>';
+    } else {
+      snap.forEach(doc => {
+        const d = doc.data();
+        const canDel = myUserId && d.userId && d.userId === myUserId;
+        const item = document.createElement('div');
+        item.className = 'comment-item';
+        item.dataset.commentId = doc.id;
+        item.innerHTML = `<span class="comment-name">${escHtml(d.name)}</span>
+          <span class="comment-text">${escHtml(d.text)}</span>
+          ${canDel ? `<button class="comment-del" onclick="deleteComment('${postId}','${doc.id}',this)" title="삭제">✕</button>` : ''}`;
+        listEl.appendChild(item);
+      });
+    }
+    if (countEl) countEl.textContent = snap.size;
+  } catch(e) { console.error('loadComments error', e); }
+}
+
+async function submitComment(postId) {
+  if (!isFirebaseReady) return;
+  const inputEl = document.getElementById('cinput-' + postId);
+  if (!inputEl) return;
+  const text = inputEl.value.trim();
+  if (!text) { inputEl.focus(); return; }
+  const pledge = JSON.parse(localStorage.getItem('wtd_pledge_v1') || '{}');
+  if (!pledge.name) { alert('서약 후 댓글을 달 수 있습니다.'); return; }
+  inputEl.value = '';
+  inputEl.disabled = true;
+  try {
+    await db.collection('meditations').doc(postId).collection('comments').add({
+      name: pledge.name,
+      userId: pledge.userId || '',
+      text: text.slice(0, 100),
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    // 열린 상태이면 섹션 data.loaded 초기화 후 재로드
+    const section = document.getElementById('comments-' + postId);
+    if (section) { section.dataset.loaded = ''; }
+    await loadComments(postId);
+  } catch(e) { console.error('submitComment error', e); inputEl.value = text; }
+  inputEl.disabled = false;
+  inputEl.focus();
+}
+
+async function deleteComment(postId, commentId, btn) {
+  if (!isFirebaseReady) return;
+  try {
+    await db.collection('meditations').doc(postId).collection('comments').doc(commentId).delete();
+    const item = btn.closest('.comment-item');
+    if (item) item.remove();
+    const countEl = document.getElementById('ccount-' + postId);
+    const listEl = document.getElementById('clist-' + postId);
+    if (countEl && listEl) {
+      const remaining = listEl.querySelectorAll('.comment-item').length;
+      countEl.textContent = remaining;
+      if (remaining === 0) listEl.innerHTML = '<div class="comment-empty">첫 댓글을 남겨보세요 🙏</div>';
+    }
+  } catch(e) { console.error('deleteComment error', e); }
 }
 
 // ── 데모 피드 (Firebase 미설정 시) ──
