@@ -2111,12 +2111,15 @@ async function submitPost() {
       return;
     }
 
+    const _pledgeRawSss = localStorage.getItem('wtd_pledge_v1');
+    const _pledgeUserIdSss = _pledgeRawSss ? (JSON.parse(_pledgeRawSss).userId || '') : '';
     postData = {
       name,
       church: document.getElementById('input-church').value.trim() || null,
       date: currentDateStr,
       scripture: (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '',
       mode: 'sss',
+      userId: _pledgeUserIdSss,
       stop_time, stop_place, opening_prayer, stop_verse,
       stay, step, prayer, thanks1, thanks2, thanks3, declaration,
       space_s: document.getElementById('input-space-s')?.value?.trim() || null,
@@ -2134,12 +2137,15 @@ async function submitPost() {
       document.getElementById('input-free').focus();
       return;
     }
+    const _pledgeRawFree = localStorage.getItem('wtd_pledge_v1');
+    const _pledgeUserIdFree = _pledgeRawFree ? (JSON.parse(_pledgeRawFree).userId || '') : '';
     postData = {
       name,
       church: document.getElementById('input-church').value.trim() || null,
       date: currentDateStr,
       scripture: (typeof getReadingByDate === 'function') ? getReadingByDate(currentDateStr) : '',
       mode: 'free',
+      userId: _pledgeUserIdFree,
       content: free,
       likes: 0,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -2182,6 +2188,17 @@ async function submitPost() {
     const savedPrayer = localStorage.getItem('wtd_opening_prayer');
     const prayerEl = document.getElementById('input-opening-prayer');
     if (prayerEl) prayerEl.value = savedPrayer || '';
+    // 서약 이름/교회 복원 (리셋에 의해 지워진 것을 되돌림)
+    try {
+      const _pr = localStorage.getItem('wtd_pledge_v1');
+      if (_pr) {
+        const {name: _pn, church: _pc} = JSON.parse(_pr);
+        const _ne = document.getElementById('input-name');
+        const _ce = document.getElementById('input-church');
+        if (_ne) _ne.value = _pn || '';
+        if (_ce) _ce.value = _pc || '';
+      }
+    } catch(e) {}
 
   } catch(e) {
     console.error(e);
@@ -2227,7 +2244,7 @@ function renderPost(id, data) {
   // 삭제 버튼: Firebase 준비됐을 때만 표시 (데모 카드 id는 'demo1','demo2' 로 시작)
   const isDemo = id.startsWith('demo');
   const deleteBtnHtml = (!isDemo && isFirebaseReady)
-    ? `<button class="delete-btn" onclick="deletePost('${id}', '${escHtml(data.name || '')}')">🗑️ 삭제</button>`
+    ? `<button class="delete-btn" onclick="deletePost('${id}', '${escHtml(data.name || '')}', '${escHtml(data.userId || '')}')">🗑️ 삭제</button>`
     : '';
 
   let contentHtml = '';
@@ -2377,13 +2394,17 @@ async function toggleLike(id, currentLikes) {
 }
 
 // ── 삭제 ──
-async function deletePost(docId, postName) {
+async function deletePost(docId, postName, postUserId) {
   if (!isFirebaseReady) return;
   const raw = localStorage.getItem('wtd_pledge_v1');
-  const myName = raw ? JSON.parse(raw).name : null;
+  const parsed = raw ? JSON.parse(raw) : {};
+  const myName = parsed.name || null;
+  const myUserId = parsed.userId || null;
 
-  // 본인 확인
-  if (myName && myName === postName) {
+  // 본인 확인 (userId 우선, 없으면 이름 fallback for legacy posts)
+  const isOwner = (postUserId && myUserId && postUserId === myUserId)
+               || (!postUserId && myName && myName === postName);
+  if (isOwner) {
     if (!confirm('이 묵상을 삭제하시겠습니까?')) return;
     try {
       await db.collection('meditations').doc(docId).delete();
@@ -2394,16 +2415,20 @@ async function deletePost(docId, postName) {
     return;
   }
 
-  // 관리자 확인
+  // 관리자 확인 (SHA-256)
+  const ADMIN_HASH = 'c7af4e7b7dc48c8f27ef3a484a6505cad469bd35a91344a6ad97d62f78825af5';
   const pw = prompt('관리자 비밀번호를 입력하세요:');
-  if (pw === 'wintheday2026') {
+  if (pw === null) return;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  if (hash === ADMIN_HASH) {
     try {
       await db.collection('meditations').doc(docId).delete();
     } catch(e) {
       console.error(e);
       alert('삭제 중 오류가 발생했습니다: ' + e.message);
     }
-  } else if (pw !== null) {
+  } else {
     alert('비밀번호가 틀렸습니다.');
   }
 }
@@ -2843,7 +2868,11 @@ function submitPledge() {
     inp.focus();
     return;
   }
-  localStorage.setItem('wtd_pledge_v1', JSON.stringify({name, church}));
+  localStorage.setItem('wtd_pledge_v1', JSON.stringify({
+    name, church,
+    userId: crypto.randomUUID(),
+    startDate: new Date().toISOString()
+  }));
   prefillPledgeForm(name, church);
   showUserBadge(name, church);
   const overlay = document.getElementById('pledge-overlay');
@@ -2858,8 +2887,8 @@ function submitPledge() {
 function prefillPledgeForm(name, church) {
   const nameEl = document.getElementById('input-name');
   const churchEl = document.getElementById('input-church');
-  if (nameEl && !nameEl.value) nameEl.value = name;
-  if (churchEl && !churchEl.value) churchEl.value = church || '';
+  if (nameEl) nameEl.value = name || '';
+  if (churchEl) churchEl.value = church || '';
 }
 
 function showUserBadge(name, church) {
@@ -2897,7 +2926,7 @@ function resetPledge() {
 function showPledgeNameInput() {
   const name = prompt('이전에 사용하신 이름을 입력해주세요:');
   if (name && name.trim()) {
-    localStorage.setItem('wtd_pledge_v1', JSON.stringify({name: name.trim(), church: ''}));
+    localStorage.setItem('wtd_pledge_v1', JSON.stringify({name: name.trim(), church: '', userId: crypto.randomUUID(), startDate: new Date().toISOString()}));
     location.reload();
   }
 }
