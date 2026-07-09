@@ -1203,9 +1203,159 @@
     border-radius: inherit;
   }
   .write-now-btn:hover::after { transform: translateX(100%); }
+
+  /* ════ 서약 화면 오버레이 ════ */
+  .pledge-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: linear-gradient(160deg, #0c1220 0%, #1a2744 60%, #2a1a2e 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    overflow-y: auto;
+  }
+  .pledge-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .pledge-logo { font-size: 3.5rem; margin-bottom: 0.5rem; }
+  .pledge-brand {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #c9980a 0%, #f0c040 50%, #c9980a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 2rem;
+  }
+  .pledge-preview {
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: rgba(240,237,232,0.85);
+    margin-bottom: 2rem;
+    max-width: 300px;
+  }
+  .pledge-name-preview {
+    color: #f0c040;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(240,192,64,0.4);
+    min-width: 3rem;
+    display: inline-block;
+  }
+  .pledge-emphasis {
+    background: linear-gradient(135deg, #c9980a, #f0c040);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  .pledge-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 1.5rem;
+  }
+  .pledge-inputs input {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(201,152,10,0.3);
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    color: var(--text-primary, #f0ede8);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .pledge-inputs input:focus {
+    border-color: #c9980a !important;
+    box-shadow: 0 0 0 3px rgba(201,152,10,0.15) !important;
+  }
+  .pledge-cta-btn {
+    background: linear-gradient(135deg, #8b1a4a, #c9980a);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 2.5rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 1rem;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .pledge-cta-btn:active { transform: scale(0.97); opacity: 0.9; }
+  .pledge-already {
+    background: none;
+    border: none;
+    color: rgba(240,237,232,0.4);
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0.5rem;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  /* 유저 정보 배지 */
+  .user-info-badge {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.9rem;
+    background: rgba(201,152,10,0.08);
+    border: 1px solid rgba(201,152,10,0.2);
+    border-radius: 50px;
+    margin: 0.4rem auto 0.6rem;
+    width: fit-content;
+    font-size: 0.82rem;
+    max-width: 90%;
+  }
+  .user-badge-name { color: #f0c040; font-weight: 600; }
+  .user-badge-church { color: rgba(240,237,232,0.5); }
+  .user-badge-change {
+    background: none;
+    border: none;
+    color: rgba(240,237,232,0.35);
+    font-size: 0.73rem;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    margin-left: 0.25rem;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
   </style>
 </head>
 <body>
+
+<!-- 서약 화면 오버레이 (첫 방문 / 서약 미완료 시 표시) -->
+<div id="pledge-overlay" class="pledge-overlay hidden">
+  <div class="pledge-logo">🏆</div>
+  <div class="pledge-brand">Win the Day</div>
+  <div class="pledge-preview">
+    나, <span id="pledge-name-preview" class="pledge-name-preview">___</span>은/는<br>
+    매일 아침 핸드폰보다<br>
+    <span class="pledge-emphasis">말씀을 먼저 잡겠습니다.</span>
+  </div>
+  <div class="pledge-inputs">
+    <input id="pledge-name-input" type="text" placeholder="이름을 입력하세요" maxlength="10" autocomplete="nickname" />
+    <input id="pledge-church-input" type="text" placeholder="소속 교회 (선택)" maxlength="20" />
+  </div>
+  <button class="pledge-cta-btn" onclick="submitPledge()">✍️ 서약하기</button>
+  <button class="pledge-already" onclick="showPledgeNameInput()">이미 서약하셨나요? 이름으로 찾기</button>
+</div>
 
 <!-- APP HEADER -->
 <header class="app-header">
@@ -1246,6 +1396,9 @@
       <button class="write-now-btn" onclick="openForm()">✍️ 묵상 나누기 ↓</button>
     </div>
   </div>
+
+  <!-- 유저 정보 배지 (서약 완료 후 표시) -->
+  <div id="user-info-badge" class="user-info-badge"></div>
 
   <!-- 기능 1: 저녁 적용 체크인 -->
   <div class="checkin-card lux-animate" id="checkin-card" style="display:none">
@@ -2383,7 +2536,7 @@ function renderFilteredFeed() {
         <div class="feed-empty">
           <div class="feed-empty-icon">📝</div>
           <p>서약 후 묵상을 작성하면<br>여기서 모아볼 수 있어요</p>
-          <button class="feed-empty-btn" onclick="openForm()">✍️ 지금 서약하러 가기</button>
+          <button class="feed-empty-btn" onclick="openPledgeScreen()">✍️ 지금 서약하러 가기</button>
         </div>`;
       return;
     }
@@ -2653,6 +2806,102 @@ function toggleSssSpace() {
   btn.textContent = isOpen ? '▶ SPACE 적용 항목 펼치기' : '▼ SPACE 적용 항목 접기';
 }
 
+// ════════════════════════════════════════════════
+// 서약 화면
+// ════════════════════════════════════════════════
+function initPledge() {
+  const raw = localStorage.getItem('wtd_pledge_v1');
+  const overlay = document.getElementById('pledge-overlay');
+  if (!raw) {
+    overlay.classList.remove('hidden');
+    document.getElementById('pledge-name-input').addEventListener('input', function() {
+      document.getElementById('pledge-name-preview').textContent = this.value.trim() || '___';
+    });
+    document.getElementById('pledge-name-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.getElementById('pledge-church-input').focus();
+    });
+    document.getElementById('pledge-church-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') submitPledge();
+    });
+  } else {
+    overlay.classList.add('hidden');
+    try {
+      const {name, church} = JSON.parse(raw);
+      prefillPledgeForm(name, church);
+      showUserBadge(name, church);
+    } catch(e) {}
+  }
+}
+
+function submitPledge() {
+  const name = document.getElementById('pledge-name-input').value.trim();
+  const church = document.getElementById('pledge-church-input').value.trim();
+  if (!name) {
+    const inp = document.getElementById('pledge-name-input');
+    inp.style.borderColor = '#ff4444';
+    inp.placeholder = '이름은 필수입니다';
+    inp.focus();
+    return;
+  }
+  localStorage.setItem('wtd_pledge_v1', JSON.stringify({name, church}));
+  prefillPledgeForm(name, church);
+  showUserBadge(name, church);
+  const overlay = document.getElementById('pledge-overlay');
+  overlay.style.opacity = '0';
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+    overlay.style.opacity = '';
+    setTimeout(() => openForm(), 100);
+  }, 500);
+}
+
+function prefillPledgeForm(name, church) {
+  const nameEl = document.getElementById('input-name');
+  const churchEl = document.getElementById('input-church');
+  if (nameEl && !nameEl.value) nameEl.value = name;
+  if (churchEl && !churchEl.value) churchEl.value = church || '';
+}
+
+function showUserBadge(name, church) {
+  const badge = document.getElementById('user-info-badge');
+  if (!badge) return;
+  badge.style.display = 'flex';
+  badge.innerHTML = `<span class="user-badge-name">🙏 ${escHtml(name)}</span>${church ? ` <span class="user-badge-church">· ${escHtml(church)}</span>` : ''}<button class="user-badge-change" onclick="resetPledge()">변경</button>`;
+}
+
+function openPledgeScreen() {
+  const overlay = document.getElementById('pledge-overlay');
+  overlay.style.opacity = '0';
+  overlay.classList.remove('hidden');
+  requestAnimationFrame(() => {
+    overlay.style.transition = 'opacity 0.4s ease';
+    overlay.style.opacity = '1';
+  });
+  setTimeout(() => {
+    overlay.style.transition = '';
+    document.getElementById('pledge-name-input').focus();
+  }, 420);
+}
+
+function resetPledge() {
+  if (!confirm('서약 정보를 변경하시겠습니까?')) return;
+  localStorage.removeItem('wtd_pledge_v1');
+  document.getElementById('pledge-name-input').value = '';
+  document.getElementById('pledge-church-input').value = '';
+  document.getElementById('pledge-name-preview').textContent = '___';
+  const badge = document.getElementById('user-info-badge');
+  if (badge) badge.style.display = 'none';
+  openPledgeScreen();
+}
+
+function showPledgeNameInput() {
+  const name = prompt('이전에 사용하신 이름을 입력해주세요:');
+  if (name && name.trim()) {
+    localStorage.setItem('wtd_pledge_v1', JSON.stringify({name: name.trim(), church: ''}));
+    location.reload();
+  }
+}
+
 // ── 초기화 ──
 renderStreak();
 initDate();
@@ -2660,6 +2909,8 @@ initFirebase();
 if (isFirebaseReady) loadFeed();
 // 기능 1 체크인 렌더
 renderCheckin();
+// 서약 화면 초기화
+initPledge();
 
 // PWA 서비스워커 등록
 if ('serviceWorker' in navigator) {
